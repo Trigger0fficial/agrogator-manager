@@ -1,0 +1,821 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>АГРОГАТОР - Панель управления</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="{% static 'main/assets/css/style.css' %}">
+    <link rel="stylesheet" href="{% static 'main/assets/css/list_quality_check.css' %}">
+    <link rel="stylesheet" href="{% static 'order/css/deal_detail.css' %}">
+    <style>
+        .deal-card { background: var(--white); border-radius: var(--border-radius-lg); padding: 1rem 1.5rem; margin-bottom: 1.5rem; box-shadow: var(--shadow); border: 1px solid var(--border-light); transition: all 0.3s ease; }
+        .deal-card:hover { transform: translateY(-5px); box-shadow: var(--shadow-lg); }
+        .deal-header { display: flex; flex-direction: row; justify-content: space-between; align-items: stretch; margin-bottom: 1rem; padding-bottom: 1rem; border-bottom: 1px solid var(--border-light); }
+        .deal-header-left { display: flex; flex-direction: column; gap: 0.25rem; align-items: flex-start; }
+        .deal-id { font-size: 1rem; font-weight: 700; color: var(--text-color); }
+        .deal-created { font-size: 0.8rem; color: var(--text-light); }
+        .deal-badge-wrap { display: flex; align-items: center; }
+        .deal-badge { padding: 0.35rem 0.75rem; border-radius: 50px; font-size: 0.7rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.5px; }
+        .deal-badge.active { background: #d1fae5; color: #065f46; }
+        .deal-badge.search { background: #dbeafe; color: #1e40af; }
+        .deal-badge.work { background: #fef3c7; color: #92400e; }
+        .deal-badge.completed { background: #f3f4f6; color: #4b5563; }
+        .deal-plates { display: grid; grid-template-columns: repeat(4, 1fr); gap: 0.75rem; margin-bottom: 1rem; }
+        .deal-plate { background: var(--white); border: 2px solid var(--border-light); border-radius: var(--border-radius); padding: 0.75rem 1rem; box-shadow: var(--shadow); position: relative; overflow: hidden; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 0.35rem; text-align: center; }
+        .deal-plate::before { content: ''; position: absolute; top: 0; left: 0; width: 100%; height: 4px; background: linear-gradient(135deg, var(--primary-color), var(--primary-light)); }
+        .deal-plate-label { font-size: 0.7rem; font-weight: 700; color: var(--text-light); text-transform: uppercase; letter-spacing: 0.5px; }
+        .deal-plate-value { font-size: 0.85rem; font-weight: 600; color: var(--text-color); }
+        .deal-price-block { background: var(--white); border: 2px solid var(--border-light); border-radius: var(--border-radius); padding: 1.25rem; margin-bottom: 1rem; box-shadow: var(--shadow); position: relative; overflow: hidden; }
+        .deal-price-block::before { content: ''; position: absolute; top: 0; left: 0; width: 100%; height: 4px; background: linear-gradient(135deg, var(--primary-color), var(--primary-light)); }
+        .deal-price-per-ton { font-size: 1.75rem; font-weight: 700; color: var(--primary-color); margin-bottom: 1rem; text-align: center; }
+        .deal-price-actions { display: flex; flex-wrap: wrap; justify-content: space-between; gap: 0.75rem; }
+        .deal-btn-link { display: inline-flex; align-items: center; justify-content: center; gap: 0.5rem; padding: 0.75rem 1rem; background: var(--white); border: 2px solid var(--border-light); border-radius: var(--border-radius); font-size: 0.9rem; font-weight: 600; color: var(--primary-color); cursor: pointer; transition: all 0.3s ease; box-shadow: 0 2px 4px rgba(0,0,0,0.05); }
+        .deal-btn-link:hover { border-color: var(--primary-color); transform: translateY(-2px); box-shadow: 0 4px 12px rgba(37,105,70,0.15); }
+        .deal-actions { display: flex; flex-wrap: wrap; gap: 0.75rem; align-items: center; justify-content: flex-end; padding-top: 0.75rem; margin-top: 0.25rem; border-top: 1px solid var(--border-light); }
+        .deal-actions .btn-show-farmer, .deal-actions .btn-details { padding: 0.75rem 1.25rem; font-size: 0.9rem; white-space: nowrap; }
+        .deal-actions .btn-show-farmer { border: 2px solid #d1d5db; }
+        .deal-actions .btn-show-farmer:hover { border-color: var(--primary-color); }
+        .load-more-container { display: flex; justify-content: center; margin-top: 2rem; margin-bottom: 3rem; }
+        .btn-load-more { padding: 0.875rem 1.5rem; border-radius: var(--border-radius); font-size: 0.95rem; font-weight: 600; background: var(--white); border: 2px solid var(--border-light); color: var(--primary-color); cursor: pointer; display: inline-flex; align-items: center; gap: 0.5rem; transition: all 0.3s ease; }
+        .btn-load-more:hover { border-color: var(--primary-light); transform: translateY(-2px); }
+        @media (max-width: 768px) { .deal-plates { grid-template-columns: 1fr 1fr; } }
+    </style>
+</head>
+<body>
+    <!-- Хедер -->
+   <header class="header">
+    <div class="container header__container">
+        <div class="logo">
+            <i class="fas fa-tractor"></i>
+            <span>АГРОГАТОР</span>
+        </div>
+            <nav class="nav">
+            <a href="{% url 'main' %}" class="nav-link active"><i class="fas fa-home"></i> Дашборд</a>
+            <a href="{% url 'order:my_deals' %}" class="nav-link"><i class="fas fa-handshake"></i> Сделки</a>
+            <a href="#" class="nav-link"><i class="fas fa-users"></i> Участники</a>
+            <a href="#" class="nav-link"><i class="fas fa-chart-bar"></i> Аналитика</a>
+        </nav>
+        <div class="user-profile">
+            <div class="notification-bell">
+                <i class="fas fa-bell"></i>
+                <span class="notification-count">3</span>
+            </div>
+            <div class="user-info">
+                <span class="user-name" id="headerUserName">Менеджер Иванов</span>
+                <span class="user-role" id="headerUserRole">Администратор</span>
+            </div>
+            <div class="user-avatar" id="userAvatar">
+                <img src="https://i.pravatar.cc/40?img=12" alt="Профиль">
+                <div class="user-dropdown" id="userDropdown">
+                    <div class="dropdown-item">
+                        <i class="fas fa-user"></i>
+                        <span>Личный кабинет</span>
+                    </div>
+                    <div class="dropdown-item">
+                        <i class="fas fa-cog"></i>
+                        <span>Настройки</span>
+                    </div>
+                    <div class="dropdown-divider"></div>
+                    <div class="dropdown-item logout-item" id="logoutBtn">
+                        <i class="fas fa-sign-out-alt"></i>
+                        <span>Выйти</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</header>
+
+    <main class="main">
+        <div class="container">
+            <!-- Блок Статистики -->
+            <section class="stats-section">
+                <div class="section-header">
+                    <div class="header-content">
+                        <h1>Обзор деятельности</h1>
+                        <p class="stats-subtitle">Здесь вы видите общую картину по вашим клиентам и сделкам</p>
+                    </div>
+                    <div class="header-actions">
+                        <button class="btn btn-secondary">
+                            <i class="fas fa-download"></i> Экспорт
+                        </button>
+                        <button class="btn btn-primary">
+                            <i class="fas fa-plus"></i> Новая сделка
+                        </button>
+                    </div>
+                </div>
+                <div class="stats-grid">
+                    <!-- Карточки заполняются из dashboard_data.js -->
+                </div>
+            </section>
+
+            <!-- Единый блок действий -->
+            <section class="actions-section">
+                <div class="actions-header">
+                    <h2>Действия</h2>
+                    <div class="actions-toggle">
+                        <button class="toggle-action active" data-mode="quick">
+                            <i class="fas fa-bolt"></i>
+                            <span>Быстрые действия</span>
+                        </button>
+                        <button class="toggle-action admin-toggle" data-mode="admin">
+                            <i class="fas fa-cog"></i>
+                            <span>Администрирование</span>
+                        </button>
+                    </div>
+                </div>
+                <div class="actions-content" id="quickActions">
+                    <div class="quick-actions-grid">
+                        <!-- Кнопки заполняются из dashboard_data.js -->
+                    </div>
+                </div>
+                <div class="actions-content admin-actions hidden" id="adminActions">
+                    <div class="quick-actions-grid">
+                        <button class="action-btn" data-action="add-manager">
+                            <div class="action-icon">
+                                <i class="fas fa-user-plus"></i>
+                            </div>
+                            <span class="action-text">Добавить менеджера</span>
+                        </button>
+                        <button class="action-btn" data-action="logistics-tariff">
+                            <div class="action-icon">
+                                <i class="fas fa-truck"></i>
+                            </div>
+                            <span class="action-text">Тарификация логистики</span>
+                        </button>
+                        <button class="action-btn" data-action="manage-managers">
+                            <div class="action-icon">
+                                <i class="fas fa-users-cog"></i>
+                            </div>
+                            <span class="action-text">Администрирование менеджеров</span>
+                        </button>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Блок Участники (Ф/Э) -->
+            <section class="participants-section">
+                <div class="section-header">
+                    <h2>Участники</h2>
+                    <div class="section-controls">
+                        <div class="participants-toggle">
+                            <button class="toggle-btn active" data-type="farmer">
+                                <i class="fas fa-tractor"></i> Фермеры
+                                <span class="toggle-count">0</span>
+                            </button>
+                            <button class="toggle-btn" data-type="exporter">
+                                <i class="fas fa-globe"></i> Экспортеры
+                                <span class="toggle-count">0</span>
+                            </button>
+                        </div>
+                        <button class="btn btn-outline">
+                            <i class="fas fa-ellipsis-h"></i>
+                        </button>
+                    </div>
+                </div>
+                <div class="participants-slider-container">
+                    <div class="slider-nav">
+                        <button class="slider-btn prev-btn">
+                            <i class="fas fa-chevron-left"></i>
+                        </button>
+                        <div class="slider-counter">
+                            <span class="current-slide">1</span>
+                            <span class="slider-divider">/</span>
+                            <span class="total-slides">0</span>
+                        </div>
+                        <button class="slider-btn next-btn">
+                            <i class="fas fa-chevron-right"></i>
+                        </button>
+                    </div>
+                    <div class="participants-slider">
+                        <!-- Карточки участников заполняются из dashboard_data.js -->
+                    </div>
+                </div>
+            </section>
+
+            <!-- Блок Сделки: реальные данные через API -->
+            <section class="deals-section">
+                <div class="section-header">
+                    <h2>Сделки</h2>
+                </div>
+                <div class="deals-grid" id="dealsGrid">
+                    <!-- Карточки сделок подгружаются из API (my_deals.js) -->
+                </div>
+                <div class="loading-state" id="loadingState">
+                    <div class="spinner"></div>
+                    <p>Загрузка сделок...</p>
+                </div>
+                <div class="load-more-container" id="loadMoreContainer" style="display: none;">
+                    <button class="btn-load-more" id="loadMoreBtn">
+                        <i class="fas fa-sync-alt"></i> Загрузить еще
+                    </button>
+                </div>
+                <div class="empty-state" id="emptyState" style="display: none;">
+                    <div class="empty-icon">
+                        <i class="fas fa-handshake-slash"></i>
+                    </div>
+                    <h3>Сделки не найдены</h3>
+                    <p>У вас пока нет активных сделок</p>
+                </div>
+                <div class="error-state" id="errorState" style="display: none;">
+                    <div class="error-icon">
+                        <i class="fas fa-exclamation-triangle"></i>
+                    </div>
+                    <h3>Проблема с сетью</h3>
+                    <p>Не удалось загрузить данные с сервера. Пожалуйста, повторите попытку позже.</p>
+                    <div class="error-actions">
+                        <button class="btn btn-primary" id="retryLoadBtn">
+                            <i class="fas fa-redo"></i>
+                            Повторить попытку
+                        </button>
+                    </div>
+                </div>
+            </section>
+        </div>
+    </main>
+
+    <!-- Модалка «Карта партнёра» (фермер/экспортер) -->
+    <div class="deal-modal-overlay" id="partnerModalOverlay" aria-hidden="true">
+        <div class="deal-modal" id="partnerModal">
+            <div class="deal-modal-header">
+                <h3 class="deal-modal-title" id="partnerModalTitle">Карта партнёра</h3>
+                <button type="button" class="deal-modal-close" id="partnerModalClose" aria-label="Закрыть"><i class="fas fa-times"></i></button>
+            </div>
+            <div class="deal-modal-body" id="partnerModalBody">
+                <div class="deal-partner-map-inner" id="partnerModalInner">
+                    <div class="deal-modal-loading" id="partnerModalLoading">
+                        <div class="deal-modal-loading-spinner"><i class="fas fa-spinner fa-spin"></i></div>
+                        <p class="deal-modal-loading-text">Загрузка данных партнёра...</p>
+                    </div>
+                    <div id="partnerModalContent" style="display: none;">
+                        <section class="deal-detail-section personal-data">
+                            <h4 class="deal-detail-section-title"><i class="fas fa-user"></i> Личные данные</h4>
+                            <div class="deal-partner-personal-grid">
+                                <div class="deal-partner-avatar-block">
+                                    <div class="deal-partner-avatar-wrap" id="partnerModalAvatar">
+                                        <span class="deal-partner-avatar-placeholder"><i class="fas fa-user"></i><span>Нет фото</span></span>
+                                    </div>
+                                    <div class="deal-partner-meta-plaque">
+                                        <div class="deal-partner-meta-item"><i class="fas fa-calendar-plus"></i><span>Зарегистрирован: <span id="partnerModalCreatedAt">—</span></span></div>
+                                        <div class="deal-partner-meta-item"><i class="fas fa-phone"></i><span id="partnerModalPhone">—</span></div>
+                                        <div class="deal-partner-meta-item"><i class="fas fa-star"></i><span>Рейтинг: <span id="partnerModalRating">—</span></span></div>
+                                        <div class="deal-partner-verification" id="partnerModalVerificationWrap">
+                                            <span class="deal-partner-verification-badge" id="partnerModalVerification">—</span>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="deal-partner-fields">
+                                    <div class="deal-partner-form-group">
+                                        <span class="deal-partner-label">Фамилия</span>
+                                        <span class="deal-partner-value" id="partnerModalLastName">—</span>
+                                    </div>
+                                    <div class="deal-partner-form-group">
+                                        <span class="deal-partner-label">Имя</span>
+                                        <span class="deal-partner-value" id="partnerModalFirstName">—</span>
+                                    </div>
+                                    <div class="deal-partner-form-group">
+                                        <span class="deal-partner-label">Отчество</span>
+                                        <span class="deal-partner-value" id="partnerModalPatronymic">—</span>
+                                    </div>
+                                    <div class="deal-partner-form-group">
+                                        <span class="deal-partner-label">Дата рождения</span>
+                                        <span class="deal-partner-value" id="partnerModalDateOfBirth">—</span>
+                                    </div>
+                                    <div class="deal-partner-form-group deal-partner-form-group-full">
+                                        <span class="deal-partner-label">Email</span>
+                                        <span class="deal-partner-value" id="partnerModalEmail">—</span>
+                                    </div>
+                                </div>
+                            </div>
+                        </section>
+                        <section class="deal-detail-section organization-data">
+                            <h4 class="deal-detail-section-title"><i class="fas fa-building"></i> Данные организации</h4>
+                            <div class="deal-partner-org-fields">
+                                <div class="deal-partner-form-row">
+                                    <div class="deal-partner-form-group">
+                                        <span class="deal-partner-label">ИНН</span>
+                                        <span class="deal-partner-value" id="partnerModalInn">—</span>
+                                    </div>
+                                    <div class="deal-partner-form-group">
+                                        <span class="deal-partner-label">ОГРНИП</span>
+                                        <span class="deal-partner-value" id="partnerModalOgrnip">—</span>
+                                    </div>
+                                </div>
+                                <div class="deal-partner-form-group deal-partner-form-group-full">
+                                    <span class="deal-partner-label">Название организации</span>
+                                    <span class="deal-partner-value" id="partnerModalOrgName">—</span>
+                                </div>
+                                <div class="deal-partner-form-group deal-partner-form-group-full">
+                                    <span class="deal-partner-label">Юридический адрес</span>
+                                    <span class="deal-partner-value" id="partnerModalLegalAddress">—</span>
+                                </div>
+                                <div class="deal-partner-form-group deal-partner-form-group-full">
+                                    <span class="deal-partner-label">Наименование банка</span>
+                                    <span class="deal-partner-value" id="partnerModalBankName">—</span>
+                                </div>
+                                <div class="deal-partner-form-row">
+                                    <div class="deal-partner-form-group">
+                                        <span class="deal-partner-label">БИК</span>
+                                        <span class="deal-partner-value" id="partnerModalBik">—</span>
+                                    </div>
+                                    <div class="deal-partner-form-group">
+                                        <span class="deal-partner-label">Корреспондентский счёт</span>
+                                        <span class="deal-partner-value" id="partnerModalCorrAccount">—</span>
+                                    </div>
+                                </div>
+                                <div class="deal-partner-form-group deal-partner-form-group-full">
+                                    <span class="deal-partner-label">Расчётный счёт</span>
+                                    <span class="deal-partner-value" id="partnerModalCheckingAccount">—</span>
+                                </div>
+                            </div>
+                        </section>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Модалка «Культура» -->
+    <div class="deal-modal-overlay" id="cropModalOverlay" aria-hidden="true">
+        <div class="deal-modal" id="cropModal">
+            <div class="deal-modal-header">
+                <h3 class="deal-modal-title" id="cropModalTitle">Качество культуры</h3>
+                <button type="button" class="deal-modal-close" id="cropModalClose" aria-label="Закрыть"><i class="fas fa-times"></i></button>
+            </div>
+            <div class="deal-modal-body" id="cropModalBody">
+                <div class="deal-modal-loading" id="cropModalLoading">
+                    <div class="deal-modal-loading-spinner"><i class="fas fa-spinner fa-spin"></i></div>
+                    <p class="deal-modal-loading-text">Загрузка информации о культуре...</p>
+                </div>
+                <div id="cropModalContent" style="display:none;"></div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Модальные окна для участников -->
+
+<div class="modal" id="pointsModal">
+    <div class="modal-content">
+        <div class="modal-header">
+            <h3>Точки погрузки</h3>
+            <button class="modal-close">&times;</button>
+        </div>
+        <div class="modal-body">
+            <div class="modal-list">
+                <div class="modal-item">
+                    <div class="item-main">
+                        <span class="item-name">Склад №1 "Центральный"</span>
+                        <span class="item-id">#POINT-12345</span>
+                    </div>
+                    <div class="item-address">
+                        <i class="fas fa-map-marker-alt"></i>
+                        с. Новопавловка, ул. Центральная, 15
+                    </div>
+                    <a href="#" class="item-link">Перейти к точке</a>
+                </div>
+                <div class="modal-item">
+                    <div class="item-main">
+                        <span class="item-name">Элеватор "Южный"</span>
+                        <span class="item-id">#POINT-12346</span>
+                    </div>
+                    <div class="item-address">
+                        <i class="fas fa-map-marker-alt"></i>
+                        с. Новопавловка, ул. Южная, 8
+                    </div>
+                    <a href="#" class="item-link">Перейти к точке</a>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="modal" id="cropsModal">
+    <div class="modal-content">
+        <div class="modal-header">
+            <h3>Культуры</h3>
+            <button class="modal-close">&times;</button>
+        </div>
+        <div class="modal-body">
+            <div class="modal-list">
+                <div class="modal-item">
+                    <div class="item-main">
+                        <span class="item-name">Пшеница 1 класс 15.5</span>
+                        <span class="item-id">#CROP-78901</span>
+                    </div>
+                </div>
+                <div class="modal-item">
+                    <div class="item-main">
+                        <span class="item-name">Ячмень пивоваренный</span>
+                        <span class="item-id">#CROP-78902</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Обновленная модалка запросов на продажу -->
+<div class="modal" id="requestsModal">
+    <div class="modal-content">
+        <div class="modal-header">
+            <h3>Запросы на продажу</h3>
+            <button class="modal-close">&times;</button>
+        </div>
+        <div class="modal-body">
+            <div class="accordion-list">
+                <div class="accordion-item">
+                    <div class="accordion-header">
+                        <div class="accordion-title">
+                            <span class="crop-name">Пшеница 1 класс 15.5</span>
+                            <span class="request-id">#REQUEST-45678</span>
+                        </div>
+                        <i class="fas fa-chevron-down"></i>
+                    </div>
+                    <div class="accordion-content">
+                        <div class="request-details-grid">
+                            <div class="detail-card">
+                                <i class="fas fa-calendar"></i>
+                                <div>
+                                    <span class="detail-label">Сроки поставки</span>
+                                    <span class="detail-value">20.10.2023 - 30.10.2023</span>
+                                </div>
+                            </div>
+                            <div class="detail-card">
+                                <i class="fas fa-weight-hanging"></i>
+                                <div>
+                                    <span class="detail-label">Объем</span>
+                                    <span class="detail-value">300 т</span>
+                                </div>
+                            </div>
+                            <div class="detail-card">
+                                <i class="fas fa-map-marker-alt"></i>
+                                <div>
+                                    <span class="detail-label">Точка погрузки</span>
+                                    <span class="detail-value">Склад №1 "Центральный"</span>
+                                </div>
+                            </div>
+                            <div class="detail-card">
+                                <i class="fas fa-clock"></i>
+                                <div>
+                                    <span class="detail-label">Дата создания</span>
+                                    <span class="detail-value">15.10.2023 14:30</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="accordion-item">
+                    <div class="accordion-header">
+                        <div class="accordion-title">
+                            <span class="crop-name">Ячмень пивоваренный</span>
+                            <span class="request-id">#REQUEST-45679</span>
+                        </div>
+                        <i class="fas fa-chevron-down"></i>
+                    </div>
+                    <div class="accordion-content">
+                        <div class="request-details-grid">
+                            <div class="detail-card">
+                                <i class="fas fa-calendar"></i>
+                                <div>
+                                    <span class="detail-label">Сроки поставки</span>
+                                    <span class="detail-value">25.10.2023 - 05.11.2023</span>
+                                </div>
+                            </div>
+                            <div class="detail-card">
+                                <i class="fas fa-weight-hanging"></i>
+                                <div>
+                                    <span class="detail-label">Объем</span>
+                                    <span class="detail-value">450 т</span>
+                                </div>
+                            </div>
+                            <div class="detail-card">
+                                <i class="fas fa-map-marker-alt"></i>
+                                <div>
+                                    <span class="detail-label">Точка погрузки</span>
+                                    <span class="detail-value">Элеватор "Южный"</span>
+                                </div>
+                            </div>
+                            <div class="detail-card">
+                                <i class="fas fa-clock"></i>
+                                <div>
+                                    <span class="detail-label">Дата создания</span>
+                                    <span class="detail-value">16.10.2023 10:15</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Новая модалка индивидуальных запросов -->
+<div class="modal" id="individualRequestsModal">
+    <div class="modal-content">
+        <div class="modal-header">
+            <h3>Индивидуальные запросы</h3>
+            <button class="modal-close">&times;</button>
+        </div>
+        <div class="modal-body">
+            <div class="requests-grid">
+                <div class="request-card">
+                    <div class="request-header">
+                        <div class="request-title">
+                            <span class="crop-name">Пшеница 3 класс</span>
+                            <span class="request-id">#REQ-78901</span>
+                        </div>
+                        <span class="farmers-count">
+                            <i class="fas fa-users"></i>
+                            8 фермеров
+                        </span>
+                    </div>
+                    <div class="request-details">
+                        <div class="detail-row">
+                            <i class="fas fa-map-marker-alt"></i>
+                            <span>с. Новопавловка, склад №2</span>
+                        </div>
+                        <div class="detail-row">
+                            <i class="fas fa-weight-hanging"></i>
+                            <span>Требуемый объем: 500 т</span>
+                        </div>
+                        <div class="detail-row">
+                            <i class="fas fa-calendar"></i>
+                            <span>Создан: 18.10.2023</span>
+                        </div>
+                    </div>
+                    <div class="request-actions">
+                        <button class="btn btn-outline btn-sm">Просмотреть отклики</button>
+                    </div>
+                </div>
+
+                <div class="request-card">
+                    <div class="request-header">
+                        <div class="request-title">
+                            <span class="crop-name">Кукуруза фуражная</span>
+                            <span class="request-id">#REQ-78902</span>
+                        </div>
+                        <span class="farmers-count">
+                            <i class="fas fa-users"></i>
+                            12 фермеров
+                        </span>
+                    </div>
+                    <div class="request-details">
+                        <div class="detail-row">
+                            <i class="fas fa-map-marker-alt"></i>
+                            <span>г. Ростов-на-Дону, порт</span>
+                        </div>
+                        <div class="detail-row">
+                            <i class="fas fa-weight-hanging"></i>
+                            <span>Требуемый объем: 750 т</span>
+                        </div>
+                        <div class="detail-row">
+                            <i class="fas fa-calendar"></i>
+                            <span>Создан: 19.10.2023</span>
+                        </div>
+                    </div>
+                    <div class="request-actions">
+                        <button class="btn btn-outline btn-sm">Просмотреть отклики</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Обновленная модалка сделок -->
+<div class="modal" id="dealsModal">
+    <div class="modal-content">
+        <div class="modal-header">
+            <h3>Сделки</h3>
+            <button class="modal-close">&times;</button>
+        </div>
+        <div class="modal-body">
+            <div class="deals-accordion">
+                <div class="deal-accordion-item">
+                    <div class="deal-accordion-header">
+                        <div class="deal-main-info">
+                            <span class="deal-name">Пшеница 3 класс → Global Grain Corp.</span>
+                            <span class="deal-status active">Активная</span>
+                        </div>
+                        <i class="fas fa-chevron-down"></i>
+                    </div>
+                    <div class="deal-accordion-content">
+                        <div class="deal-details-grid">
+                            <div class="deal-section">
+                                <h4>Основная информация</h4>
+                                <div class="info-pairs">
+                                    <div class="info-pair">
+                                        <span class="info-label">Культура:</span>
+                                        <span class="info-value">Пшеница 3 класс</span>
+                                    </div>
+                                    <div class="info-pair">
+                                        <span class="info-label">Покупатель:</span>
+                                        <span class="info-value">Global Grain Corp.</span>
+                                    </div>
+                                    <div class="info-pair">
+                                        <span class="info-label">Сроки:</span>
+                                        <span class="info-value">15.10.2023 - 25.10.2023</span>
+                                    </div>
+                                    <div class="info-pair">
+                                        <span class="info-label">Объем:</span>
+                                        <span class="info-value">500 т</span>
+                                    </div>
+                                    <div class="info-pair">
+                                        <span class="info-label">Стоимость:</span>
+                                        <span class="info-value">5,840,000 ₽</span>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="deal-section">
+                                <h4>Логистика</h4>
+                                <div class="logistics-info">
+                                    <div class="route-point">
+                                        <i class="fas fa-shipping-fast"></i>
+                                        <div>
+                                            <span class="point-title">Загрузка</span>
+                                            <span class="point-address">с. Новопавловка, склад №2</span>
+                                        </div>
+                                    </div>
+                                    <div class="route-distance">
+                                        <i class="fas fa-route"></i>
+                                        <span>1,250 км</span>
+                                    </div>
+                                    <div class="route-point">
+                                        <i class="fas fa-warehouse"></i>
+                                        <div>
+                                            <span class="point-title">Выгрузка</span>
+                                            <span class="point-address">г. Новороссийск, порт</span>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="deal-accordion-item">
+                    <div class="deal-accordion-header">
+                        <div class="deal-main-info">
+                            <span class="deal-name">Ячмень пивоваренный → AgroTrade Ltd.</span>
+                            <span class="deal-status completed">Завершена</span>
+                        </div>
+                        <i class="fas fa-chevron-down"></i>
+                    </div>
+                    <div class="deal-accordion-content">
+                        <!-- Аналогичная структура для второй сделки -->
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Обновленная модалка документооборота -->
+<div class="modal" id="documentsModal">
+    <div class="modal-content">
+        <div class="modal-header">
+            <h3>Документооборот</h3>
+            <button class="modal-close">&times;</button>
+        </div>
+        <div class="modal-body">
+            <div class="documents-list">
+                <div class="document-card signed">
+                    <div class="doc-header">
+                        <div class="doc-info">
+                            <span class="doc-name">Договор поставки №123</span>
+                            <span class="doc-date">от 10.10.2023</span>
+                        </div>
+                        <span class="doc-status">Подписан</span>
+                    </div>
+                    <div class="doc-actions">
+                        <button class="btn btn-outline btn-sm">
+                            <i class="fas fa-download"></i> Скачать
+                        </button>
+                        <button class="btn btn-outline btn-sm">
+                            <i class="fas fa-signature"></i> Подписать ЭЦП
+                        </button>
+                    </div>
+                </div>
+
+                <div class="document-card pending">
+                    <div class="doc-header">
+                        <div class="doc-info">
+                            <span class="doc-name">Счет на оплату №456</span>
+                            <span class="doc-date">от 12.10.2023</span>
+                        </div>
+                        <span class="doc-status">В ожидании</span>
+                    </div>
+                    <div class="doc-actions">
+                        <button class="btn btn-outline btn-sm">
+                            <i class="fas fa-download"></i> Скачать
+                        </button>
+                        <button class="btn btn-primary btn-sm">
+                            <i class="fas fa-signature"></i> Подписать ЭЦП
+                        </button>
+                    </div>
+                </div>
+
+                <div class="document-card rejected">
+                    <div class="doc-header">
+                        <div class="doc-info">
+                            <span class="doc-name">Акт приемки №789</span>
+                            <span class="doc-date">от 15.10.2023</span>
+                        </div>
+                        <span class="doc-status">Отклонен</span>
+                    </div>
+                    <div class="doc-actions">
+                        <button class="btn btn-outline btn-sm">
+                            <i class="fas fa-download"></i> Скачать
+                        </button>
+                        <button class="btn btn-outline btn-sm">
+                            <i class="fas fa-edit"></i> Исправить
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="modal" id="workingTransportModal">
+    <div class="modal-content">
+        <div class="modal-header">
+            <h3>Транспорт в работе</h3>
+            <button class="modal-close">&times;</button>
+        </div>
+        <div class="modal-body">
+            <div class="modal-list">
+                <div class="transport-item">
+                    <div class="vehicle-info">
+                        <span class="vehicle-model">MAN TGS 18.400</span>
+                        <span class="vehicle-number">А123БВ 777</span>
+                    </div>
+                    <div class="vehicle-specs">
+                        <span>Грузоподъемность: 20 т</span>
+                        <span>Статус: В пути</span>
+                    </div>
+                </div>
+                <div class="transport-item">
+                    <div class="vehicle-info">
+                        <span class="vehicle-model">Volvo FH 540</span>
+                        <span class="vehicle-number">О456МН 777</span>
+                    </div>
+                    <div class="vehicle-specs">
+                        <span>Грузоподъемность: 22 т</span>
+                        <span>Статус: Загрузка</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="modal" id="logoutConfirmModal">
+    <div class="modal-content logout-modal">
+        <div class="modal-header">
+            <div class="modal-icon">
+                <i class="fas fa-sign-out-alt"></i>
+            </div>
+            <div class="modal-title">
+                <h3>Выход из системы</h3>
+                <p>Вы уверены, что хотите выйти?</p>
+            </div>
+            <button class="modal-close">&times;</button>
+        </div>
+
+        <div class="modal-body">
+            <div class="logout-warning">
+                <i class="fas fa-exclamation-triangle"></i>
+                <p>После выхода вам потребуется снова войти в систему для доступа к платформе.</p>
+            </div>
+
+            <div class="logout-actions">
+                <button class="btn btn-outline" id="cancelLogout">
+                    <i class="fas fa-times"></i>
+                    Отмена
+                </button>
+                <button class="btn btn-danger" id="confirmLogout">
+                    <i class="fas fa-sign-out-alt"></i>
+                    Выйти
+                </button>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+    <script src="{% static 'server/js/total_post.js' %}"></script>
+    <script src="{% static 'main/assets/js/dashboard_data.js' %}"></script>
+    <script src="{% static 'main/assets/js/scripts_clean.js' %}"></script>
+    <script src="{% static 'order/js/my_deals.js' %}"></script>
+    <script src="{% static 'main/assets/js/main_auth.js' %}"></script>
+</body>
+</html>

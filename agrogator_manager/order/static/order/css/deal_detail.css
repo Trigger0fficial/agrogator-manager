@@ -1,0 +1,3879 @@
+/* Детальная страница сделки — стили в приложении order */
+
+.deal-detail-page {
+    padding-bottom: 3rem;
+}
+
+/* Заголовок — в стиле quality-detail-header / verification-header */
+.deal-detail-header {
+    margin-bottom: 2rem;
+    background: var(--bg-color, #fff);
+    border-radius: var(--border-radius);
+    box-shadow: var(--shadow);
+    border: 1px solid var(--border-light);
+    padding: 1.5rem 2rem;
+}
+
+.deal-detail-header .btn-back {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    padding: 0.75rem 1.25rem;
+    margin-bottom: 1rem;
+    background: var(--bg-light, #f8f9fa);
+    border: 2px solid var(--border-light);
+    border-radius: var(--border-radius-sm);
+    color: var(--text-color);
+    font-size: 0.95rem;
+    font-weight: 500;
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+.deal-detail-header .btn-back:hover {
+    border-color: var(--primary-light);
+    color: var(--primary-color);
+    transform: translateX(-5px);
+}
+
+.deal-detail-title h1 {
+    font-size: 1.75rem;
+    font-weight: 700;
+    color: var(--text-color);
+    margin: 0 0 0.25rem 0;
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+}
+
+.deal-detail-title h1 i {
+    color: var(--primary-color);
+}
+
+.deal-detail-subtitle {
+    margin: 0;
+    font-size: 0.95rem;
+    color: var(--text-light);
+}
+
+/* Загрузка и ошибка */
+.deal-detail-loading,
+.deal-detail-error {
+    text-align: center;
+    padding: 3rem 1rem;
+    background: var(--bg-color, #fff);
+    border-radius: var(--border-radius);
+    box-shadow: var(--shadow);
+}
+
+.deal-detail-loading .loading-spinner {
+    font-size: 2rem;
+    color: var(--primary-color);
+    margin-bottom: 1rem;
+}
+
+.deal-detail-loading p,
+.deal-detail-error p {
+    margin: 0;
+    color: var(--text-light);
+}
+
+.deal-detail-error i {
+    font-size: 2rem;
+    color: var(--danger-color);
+    margin-bottom: 0.5rem;
+}
+
+.deal-detail-error p {
+    color: var(--text-color);
+}
+
+/* Информационная плашка по статусу (например, «На согласовании») */
+.deal-detail-status-info {
+    margin-bottom: 1.5rem;
+}
+
+.deal-detail-status-info-inner {
+    background: rgba(37, 105, 70, 0.04);
+    border: 1px solid rgba(37, 105, 70, 0.15);
+    border-radius: var(--border-radius);
+    padding: 1rem 1.25rem 1.25rem;
+    border-left: 3px solid var(--primary-light);
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.04);
+}
+
+.deal-detail-status-info-title {
+    margin: 0 0 0.6rem 0;
+    font-size: 0.85rem;
+    font-weight: 700;
+    color: var(--primary-color);
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+}
+
+.deal-detail-status-info-title i {
+    font-size: 1rem;
+    opacity: 0.9;
+}
+
+.deal-detail-status-info-text {
+    margin: 0;
+    font-size: 0.9rem;
+    line-height: 1.55;
+    color: var(--text-color);
+}
+
+/* ========== Общая информация о сделке — в стиле списка и деталок ========== */
+.deal-overview {
+    margin-bottom: 2.5rem;
+}
+
+/* Карточка как .detail-section / verification: белый фон, тень, рамка, верхняя полоса */
+.deal-general-info {
+    display: grid;
+    grid-template-rows: 1fr auto;
+    background: var(--bg-color, #fff);
+    border-radius: var(--border-radius);
+    box-shadow: var(--shadow);
+    border: 2px solid var(--border-light);
+    overflow: hidden;
+    transition: all 0.3s ease;
+    position: relative;
+}
+
+.deal-general-info::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 4px;
+    background: linear-gradient(90deg, var(--primary-color), var(--primary-light));
+}
+
+.deal-general-info:hover {
+    box-shadow: var(--shadow-md);
+}
+
+.deal-status-badge {
+    display: inline-block;
+    padding: 0.35rem 0.75rem;
+    border-radius: 20px;
+    font-size: 0.8rem;
+    font-weight: 600;
+    border: 2px solid transparent;
+}
+
+.deal-status-7 { background: rgba(40, 167, 69, 0.15); color: var(--success-color); border-color: rgba(40, 167, 69, 0.3); }
+.deal-status-1 { background: rgba(23, 162, 184, 0.12); color: var(--info-color); border-color: rgba(23, 162, 184, 0.25); }
+.deal-status-2 { background: rgba(255, 193, 7, 0.2); color: #856404; border-color: rgba(255, 193, 7, 0.4); }
+.deal-status-5 { background: rgba(37, 99, 235, 0.12); color: #1d4ed8; border-color: rgba(37, 99, 235, 0.25); }
+/* «Отклонена» — бейдж как у .deal-status-2, но красная палитра */
+.deal-status-2.deal-status-rejected {
+    background: rgba(220, 38, 38, 0.12);
+    color: #991b1b;
+    border-color: rgba(220, 38, 38, 0.25);
+}
+
+/* Три колонки: фермер | центр | экспортер (стрелки убраны) */
+.deal-general-cols {
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr;
+    gap: 0 1rem;
+    padding: 1.5rem 1rem;
+    align-items: stretch;
+}
+
+.deal-col {
+    padding: 0 0.75rem;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+}
+
+.deal-general-cols .deal-col:nth-child(1) { align-items: stretch; text-align: left; }
+.deal-general-cols .deal-col:nth-child(3) { align-items: stretch; text-align: right; }
+
+/* ----- Панель стороны: фермер и экспортер одинаковой высоты ----- */
+.deal-col-party {
+    min-height: 200px;
+    overflow: hidden;
+    display: flex;
+    flex-direction: column;
+    border-radius: var(--border-radius);
+    align-items: stretch;
+}
+
+/* Фермер: зелёная полоска по внешнему краю — слева и снизу; сверху и справа (к центру) без бордера, фон от внешнего края к центру в белый */
+.deal-col-farmer {
+    border: none;
+    border-left: 3px solid var(--primary-color);
+    border-bottom: 3px solid var(--primary-color);
+    background: linear-gradient(to right, #f2f4f6 0%, #f5f7f8 30%, #f8fafb 55%, #fbfcfd 80%, #fff 100%);
+}
+
+/* Экспортер: зелёная полоска по внешнему краю — справа и снизу; сверху и слева (к центру) без бордера, фон от внешнего края к центру в белый */
+.deal-col-exporter {
+    border: none;
+    border-right: 3px solid var(--primary-color);
+    border-bottom: 3px solid var(--primary-color);
+    background: linear-gradient(to left, #f2f4f6 0%, #f5f7f8 30%, #f8fafb 55%, #fbfcfd 80%, #fff 100%);
+}
+
+/* Шапка: аватар + роль */
+.deal-party-header {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    padding: 1rem 1.25rem;
+    flex-shrink: 0;
+}
+
+.deal-party-avatar {
+    width: 50px;
+    height: 50px;
+    border-radius: 12px;
+    background: linear-gradient(135deg, var(--primary-color), var(--primary-light));
+    color: #fff;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.2rem;
+    flex-shrink: 0;
+}
+
+.deal-party-role {
+    font-size: 0.85rem;
+    font-weight: 600;
+    color: var(--text-color);
+}
+
+/* Плашка согласия/подписи: горизонтальная, галочка/крестик в цвете, иконки крупнее с анимацией */
+.deal-party-consent-plaque {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    margin-left: auto;
+    padding: 0.5rem 0.9rem;
+    background: rgba(255, 255, 255, 0.9);
+    border-radius: 10px;
+    border: 1px solid var(--border-light);
+}
+
+.deal-consent-cell {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    gap: 0.45rem;
+    transition: transform 0.2s ease;
+}
+
+.deal-consent-cell:hover {
+    transform: scale(1.05);
+}
+
+.deal-consent-status {
+    font-size: 0.95rem;
+    line-height: 1;
+    transition: transform 0.25s ease;
+}
+
+.deal-consent-cell:hover .deal-consent-status {
+    transform: scale(1.1);
+}
+
+.deal-consent-status.fa-check {
+    color: #16a34a;
+}
+
+.deal-consent-status.fa-times {
+    color: #dc2626;
+}
+
+.deal-consent-symbol {
+    font-size: 1.1rem;
+    color: var(--text-color);
+    transition: opacity 0.2s ease, transform 0.2s ease;
+}
+
+.deal-consent-cell:hover .deal-consent-symbol {
+    opacity: 0.9;
+    transform: scale(1.08);
+}
+
+/* ========== Общая зона контента (фермер и экспортер — один порядок блоков) ========== */
+.deal-party-inner {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+    padding: 1rem 1.35rem 1.35rem;
+    min-height: 0;
+}
+
+.deal-party-inner-exporter {
+    align-items: stretch;
+    gap: 0.65rem;
+    padding: 0.75rem 1.2rem 1rem;
+}
+
+.deal-party-inner-exporter .deal-party-hero-plaque,
+.deal-party-inner-exporter .deal-party-plaque,
+.deal-party-inner-exporter .deal-party-plaque-full,
+.deal-party-inner-exporter .deal-party-footer-row,
+.deal-party-inner-exporter .deal-exporter-last-plaque {
+    align-self: stretch;
+}
+
+/* ----- Плашки: один дизайн у фермера и экспортера (полурамка правый+низ, градиент серый→белый) ----- */
+.deal-col-farmer .deal-party-hero-plaque,
+.deal-col-farmer .deal-party-plaque,
+.deal-col-farmer .deal-party-plaque-declarations,
+.deal-col-farmer .deal-party-payment-block,
+.deal-col-exporter .deal-party-hero-plaque,
+.deal-col-exporter .deal-party-plaque,
+.deal-col-exporter .deal-exporter-last-plaque {
+    border: none;
+    border-right: 1px solid var(--border-color, #e2e8f0);
+    border-bottom: 1px solid var(--border-color, #e2e8f0);
+    background: linear-gradient(to right, #eef1f3 0%, #f3f5f7 35%, #f8f9fb 70%, #fff 100%);
+}
+
+.deal-col-farmer .deal-party-footer-row,
+.deal-col-farmer .deal-party-payment-block {
+    align-self: stretch;
+    width: 100%;
+}
+
+/* Герой — общая сумма: у поставщика зелёная полоска слева, у экспортера без неё (дизайн иначе один в один) */
+.deal-party-hero-plaque {
+    padding: 1rem 1.15rem;
+    border-radius: var(--border-radius-sm);
+    border-left: 4px solid var(--primary-color);
+    box-shadow: 0 1px 4px rgba(0, 0, 0, 0.04);
+    transition: box-shadow 0.2s ease;
+    display: flex;
+    flex-wrap: wrap;
+    align-items: flex-start;
+    gap: 0.5rem 0.75rem;
+}
+
+/* Экспортер: плашка общей суммы без зелёной полоски, остальное как у поставщика */
+.deal-col-exporter .deal-party-hero-plaque {
+    border-left: none;
+}
+
+.deal-party-hero-plaque:hover {
+    box-shadow: 0 4px 12px rgba(37, 89, 70, 0.08);
+}
+
+.deal-party-hero-clickable {
+    cursor: pointer;
+    text-align: left;
+    width: 100%;
+    font: inherit;
+    border: none;
+    outline: none;
+    background: transparent;
+}
+
+.deal-party-hero-clickable:hover {
+    outline: none;
+}
+
+/* Клик по всей плашке: контент не перехватывает клик */
+.deal-party-hero-clickable * {
+    pointer-events: none;
+}
+
+.deal-party-inner-exporter .deal-party-hero-clickable {
+    text-align: left;
+}
+
+.deal-hero-hint {
+    font-size: 0.65rem;
+    opacity: 0.7;
+    margin-left: 0.25rem;
+}
+
+.deal-party-hero-icon {
+    width: 36px;
+    height: 36px;
+    border-radius: 10px;
+    background: linear-gradient(135deg, var(--primary-color), var(--primary-light));
+    color: #fff;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1rem;
+    flex-shrink: 0;
+}
+
+.deal-party-hero-value {
+    display: block;
+    font-size: 1.35rem;
+    font-weight: 800;
+    color: var(--primary-color);
+    line-height: 1.2;
+    letter-spacing: -0.02em;
+    flex: 1;
+    min-width: 0;
+}
+
+.deal-party-hero-caption {
+    display: block;
+    width: 100%;
+    font-size: 0.7rem;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    color: var(--text-light);
+    margin-top: -0.15rem;
+}
+
+/* Ряд из двух плашек */
+.deal-party-row-two {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 0.75rem;
+}
+
+/* Плашка общая: иконка, лейбл, значение — больше воздуха */
+.deal-party-plaque {
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 0.35rem;
+    padding: 0.9rem 1rem;
+    border-radius: 10px;
+    text-align: left;
+    transition: box-shadow 0.2s;
+}
+
+/* У экспортера плашки как у поставщика — выравнивание слева, компактнее по размеру */
+.deal-party-inner-exporter .deal-party-plaque,
+.deal-party-inner-exporter .deal-exporter-last-plaque {
+    align-items: flex-start;
+    text-align: left;
+}
+
+.deal-col-exporter .deal-party-hero-plaque {
+    padding: 0.75rem 1rem;
+}
+
+.deal-col-exporter .deal-party-plaque:not(.deal-exporter-last-plaque) {
+    padding: 0.65rem 0.85rem;
+}
+
+.deal-col-exporter .deal-party-plaque .deal-party-plaque-icon {
+    width: 28px;
+    height: 28px;
+    font-size: 0.8rem;
+}
+
+/* Плашка на всю ширину (экспортер: точка и приём качества в один столбец) */
+.deal-party-plaque-full {
+    width: 100%;
+}
+
+/* Последняя плашка экспортера растягивается, чтобы колонка экспортера была как у фермера */
+.deal-exporter-last-plaque {
+    flex: 1 1 auto;
+    min-height: 3rem;
+    display: flex;
+    align-items: center;
+    justify-content: flex-start;
+    padding: 0.75rem 1rem;
+}
+
+.deal-party-plaque-link {
+    cursor: pointer;
+}
+
+.deal-party-plaque-link:hover {
+    border-color: var(--primary-color);
+    box-shadow: 0 2px 10px rgba(37, 89, 70, 0.1);
+}
+
+.deal-party-plaque-link .deal-party-plaque-value {
+    color: var(--primary-color);
+    font-weight: 600;
+}
+
+.deal-party-plaque-link .fa-chevron-right {
+    position: absolute;
+    right: 1rem;
+    top: 50%;
+    transform: translateY(-50%);
+    font-size: 0.75rem;
+    color: var(--primary-color);
+    opacity: 0.8;
+}
+
+.deal-party-plaque-icon {
+    width: 32px;
+    height: 32px;
+    border-radius: 8px;
+    background: linear-gradient(135deg, var(--primary-color), var(--primary-light));
+    color: #fff;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 0.85rem;
+    margin-bottom: 0.2rem;
+}
+
+
+.deal-party-plaque-label {
+    font-size: 0.68rem;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    color: var(--text-light);
+}
+
+.deal-party-plaque-value {
+    font-size: 0.85rem;
+    font-weight: 600;
+    color: var(--text-color);
+    word-break: break-word;
+    line-height: 1.35;
+}
+
+.deal-party-plaque-accent strong {
+    color: var(--primary-color);
+}
+
+/* Плашка деклараций */
+.deal-party-plaque-declarations {
+    flex-direction: row;
+    align-items: center;
+    justify-content: space-between;
+    padding: 0.75rem 1.1rem;
+    cursor: pointer;
+}
+
+.deal-col-farmer .deal-party-plaque-declarations:hover {
+    background: linear-gradient(to right, #e8ebee 0%, #f0f2f5 50%, #fff 100%);
+}
+
+.deal-party-decl-icon {
+    width: 36px;
+    height: 36px;
+    border-radius: 10px;
+    background: var(--primary-color);
+    color: #fff;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1rem;
+    flex-shrink: 0;
+}
+
+.deal-party-decl-icon i {
+    color: #fff;
+}
+
+
+/* Плашка «Особые условия» у экспортера */
+.deal-party-plaque-special {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: space-between;
+    padding: 0.75rem 1.1rem;
+    cursor: pointer;
+    width: 100%;
+    font: inherit;
+    text-align: left;
+}
+
+.deal-party-inner-exporter .deal-party-plaque-special {
+    text-align: right;
+}
+
+.deal-party-plaque-special:hover {
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.06);
+}
+
+.deal-party-plaque-declarations > span:not(.deal-party-decl-count) {
+    font-size: 0.9rem;
+    font-weight: 600;
+    color: var(--text-color);
+}
+
+.deal-party-decl-count {
+    min-width: 1.6em;
+    padding: 0.2rem 0.5rem;
+    background: var(--primary-color);
+    color: #fff;
+    border-radius: 20px;
+    font-size: 0.8rem;
+    text-align: center;
+}
+
+/* Нижняя строка: оплата (фермер) + блок цен за т/км */
+.deal-party-footer-row {
+    margin-top: auto;
+    padding-top: 0.75rem;
+    display: flex;
+    flex-wrap: wrap;
+    align-items: stretch;
+    gap: 0.75rem;
+}
+
+.deal-party-inner-exporter .deal-party-footer-row {
+    justify-content: flex-end;
+}
+
+/* Блок оплаты (только у фермера) — плашка с иконкой и текстом */
+.deal-party-payment-block {
+    display: flex;
+    align-items: center;
+    gap: 0.65rem;
+    padding: 0.6rem 1rem;
+    border-radius: 10px;
+    min-width: 0;
+    width: 100%;
+}
+
+.deal-party-payment-icon {
+    width: 34px;
+    height: 34px;
+    border-radius: 9px;
+    background: linear-gradient(135deg, var(--primary-color), var(--primary-light));
+    color: #fff;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 0.9rem;
+    flex-shrink: 0;
+}
+
+.deal-party-payment-text {
+    display: flex;
+    flex-direction: column;
+    gap: 0.15rem;
+}
+
+.deal-party-payment-label {
+    font-size: 0.65rem;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    color: var(--text-light);
+}
+
+.deal-party-payment-value {
+    font-size: 0.85rem;
+    font-weight: 600;
+    color: var(--text-color);
+}
+
+/* Блок «за т» и «за км» — две ячейки с иконками */
+.deal-party-prices {
+    display: flex;
+    gap: 0.75rem;
+}
+
+.deal-party-inner-exporter .deal-party-prices {
+    justify-content: flex-end;
+}
+
+.deal-party-price-item {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 0.25rem;
+    padding: 0.55rem 0.9rem;
+    border-radius: 10px;
+    min-width: 0;
+}
+
+.deal-party-inner-exporter .deal-party-price-item {
+    align-items: flex-end;
+}
+
+.deal-party-price-icon {
+    width: 28px;
+    height: 28px;
+    border-radius: 8px;
+    background: linear-gradient(135deg, var(--primary-color), var(--primary-light));
+    color: #fff;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 0.75rem;
+}
+
+.deal-party-price-label {
+    font-size: 0.65rem;
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+    color: var(--text-light);
+}
+
+.deal-party-price-value {
+    font-size: 0.9rem;
+    font-weight: 700;
+    color: var(--primary-color);
+}
+
+/* ----- Центр: как stat-card + кнопка в стиле filter ----- */
+.deal-col-center {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 0.75rem;
+    padding: 0.5rem 1rem;
+    min-height: 0;
+}
+
+.deal-col-center > .deal-center-top,
+.deal-col-center > .deal-center-crop,
+.deal-col-center > .deal-carrier-plaque,
+.deal-col-center > .deal-center-total {
+    flex-shrink: 0;
+}
+
+.deal-center-top {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 0.4rem;
+    padding: 1rem 1.15rem;
+    background: var(--bg-color, #fff);
+    border-radius: var(--border-radius-sm);
+    border: 2px solid var(--border-light);
+    width: 100%;
+    max-width: 300px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+    transition: all 0.3s ease;
+    position: relative;
+    overflow: hidden;
+}
+
+.deal-center-top::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 4px;
+    background: linear-gradient(90deg, var(--primary-color), var(--primary-light));
+}
+
+.deal-center-top:hover {
+    box-shadow: var(--shadow);
+}
+
+.deal-center-number {
+    font-size: 1.05rem;
+    font-weight: 700;
+    color: var(--primary-color);
+    letter-spacing: 0.02em;
+}
+
+.deal-center-period {
+    font-size: 0.85rem;
+    color: var(--text-light);
+}
+
+.deal-center-status {
+    margin-top: 0.15rem;
+}
+
+.deal-center-crop {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.5rem;
+    width: 100%;
+    max-width: 300px;
+    padding: 0.75rem 1rem;
+    background: var(--bg-color, #fff);
+    border: 2px solid var(--border-light);
+    border-radius: var(--border-radius-sm);
+    font-size: 0.9rem;
+    font-weight: 600;
+    color: var(--primary-color);
+    cursor: pointer;
+    transition: all 0.3s ease;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+}
+
+.deal-center-crop:hover {
+    border-color: var(--primary-color);
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(37, 89, 70, 0.15);
+}
+
+.deal-center-crop i:first-child {
+    font-size: 1rem;
+}
+
+.deal-center-crop i:last-child {
+    font-size: 0.7rem;
+    opacity: 0.8;
+}
+
+/* Плашка перевозки (шире чем сделка и культура, без зелёной полоски) */
+.deal-carrier-plaque {
+    width: 100%;
+    max-width: 360px;
+    padding: 1rem 1.15rem;
+    background: var(--bg-color, #fff);
+    border-radius: var(--border-radius-sm);
+    border: 2px solid var(--border-light);
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+    transition: box-shadow 0.2s ease;
+}
+
+.deal-carrier-plaque:hover {
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+}
+
+/* ----- Перевозка: иконка + «Перевозка», затем два больших зелёных квадрата (км и т) ----- */
+.deal-carrier-wrap {
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 0.75rem;
+}
+
+.deal-carrier-in-center {
+    padding: 0;
+}
+
+/* Общая стоимость под логистикой (без плашки) */
+.deal-center-total {
+    width: 100%;
+    max-width: 300px;
+    padding: 0.35rem 0;
+    text-align: center;
+}
+
+.deal-center-total-label {
+    display: block;
+    font-size: 0.7rem;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    color: var(--text-light);
+}
+
+.deal-center-total-value {
+    display: block;
+    font-size: 1.85rem;
+    font-weight: 800;
+    color: var(--primary-color);
+    margin-top: 0.2rem;
+}
+
+.deal-carrier-head {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+}
+
+.deal-carrier-wrap .deal-carrier-icon {
+    width: 36px;
+    height: 36px;
+    border-radius: 10px;
+    background: linear-gradient(135deg, var(--primary-color), var(--primary-light));
+    color: #fff;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1rem;
+}
+
+.deal-carrier-wrap .deal-carrier-type {
+    font-size: 0.95rem;
+    font-weight: 600;
+    color: var(--text-color);
+}
+
+.deal-carrier-tiles {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 0.75rem;
+    width: 100%;
+    max-width: 300px;
+}
+
+.deal-carrier-tile {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 0.5rem;
+    padding: 1.25rem 1rem;
+    background: linear-gradient(135deg, var(--primary-color), var(--primary-light));
+    border-radius: 16px;
+    color: #fff;
+    min-height: 100px;
+}
+
+.deal-carrier-tile-icon {
+    font-size: 1.75rem;
+    opacity: 0.95;
+}
+
+.deal-carrier-tile-value {
+    font-size: 1.35rem;
+    font-weight: 800;
+    line-height: 1.2;
+}
+
+.deal-carrier-tile-unit {
+    font-size: 0.8rem;
+    opacity: 0.9;
+}
+
+
+/* Нижняя полоса: высота как у ряда фермер/центр/экспортер; слева и справа — плашки одного размера, по центру — кнопки на всю высоту */
+.deal-general-bottom {
+    display: grid;
+    grid-template-columns: minmax(0, 200px) 1fr minmax(0, 200px);
+    align-items: stretch;
+    gap: 1rem;
+    padding: 1rem 1.5rem;
+    background: var(--bg-light, #f8f9fa);
+    border-top: 1px solid var(--border-light);
+    min-height: 0;
+}
+
+.deal-bottom-left,
+.deal-bottom-right {
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+    max-width: 200px;
+}
+
+.deal-bottom-left .deal-bottom-card,
+.deal-bottom-right .deal-bottom-card {
+    flex: 1;
+    min-height: 0;
+}
+
+.deal-bottom-right {
+    align-items: stretch;
+}
+
+.deal-bottom-card {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    padding: 0.75rem 1rem;
+    background: var(--bg-color, #fff);
+    border-radius: var(--border-radius-sm);
+    border: 1px solid var(--border-light);
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.04);
+    transition: box-shadow 0.2s ease, border-color 0.2s ease;
+    min-width: 0;
+}
+
+.deal-bottom-actions {
+    display: flex;
+    flex-direction: row;
+    justify-content: stretch;
+    align-items: stretch;
+    gap: 0.5rem;
+    min-width: 0;
+}
+
+.deal-bottom-action-btn {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 0.5rem;
+    padding: 0.75rem 1rem;
+    background: var(--bg-color, #fff);
+    border: 2px solid var(--border-light);
+    border-radius: var(--border-radius-sm);
+    font-size: 0.9rem;
+    font-weight: 600;
+    color: var(--text-color);
+    cursor: pointer;
+    transition: all 0.25s ease;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+    min-height: 2.75rem;
+}
+
+.deal-bottom-action-btn i:first-child {
+    flex-shrink: 0;
+}
+
+.deal-bottom-action-btn span {
+    text-align: center;
+    line-height: 1.2;
+}
+
+.deal-bottom-action-btn:hover {
+    border-color: var(--primary-color);
+    color: var(--primary-color);
+    box-shadow: 0 4px 12px rgba(37, 89, 70, 0.12);
+}
+
+.deal-bottom-action-btn i {
+    font-size: 2.5rem;
+    color: var(--primary-color);
+}
+
+.deal-bottom-action-btn-cancel {
+    padding: 0.9rem 1.25rem;
+    min-width: 10rem;
+}
+
+.deal-bottom-card:hover {
+    box-shadow: 0 4px 10px rgba(37, 89, 70, 0.08);
+}
+
+.deal-bottom-card-icon {
+    width: 38px;
+    height: 38px;
+    border-radius: 10px;
+    background: linear-gradient(135deg, var(--primary-color), var(--primary-light));
+    color: #fff;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1rem;
+    flex-shrink: 0;
+}
+
+.deal-bottom-card-text {
+    display: flex;
+    flex-direction: column;
+    gap: 0.1rem;
+    min-width: 0;
+}
+
+.deal-bottom-label {
+    display: block;
+    font-size: 0.68rem;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    color: var(--text-light);
+    font-weight: 600;
+}
+
+.deal-bottom-value {
+    font-size: 0.95rem;
+    font-weight: 700;
+    color: var(--text-color);
+}
+
+.deal-bottom-card-click {
+    cursor: pointer;
+    text-align: left;
+    border: 2px solid var(--border-light);
+}
+
+.deal-bottom-card-click:hover {
+    border-color: var(--primary-light);
+}
+
+.deal-bottom-card-click .deal-bottom-card-arrow {
+    margin-left: auto;
+    font-size: 0.75rem;
+    color: var(--primary-color);
+    opacity: 0.8;
+    flex-shrink: 0;
+}
+
+/* ----- Модалка: заголовок с иконкой и акцентом, контент секциями ----- */
+.deal-modal-overlay {
+    position: fixed;
+    inset: 0;
+    background: rgba(0, 0, 0, 0.45);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 2000;
+    padding: 1rem;
+    opacity: 0;
+    visibility: hidden;
+    transition: opacity 0.2s, visibility 0.2s;
+}
+
+.deal-modal-overlay.is-open {
+    opacity: 1;
+    visibility: visible;
+}
+
+.deal-modal {
+    background: var(--bg-color, #fff);
+    border-radius: var(--border-radius);
+    box-shadow: var(--shadow-lg);
+    max-width: 440px;
+    width: 100%;
+    max-height: 85vh;
+    overflow: hidden;
+    display: flex;
+    flex-direction: column;
+    border: 1px solid var(--border-light);
+}
+
+/* Широкая модалка (для Документооборот) */
+.deal-modal.deal-modal-wide {
+    max-width: 980px;
+}
+
+.deal-modal-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 1rem 1.25rem;
+    background: linear-gradient(135deg, rgba(37, 89, 70, 0.08) 0%, transparent 100%);
+    border-bottom: 1px solid var(--border-light);
+}
+
+.deal-modal-title {
+    margin: 0;
+    font-size: 1.15rem;
+    font-weight: 600;
+    color: var(--text-color);
+}
+
+.deal-modal-close {
+    background: none;
+    border: none;
+    padding: 0.5rem;
+    color: var(--text-light);
+    cursor: pointer;
+    border-radius: var(--border-radius-sm);
+    transition: color 0.2s, background 0.2s;
+}
+
+.deal-modal-close:hover {
+    color: var(--text-color);
+    background: var(--border-light);
+}
+
+.deal-modal-body {
+    padding: 1rem 1.25rem;
+    overflow-y: auto;
+    font-size: 0.9rem;
+}
+
+/* Модалка успеха «Принять сделку» */
+.deal-accept-success-main {
+    margin: 0 0 1rem 0;
+    line-height: 1.5;
+    color: var(--text-color);
+}
+
+.deal-accept-success-notice {
+    background: rgba(37, 105, 70, 0.06);
+    border: 1px solid rgba(37, 105, 70, 0.2);
+    border-radius: var(--border-radius-sm);
+    padding: 1rem 1.25rem;
+    margin-bottom: 1.25rem;
+    border-left: 3px solid var(--primary-color);
+}
+
+.deal-accept-success-notice p {
+    margin: 0;
+    font-size: 0.9rem;
+    line-height: 1.5;
+    color: var(--text-color);
+}
+
+.deal-accept-success-actions {
+    display: flex;
+    justify-content: flex-end;
+}
+
+.deal-modal-actions-two {
+    gap: 0.75rem;
+    flex-wrap: wrap;
+}
+
+.deal-finish-nodocs-main,
+.deal-finish-409-main,
+.deal-finish-success-main,
+.deal-finish-imbalance-main {
+    margin: 0 0 1rem 0;
+    line-height: 1.5;
+    color: var(--text-color);
+}
+
+.deal-modal-actions-end {
+    justify-content: flex-end;
+}
+
+.deal-crop-go-wrap {
+    margin-top: 1rem;
+    display: flex;
+    justify-content: flex-end;
+}
+
+.deal-crop-go-btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.4rem;
+    padding: 0.5rem 1rem;
+    font-size: 0.875rem;
+    font-weight: 600;
+    color: #fff;
+    background: linear-gradient(135deg, var(--primary-color), var(--primary-light));
+    border-radius: var(--border-radius-sm);
+    text-decoration: none;
+    transition: all 0.2s ease;
+}
+
+.deal-crop-go-btn:hover {
+    opacity: 0.95;
+    transform: translateY(-1px);
+}
+
+.deal-btn-primary {
+    padding: 0.75rem 1.5rem;
+    background: linear-gradient(135deg, var(--primary-color), var(--primary-light));
+    color: #fff;
+    border: none;
+    border-radius: var(--border-radius-sm);
+    font-size: 0.95rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.2s ease;
+}
+
+.deal-btn-primary:hover {
+    opacity: 0.95;
+    transform: translateY(-1px);
+}
+
+/* Модалки подтверждений — в стиле качества культур */
+.accept-confirmation-modal,
+.success-modal {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.5);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 10000;
+    opacity: 0;
+    visibility: hidden;
+    transition: opacity 0.2s ease, visibility 0.2s ease;
+}
+
+.accept-confirmation-modal.is-open,
+.success-modal.is-open {
+    opacity: 1;
+    visibility: visible;
+}
+
+.accept-modal-content,
+.success-modal-content {
+    position: relative;
+    background: #fff;
+    border-radius: 12px;
+    padding: 2rem;
+    width: 90%;
+    max-width: 520px;
+    text-align: center;
+    animation: slideUp 0.25s ease;
+}
+
+.accept-modal-icon,
+.success-modal-icon {
+    width: 64px;
+    height: 64px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin: 0 auto 1.25rem auto;
+    color: #fff;
+    font-size: 1.5rem;
+    background: var(--primary-color);
+}
+
+.accept-modal-icon-danger,
+.success-modal-icon-danger {
+    background: #dc2626;
+}
+
+.accept-modal-content h3,
+.success-modal-content h3 {
+    margin: 0 0 0.75rem 0;
+    color: var(--text-color);
+    font-size: 1.25rem;
+}
+
+.accept-modal-content p,
+.success-modal-content p {
+    margin: 0 0 1rem 0;
+    color: var(--text-light);
+    line-height: 1.5;
+}
+
+.accept-modal-description {
+    font-size: 0.95rem;
+    color: var(--text-color);
+    background: #f9fafb;
+    padding: 1rem;
+    border-radius: 10px;
+    border-left: 4px solid var(--primary-color);
+}
+
+.accept-modal-description-danger {
+    border-left-color: #dc2626;
+}
+
+.accept-modal-actions,
+.success-modal-actions {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.75rem;
+    justify-content: center;
+    margin-top: 1.25rem;
+}
+
+/* Модалки отмены сделки: кнопки в один ряд (как в качестве культур) */
+#dealRejectConfirmOverlay .accept-modal-actions {
+    flex-wrap: nowrap;
+    gap: 1rem;
+    margin-top: 1.5rem;
+}
+
+#dealRejectSuccessOverlay .success-modal-actions {
+    flex-wrap: nowrap;
+    gap: 1rem;
+    margin-top: 1.5rem;
+}
+
+/* Платёжные документы */
+.deal-payments-hint {
+    margin: 0 0 1rem 0;
+    color: var(--text-light);
+    line-height: 1.5;
+}
+
+.deal-payments-add {
+    width: 100%;
+    margin-top: 0.75rem;
+    border: 1px dashed var(--border-light);
+    background: var(--bg-light, #f8f9fa);
+    color: var(--text-color);
+    padding: 0.75rem 1rem;
+    border-radius: var(--border-radius-sm);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.5rem;
+    cursor: pointer;
+    transition: background 0.2s, transform 0.2s;
+}
+
+.deal-payments-add:hover {
+    background: #eef2ff;
+    transform: translateY(-1px);
+}
+
+.deal-payments-footer {
+    margin-top: 1rem;
+    display: flex;
+    justify-content: flex-end;
+}
+
+.deal-payments-row {
+    border: 1px solid var(--border-light);
+    border-radius: var(--border-radius-sm);
+    padding: 0.9rem;
+    background: #fff;
+    margin-bottom: 0.75rem;
+}
+
+.deal-payments-row-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 0.75rem;
+    margin-bottom: 0.75rem;
+}
+
+.deal-payments-row-title {
+    font-weight: 700;
+    color: var(--text-color);
+}
+
+.deal-payments-row-remove {
+    border: none;
+    background: transparent;
+    color: var(--text-light);
+    width: 34px;
+    height: 34px;
+    border-radius: 10px;
+    cursor: pointer;
+    transition: background 0.2s, color 0.2s;
+}
+
+.deal-payments-row-remove:hover {
+    background: var(--bg-light, #f3f4f6);
+    color: var(--text-color);
+}
+
+.deal-payments-grid {
+    display: grid;
+    grid-template-columns: 1.1fr 1.2fr 1.4fr auto;
+    gap: 0.75rem;
+    align-items: end;
+}
+
+.deal-payments-field label {
+    display: block;
+    font-size: 0.8rem;
+    color: var(--text-light);
+    margin-bottom: 0.25rem;
+}
+
+.deal-payments-field input[type="text"],
+.deal-payments-field select,
+.deal-payments-field input[type="file"] {
+    width: 100%;
+    border: 1px solid var(--border-light);
+    border-radius: 10px;
+    padding: 0.55rem 0.7rem;
+    font-size: 0.9rem;
+    background: #fff;
+}
+
+/* Select: стилизованный выпадающий список */
+.deal-payments-field select {
+    -webkit-appearance: none;
+    -moz-appearance: none;
+    appearance: none;
+    padding-right: 2.1rem;
+    cursor: pointer;
+    background-image:
+        linear-gradient(45deg, transparent 50%, #64748b 50%),
+        linear-gradient(135deg, #64748b 50%, transparent 50%),
+        linear-gradient(to right, transparent, transparent);
+    background-position:
+        calc(100% - 16px) 55%,
+        calc(100% - 11px) 55%,
+        0 0;
+    background-size:
+        5px 5px,
+        5px 5px,
+        100% 100%;
+    background-repeat: no-repeat;
+}
+
+.deal-payments-field select:focus {
+    outline: none;
+    border-color: rgba(37, 89, 70, 0.55);
+    box-shadow: 0 0 0 3px rgba(37, 89, 70, 0.12);
+}
+
+.deal-payments-upload-btn {
+    height: 40px;
+    border-radius: 10px;
+    padding: 0.55rem 0.9rem;
+}
+
+.deal-payments-status {
+    margin-top: 0.6rem;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    color: var(--text-light);
+    font-size: 0.85rem;
+}
+
+.deal-payments-status .ok {
+    color: var(--success-color);
+}
+
+.deal-payments-status .err {
+    color: #dc2626;
+}
+
+.deal-payments-success-list {
+    margin: 0.75rem 0 0 0;
+    padding: 0;
+    list-style: none;
+    color: var(--text-color);
+}
+
+.deal-payments-success-list li {
+    padding: 0.5rem 0.85rem;
+    margin-bottom: 0.35rem;
+    border-radius: 10px;
+    background: rgba(37, 89, 70, 0.06);
+    border: 1px solid rgba(37, 89, 70, 0.12);
+    font-size: 0.9rem;
+}
+
+.deal-payments-success-list li:last-child {
+    margin-bottom: 0;
+}
+
+.deal-modal-success .deal-modal-success-header {
+    flex-wrap: wrap;
+    gap: 0.5rem;
+}
+
+.deal-modal-success-heading {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+}
+
+.deal-modal-success-icon {
+    width: 44px;
+    height: 44px;
+    border-radius: 50%;
+    background: rgba(34, 197, 94, 0.15);
+    color: var(--success-color, #16a34a);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.35rem;
+    flex-shrink: 0;
+}
+
+.deal-modal-success-body {
+    padding-top: 0.25rem;
+}
+
+.deal-payments-success-main {
+    margin: 0 0 0.5rem 0;
+    font-size: 0.95rem;
+    color: var(--text-color);
+    line-height: 1.45;
+}
+
+@media (max-width: 768px) {
+    .deal-payments-grid {
+        grid-template-columns: 1fr;
+    }
+    .deal-payments-footer {
+        justify-content: stretch;
+    }
+    #dealPaymentsAttachBtn {
+        width: 100%;
+    }
+}
+
+.modal-close {
+    position: absolute;
+    top: 10px;
+    right: 10px;
+    width: 36px;
+    height: 36px;
+    border: none;
+    background: transparent;
+    border-radius: 10px;
+    cursor: pointer;
+    color: var(--text-light);
+    transition: background 0.2s, color 0.2s;
+}
+
+.modal-close:hover {
+    background: var(--bg-light, #f3f4f6);
+    color: var(--text-color);
+}
+
+.success-modal-comment {
+    text-align: left;
+    background: rgba(37, 89, 70, 0.06);
+    border: 1px solid rgba(37, 89, 70, 0.18);
+    border-radius: 10px;
+    padding: 1rem 1.25rem;
+    margin-top: 0.75rem;
+}
+
+.success-modal-comment strong {
+    display: block;
+    margin-bottom: 0.35rem;
+    color: var(--text-color);
+}
+
+.success-modal-comment p {
+    margin: 0;
+    color: var(--text-light);
+}
+
+.btn.btn-danger {
+    background: #dc2626;
+    color: #fff;
+    border: none;
+}
+
+.btn.btn-danger:hover {
+    background: #b91c1c;
+    transform: translateY(-1px);
+}
+
+.deal-modal-body .deal-modal-section {
+    margin-bottom: 1.25rem;
+}
+
+.deal-modal-body .deal-modal-section:last-child {
+    margin-bottom: 0;
+}
+
+.deal-modal-body .deal-modal-section-title {
+    font-size: 0.75rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.04em;
+    color: var(--text-light);
+    margin-bottom: 0.5rem;
+    padding-bottom: 0.25rem;
+    border-bottom: 1px solid var(--border-light);
+}
+
+.deal-modal-body .deal-modal-item {
+    display: flex;
+    align-items: flex-start;
+    gap: 0.75rem;
+    padding: 0.5rem 0;
+    border-bottom: 1px solid var(--border-light);
+}
+
+.deal-modal-body .deal-modal-item:last-child {
+    border-bottom: none;
+}
+
+.deal-modal-body .deal-modal-item i {
+    width: 20px;
+    text-align: center;
+    color: var(--primary-color);
+    flex-shrink: 0;
+}
+
+.deal-modal-body .deal-modal-item {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 0.15rem;
+}
+
+.deal-modal-body .deal-modal-item-label {
+    font-size: 0.8rem;
+    color: var(--text-light);
+    display: block;
+}
+
+.deal-modal-body .deal-modal-item-value {
+    font-weight: 600;
+    color: var(--text-color);
+}
+
+.deal-modal-body .deal-modal-item-value-empty {
+    font-weight: 500;
+    color: #94a3b8;
+    font-style: italic;
+}
+
+/* Расписание в модалке */
+.deal-modal-schedule {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 0.9rem;
+}
+
+.deal-modal-schedule th,
+.deal-modal-schedule td {
+    padding: 0.4rem 0.6rem;
+    text-align: left;
+    border-bottom: 1px solid var(--border-light);
+}
+
+.deal-modal-schedule th {
+    font-weight: 600;
+    color: var(--text-light);
+}
+
+.deal-modal-schedule tbody tr:last-child td {
+    border-bottom: none;
+}
+
+/* Декларации в модалке */
+.deal-declarations-list {
+    display: flex;
+    flex-direction: column;
+    gap: 0.75rem;
+}
+
+.deal-declaration-item {
+    padding: 0.75rem;
+    border: 1px solid var(--border-light);
+    border-radius: var(--border-radius-sm);
+    background: var(--bg-light, #f8f9fa);
+}
+
+.deal-declaration-row {
+    display: flex;
+    justify-content: space-between;
+    gap: 1rem;
+    margin-bottom: 0.35rem;
+    font-size: 0.9rem;
+}
+
+.deal-declaration-link a {
+    color: var(--primary-color);
+    font-weight: 500;
+}
+
+.deal-declaration-link a:hover {
+    text-decoration: underline;
+}
+
+/* Договоры в модалке */
+.deal-contracts-list {
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+}
+
+.deal-contract-item {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 0.6rem 0.75rem;
+    border: 1px solid var(--border-light);
+    border-radius: var(--border-radius-sm);
+    background: var(--bg-light, #f8f9fa);
+}
+
+.deal-contract-role {
+    font-weight: 600;
+    color: var(--text-color);
+}
+
+.deal-contract-date {
+    font-size: 0.9rem;
+    color: var(--text-light);
+}
+
+.deal-modal-empty {
+    margin: 0;
+    color: var(--text-light);
+    font-style: italic;
+}
+
+/* Модалка: цена за т / за км */
+.deal-modal-price-detail {
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+}
+
+.deal-price-detail-item {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 1rem 1.25rem;
+    background: var(--bg-light, #f8f9fa);
+    border-radius: var(--border-radius-sm);
+    border-left: 4px solid var(--primary-color);
+}
+
+.deal-price-detail-label {
+    font-size: 0.9rem;
+    color: var(--text-light);
+}
+
+.deal-price-detail-value {
+    font-size: 1.1rem;
+    font-weight: 700;
+    color: var(--primary-color);
+}
+
+/* Модалка: особые условия (мок) */
+.deal-modal-special-mock {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 0.75rem;
+    padding: 1.5rem;
+    color: var(--text-light);
+    text-align: center;
+}
+
+.deal-modal-special-mock i {
+    font-size: 2rem;
+    color: var(--primary-light);
+}
+
+.deal-modal-special-mock p {
+    margin: 0;
+    font-size: 0.95rem;
+}
+
+/* Модалка деклараций: две плашки-вкладки сверху */
+.deal-modal-declarations {
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+}
+
+.deal-modal-tab-btns {
+    display: flex;
+    gap: 0.5rem;
+    padding: 0.35rem;
+    border-radius: var(--border-radius-sm);
+    background: rgba(37, 89, 70, 0.05);
+    border: 1px solid rgba(37, 89, 70, 0.12);
+}
+
+.deal-modal-tab-btn {
+    flex: 1;
+    padding: 0.65rem 1rem;
+    font-size: 0.9rem;
+    font-weight: 600;
+    color: var(--text-light);
+    background: transparent;
+    border: 1px solid transparent;
+    border-radius: var(--border-radius-sm);
+    cursor: pointer;
+    transition: color 0.2s, background 0.2s, border-color 0.2s;
+}
+
+.deal-modal-tab-btn:hover {
+    color: var(--text-color);
+    background: rgba(255, 255, 255, 0.7);
+}
+
+.deal-modal-tab-btn.is-active {
+    color: var(--primary-color);
+    background: #fff;
+    border-color: rgba(37, 89, 70, 0.18);
+    box-shadow: 0 1px 2px rgba(0, 0, 0, 0.04);
+}
+
+.deal-modal-tab-panel {
+    display: none;
+}
+
+.deal-modal-tab-panel.is-active {
+    display: block;
+}
+
+/* Документооборот: списки документов */
+.deal-docs-list {
+    display: flex;
+    flex-direction: column;
+    gap: 0.75rem;
+}
+
+.deal-doc-item {
+    border: 1px solid var(--border-light);
+    border-radius: var(--border-radius-sm);
+    background: #fff;
+    padding: 0.85rem 0.95rem;
+    box-shadow: 0 1px 2px rgba(0, 0, 0, 0.04);
+}
+
+.deal-doc-item:hover {
+    border-color: rgba(37, 89, 70, 0.22);
+    box-shadow: 0 4px 10px rgba(37, 89, 70, 0.08);
+}
+
+.deal-doc-main {
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+    gap: 1rem;
+}
+
+.deal-doc-meta {
+    margin-top: 0;
+    justify-content: flex-end;
+    min-width: 240px;
+}
+
+@media (max-width: 768px) {
+    .deal-doc-main {
+        flex-direction: column;
+        gap: 0.5rem;
+    }
+    .deal-doc-meta {
+        justify-content: flex-start;
+        min-width: 0;
+    }
+}
+
+.deal-doc-link {
+    font-weight: 700;
+    color: var(--primary-color);
+    text-decoration: none;
+}
+
+.deal-doc-link:hover {
+    text-decoration: underline;
+}
+
+.deal-doc-link-disabled {
+    color: var(--text-light);
+    cursor: not-allowed;
+    text-decoration: none;
+}
+
+.deal-doc-meta {
+    margin-top: 0.45rem;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.5rem 0.75rem;
+    align-items: center;
+}
+
+.deal-doc-chip {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.35rem;
+    padding: 0.25rem 0.55rem;
+    border-radius: 999px;
+    background: rgba(37, 89, 70, 0.06);
+    border: 1px solid rgba(37, 89, 70, 0.16);
+    color: var(--text-color);
+    font-size: 0.82rem;
+}
+
+.deal-doc-date {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.35rem;
+    color: var(--text-light);
+    font-size: 0.82rem;
+}
+
+/* === Новая модалка: Документооборот (docflow) === */
+.docflow {
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+}
+
+.docflow-tabs {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 0.5rem;
+}
+
+.docflow-tab {
+    border: 1px solid var(--border-light);
+    background: var(--bg-light, #f5f6f8);
+    color: var(--text-light);
+    border-radius: 14px;
+    padding: 0.75rem 0.9rem;
+    cursor: pointer;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.5rem;
+    font-weight: 700;
+    transition: background 0.2s, border-color 0.2s, color 0.2s, transform 0.2s;
+}
+
+.docflow-tab i {
+    color: var(--primary-color);
+    opacity: 0.9;
+}
+
+.docflow-tab:hover {
+    background: #eef1f4;
+    color: var(--text-color);
+    transform: translateY(-1px);
+}
+
+.docflow-tab.is-active {
+    background: #fff;
+    color: var(--text-color);
+    border-color: rgba(37, 89, 70, 0.22);
+    box-shadow: 0 6px 18px rgba(37, 89, 70, 0.10);
+}
+
+.docflow-panels {
+    display: block;
+}
+
+.docflow-tab-panel {
+    display: none;
+}
+
+.docflow-tab-panel.is-active {
+    display: block;
+}
+
+.docflow-panel {
+    border: 1px solid var(--border-light);
+    border-radius: 14px;
+    background: #fff;
+    padding: 1.1rem;
+    box-shadow: 0 1px 4px rgba(0, 0, 0, 0.04);
+}
+
+.docflow-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 0.75rem;
+}
+
+.docflow-card {
+    border: 1px solid var(--border-light);
+    border-radius: 14px;
+    padding: 0.9rem 0.95rem;
+    background: linear-gradient(135deg, rgba(37, 89, 70, 0.06), transparent 70%);
+}
+
+.docflow-card-title {
+    font-weight: 800;
+    color: var(--text-color);
+    margin-bottom: 0.25rem;
+}
+
+.docflow-card-sub {
+    font-size: 0.85rem;
+    color: var(--text-light);
+}
+
+.docflow-empty-note {
+    margin-top: 0.75rem;
+    font-size: 0.85rem;
+    color: var(--text-light);
+}
+
+.docflow-table {
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+}
+
+.docflow-head,
+.docflow-row {
+    display: grid;
+    grid-template-columns: 1.6fr 0.7fr 0.7fr;
+    gap: 0.75rem;
+    align-items: center;
+}
+
+.docflow-table-finish .docflow-head.docflow-head-finish,
+.docflow-table-finish .docflow-row {
+    grid-template-columns: 1.4fr 0.6fr 0.7fr 0.7fr;
+}
+
+.docflow-col-num {
+    font-size: 0.85rem;
+    color: var(--text-light);
+}
+
+.docflow-pill-num {
+    background: rgba(37, 89, 70, 0.06);
+    font-weight: 600;
+}
+
+.docflow-head {
+    padding: 0.4rem 0.6rem;
+    color: var(--text-light);
+    font-size: 0.78rem;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+}
+
+.docflow-row {
+    border: 1px solid var(--border-light);
+    border-radius: 12px;
+    padding: 0.85rem 1rem;
+    background: #fff;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.04);
+    transition: border-color 0.2s, box-shadow 0.2s;
+}
+
+.docflow-row:hover {
+    border-color: rgba(37, 89, 70, 0.25);
+    box-shadow: 0 2px 10px rgba(37, 89, 70, 0.08);
+}
+
+.docflow-link {
+    font-weight: 800;
+    color: var(--primary-color);
+    text-decoration: none;
+}
+
+.docflow-link:hover {
+    text-decoration: underline;
+}
+
+.docflow-link-disabled {
+    color: var(--text-light);
+    cursor: not-allowed;
+    text-decoration: none;
+}
+
+.docflow-pill {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    padding: 0.25rem 0.6rem;
+    border-radius: 999px;
+    background: rgba(37, 89, 70, 0.08);
+    border: 1px solid rgba(37, 89, 70, 0.16);
+    font-size: 0.82rem;
+    font-weight: 700;
+    color: var(--text-color);
+}
+
+.docflow-col-date {
+    color: var(--text-light);
+    font-size: 0.85rem;
+    text-align: right;
+}
+
+.docflow-col-to {
+    text-align: left;
+}
+
+.docflow-empty {
+    padding: 1.25rem 1rem;
+    border-radius: 16px;
+    background: linear-gradient(135deg, rgba(37, 89, 70, 0.06), transparent 70%);
+    border: 1px dashed rgba(37, 89, 70, 0.25);
+    text-align: center;
+}
+
+.docflow-empty-icon {
+    width: 56px;
+    height: 56px;
+    border-radius: 16px;
+    background: rgba(37, 89, 70, 0.10);
+    color: var(--primary-color);
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.4rem;
+    margin: 0 auto 0.75rem;
+}
+
+.docflow-empty-title {
+    font-weight: 900;
+    color: var(--text-color);
+    margin-bottom: 0.25rem;
+}
+
+.docflow-empty-sub {
+    color: var(--text-light);
+    line-height: 1.5;
+    font-size: 0.9rem;
+}
+
+@media (max-width: 900px) {
+    .docflow-grid {
+        grid-template-columns: 1fr;
+    }
+    .docflow-tabs {
+        grid-template-columns: 1fr;
+    }
+    .docflow-head {
+        display: none;
+    }
+    .docflow-row {
+        grid-template-columns: 1fr;
+        gap: 0.5rem;
+    }
+    .docflow-col-date {
+        text-align: left;
+    }
+}
+
+.deal-modal-tabs .deal-modal-section {
+    margin-bottom: 1.25rem;
+}
+
+.deal-modal-tabs .deal-modal-section:last-child {
+    margin-bottom: 0;
+}
+
+/* Адаптив блока общей информации */
+@media (max-width: 900px) {
+    .deal-general-cols {
+        grid-template-columns: 1fr;
+        padding: 1rem;
+    }
+
+    .deal-general-cols .deal-col:nth-child(1),
+    .deal-general-cols .deal-col:nth-child(3) {
+        align-items: stretch;
+        text-align: left;
+    }
+
+    .deal-col-center {
+        order: -1;
+        margin-bottom: 0.5rem;
+    }
+
+    .deal-col-exporter .deal-party-plaque,
+    .deal-col-exporter .deal-exporter-last-plaque {
+        text-align: left;
+        align-items: flex-start;
+    }
+
+    .deal-carrier-tiles {
+        max-width: 100%;
+    }
+
+    .deal-general-info {
+        grid-template-rows: auto 1fr;
+    }
+
+    .deal-general-bottom {
+        grid-template-columns: 1fr;
+        padding: 0.75rem 1rem;
+    }
+
+    .deal-bottom-left,
+    .deal-bottom-right {
+        max-width: none;
+    }
+
+    .deal-bottom-left .deal-bottom-card,
+    .deal-bottom-right .deal-bottom-card {
+        flex: 0 0 auto;
+        min-height: 64px;
+    }
+
+    .deal-bottom-actions {
+        flex-direction: column;
+        min-height: 140px;
+    }
+
+    .deal-bottom-right {
+        align-items: stretch;
+    }
+
+    .deal-bottom-card-click {
+        text-align: left;
+    }
+}
+
+/* Блок быстрых действий — как filters-section + filter-btn */
+.deal-section-title {
+    font-size: 1.2rem;
+    font-weight: 600;
+    color: var(--text-color);
+    margin: 0 0 1.25rem 0;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+}
+
+.deal-section-title::before {
+    content: '';
+    width: 4px;
+    height: 1.2em;
+    background: linear-gradient(to bottom, var(--primary-color), var(--primary-light));
+    border-radius: 2px;
+}
+
+/* Участники сделки: кликабельные карточки необычной формы */
+.deal-roles-section {
+    margin-bottom: 2rem;
+}
+
+.deal-roles-section .deal-section-title {
+    margin-bottom: 1.25rem;
+}
+
+.deal-roles-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 1.5rem;
+}
+
+@media (max-width: 1024px) {
+    .deal-roles-grid {
+        grid-template-columns: 1fr;
+    }
+}
+
+/* Карточка: левая часть — контент (60–70%), правая — иконка в «пузыре» (≥30%). Форма: скругление слева меньше, справа — большая дуга */
+.participant-card {
+    position: relative;
+    display: flex;
+    align-items: stretch;
+    min-height: 140px;
+    padding: 0;
+    border: 2px solid var(--border-light, #e2e8f0);
+    border-radius: 16px 56px 56px 16px;
+    background: var(--bg-color, #fff);
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.06);
+    cursor: pointer;
+    transition: border-color 0.25s ease, box-shadow 0.25s ease, transform 0.2s ease;
+    text-align: left;
+    font: inherit;
+    overflow: visible;
+}
+
+/* Зеркальная карточка (экспортер): иконка слева, контент справа */
+.participant-card-mirror {
+    flex-direction: row-reverse;
+    border-radius: 56px 16px 16px 56px;
+}
+
+.participant-card-mirror .participant-card-main {
+    margin-right: 1.25rem;
+    margin-left: 5rem;
+    flex-direction: row-reverse;
+}
+
+.participant-card-mirror .participant-card-icon-wrap {
+    right: auto;
+    left: 12px;
+}
+
+/* Карточка перевозчика: прямоугольник с закруглёнными углами, без фото — кол-во перевозчиков и машин */
+.participant-card-carrier {
+    border-radius: 16px;
+}
+
+.participant-card-carrier .participant-card-main {
+    margin-right: 2.5rem;
+}
+
+.participant-card-carrier-main {
+    width: 100%;
+}
+
+.participant-card-carrier-stats {
+    display: flex;
+    flex-direction: column;
+    gap: 0.6rem;
+}
+
+.participant-card-carrier-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 0.75rem;
+}
+
+.participant-card-carrier-label {
+    font-size: 0.75rem;
+    color: var(--text-light);
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.03em;
+}
+
+.participant-card-carrier-value {
+    font-size: 1rem;
+    font-weight: 700;
+    color: var(--primary-color);
+}
+
+.participant-card-loading {
+    cursor: wait !important;
+    pointer-events: none;
+}
+
+/* Перевозчик: нет лота — выключаем карточку */
+.participant-card.is-disabled {
+    cursor: not-allowed;
+    opacity: 0.78;
+    transform: none !important;
+    box-shadow: 0 3px 10px rgba(0, 0, 0, 0.05);
+    border-color: rgba(226, 232, 240, 0.9);
+}
+.participant-card.is-disabled:hover {
+    border-color: rgba(226, 232, 240, 0.9);
+    box-shadow: 0 3px 10px rgba(0, 0, 0, 0.05);
+}
+.participant-card.is-disabled:focus {
+    box-shadow: none;
+}
+
+.participant-card-loading-wrap {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    min-height: 120px;
+    width: 100%;
+    gap: 0.75rem;
+    padding: 1rem;
+    box-sizing: border-box;
+}
+
+.participant-card-loading-wrap .fa-spin {
+    font-size: 2rem;
+    color: var(--primary-color);
+}
+
+.participant-card-loading-text {
+    font-size: 0.9rem;
+    font-weight: 600;
+    color: var(--text-light);
+}
+
+.participant-card:hover {
+    border-color: var(--primary-light, #4a9b6e);
+    box-shadow: 0 6px 20px rgba(37, 89, 70, 0.12);
+}
+
+.participant-card:focus {
+    outline: none;
+    box-shadow: 0 0 0 3px rgba(37, 89, 70, 0.25);
+}
+
+/* Активная плашка: зелёные границы карточки и зелёная заливка иконки */
+.participant-card.is-active {
+    border-color: var(--primary-color, #255941);
+    box-shadow: 0 6px 20px rgba(37, 89, 70, 0.18);
+}
+
+.participant-card.is-active .participant-card-icon-wrap {
+    background: linear-gradient(135deg, var(--primary-color), var(--primary-light));
+    border-color: var(--primary-color);
+    color: #fff;
+}
+
+.participant-card.is-active .participant-card-icon-wrap i {
+    color: #fff;
+}
+
+/* Основная зона: аватар + мета (дата, ФИО, компания, ИНН) — ~65% */
+.participant-card-main {
+    flex: 1;
+    min-width: 0;
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    padding: 1rem 1.25rem 1rem 1.25rem;
+    margin-right: 2.5rem;
+}
+
+.participant-card-avatar {
+    width: 72px;
+    height: 72px;
+    border-radius: 50%;
+    background: linear-gradient(145deg, #eef1f4, #e2e8f0);
+    border: 2px solid var(--border-light);
+    flex-shrink: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.25rem;
+    font-weight: 700;
+    color: var(--primary-color);
+    overflow: hidden;
+    background-size: cover;
+    background-position: center;
+}
+
+.participant-card-avatar.participant-card-avatar-no-photo {
+    flex-direction: column;
+    gap: 0.15rem;
+    background: linear-gradient(145deg, #eef1f4, #e2e8f0);
+}
+
+.participant-card-avatar-no-photo .fa-user,
+.participant-card-avatar-no-photo .fa-tractor,
+.participant-card-avatar-no-photo .fa-building {
+    font-size: 1.5rem;
+    color: var(--primary-color);
+    opacity: 0.85;
+}
+
+.participant-card-avatar-label {
+    font-size: 0.55rem;
+    font-weight: 600;
+    color: var(--text-light);
+    text-transform: uppercase;
+    letter-spacing: 0.02em;
+    line-height: 1;
+}
+
+.participant-card-meta {
+    display: flex;
+    flex-direction: column;
+    gap: 0.25rem;
+    min-width: 0;
+}
+
+.participant-card-fio {
+    font-size: 0.95rem;
+    font-weight: 700;
+    color: var(--text-color);
+    line-height: 1.25;
+}
+
+.participant-card-company,
+.participant-card-inn {
+    font-size: 0.8rem;
+    color: var(--text-light);
+}
+
+/* Зона иконки: круг справа. По умолчанию — белый фон, зелёная обводка; иконка зелёная (только контур) */
+.participant-card-icon-wrap {
+    position: absolute;
+    right: 12px;
+    top: 50%;
+    transform: translateY(-50%);
+    width: 72px;
+    height: 72px;
+    border-radius: 50%;
+    background: #fff;
+    border: 3px solid var(--primary-color);
+    color: var(--primary-color);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+    transition: background 0.25s ease, border-color 0.25s ease, color 0.25s ease;
+}
+
+.participant-card-icon-wrap i {
+    font-size: 1.75rem;
+    color: var(--primary-color);
+    transition: color 0.25s ease;
+}
+
+/* Плашка «Качество культуры» в карте фермера — в стиле детальной страницы качества культур */
+.deal-partner-quality-section {
+    margin-top: 1.5rem;
+}
+
+.deal-partner-quality-plaque {
+    background: var(--bg-color, #fff);
+    border-radius: 20px;
+    box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+    border: 1px solid var(--border-light);
+    overflow: hidden;
+}
+
+.deal-partner-quality-plaque-inner .section-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 1.25rem 1.5rem;
+    background: var(--bg-color, #f8fafc);
+    border-bottom: 1px solid var(--border-light);
+}
+
+.deal-partner-quality-plaque-inner .section-header h2 {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    font-size: 1.15rem;
+    font-weight: 600;
+    color: var(--text-color);
+    margin: 0;
+}
+
+.deal-partner-quality-plaque-inner .section-header h2 i {
+    color: var(--primary-color);
+}
+
+.deal-partner-quality-plaque-inner .quality-fields {
+    padding: 1rem 1.25rem;
+    display: flex;
+    flex-direction: column;
+    gap: 0.85rem;
+}
+
+.deal-partner-quality-plaque-inner .form-row {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 0.85rem;
+}
+
+.deal-partner-quality-plaque-inner .form-group {
+    display: flex;
+    flex-direction: column;
+    gap: 0.35rem;
+}
+
+.deal-partner-quality-plaque-inner .form-group.full-width {
+    grid-column: 1 / -1;
+}
+
+.deal-partner-quality-plaque-inner .quality-fields > .form-group.full-width {
+    width: 100%;
+}
+
+.deal-partner-quality-plaque-inner .form-label {
+    font-weight: 600;
+    font-size: 0.85rem;
+    color: var(--text-color);
+}
+
+.deal-partner-quality-plaque-inner .form-value {
+    padding: 0.55rem 0.85rem;
+    background: var(--bg-light, #f8f9fa);
+    border-radius: var(--border-radius-sm);
+    border: 1px solid var(--border-light);
+    font-size: 0.9rem;
+    color: var(--text-color);
+}
+
+.deal-partner-quality-plaque-inner .form-group-placeholder {
+    visibility: hidden;
+}
+
+.deal-partner-quality-plaque-inner .quality-documents-inner {
+    padding: 0 1.25rem 1.25rem;
+    border-top: 1px solid var(--border-light);
+    padding-top: 1rem;
+}
+
+.deal-partner-quality-plaque-inner .quality-docs-heading {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    font-size: 1rem;
+    font-weight: 600;
+    color: var(--text-color);
+    margin: 0 0 1rem 0;
+}
+
+.deal-partner-quality-plaque-inner .quality-docs-heading i {
+    color: var(--primary-color);
+}
+
+.deal-partner-quality-plaque-inner .documents-grid {
+    display: flex;
+    flex-direction: column;
+    gap: 0.75rem;
+}
+
+.deal-partner-quality-plaque-inner .document-card {
+    display: flex;
+    align-items: center;
+    gap: 1.25rem;
+    padding: 1rem 1.25rem;
+    background: var(--bg-color, #f8fafc);
+    border-radius: 12px;
+    border: 1px solid var(--border-light);
+    transition: all 0.2s ease;
+}
+
+.deal-partner-quality-plaque-inner .document-card:hover {
+    border-color: var(--primary-color);
+    box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.08);
+}
+
+.deal-partner-quality-plaque-inner .document-icon {
+    width: 48px;
+    height: 48px;
+    border-radius: 10px;
+    background: linear-gradient(135deg, var(--primary-color), var(--primary-light));
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: #fff;
+    font-size: 1.25rem;
+    flex-shrink: 0;
+}
+
+.deal-partner-quality-plaque-inner .document-info {
+    flex: 1;
+    min-width: 0;
+}
+
+.deal-partner-quality-plaque-inner .document-info h4 {
+    margin: 0 0 0.25rem 0;
+    font-size: 0.95rem;
+    font-weight: 600;
+    color: var(--text-color);
+}
+
+.deal-partner-quality-plaque-inner .document-info p {
+    margin: 0 0 0.5rem 0;
+    font-size: 0.8rem;
+    color: var(--text-light);
+}
+
+.deal-partner-quality-plaque-inner .document-meta span {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.35rem;
+    font-size: 0.75rem;
+    color: var(--text-light);
+}
+
+.deal-partner-quality-plaque-inner .document-actions .btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    padding: 0.5rem 1rem;
+    font-size: 0.85rem;
+    font-weight: 600;
+    border-radius: 8px;
+    background: var(--primary-color);
+    color: #fff;
+    text-decoration: none;
+    border: none;
+    cursor: pointer;
+    transition: background 0.2s;
+}
+
+.deal-partner-quality-plaque-inner .document-actions .btn:hover {
+    opacity: 0.95;
+}
+
+.deal-partner-quality-plaque-inner .no-documents-message {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    padding: 2rem 1.5rem;
+    background: var(--bg-color, #f8fafc);
+    border-radius: 12px;
+    border: 1px dashed var(--border-light);
+}
+
+.deal-partner-quality-plaque-inner .no-documents-icon {
+    width: 56px;
+    height: 56px;
+    border-radius: 50%;
+    background: rgba(37, 89, 70, 0.08);
+    color: var(--primary-color);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.5rem;
+    margin-bottom: 1rem;
+}
+
+.deal-partner-quality-plaque-inner .no-documents-message h4 {
+    margin: 0 0 0.35rem 0;
+    font-size: 1rem;
+    font-weight: 600;
+    color: var(--text-color);
+}
+
+.deal-partner-quality-plaque-inner .no-documents-message p {
+    margin: 0;
+    font-size: 0.9rem;
+    color: var(--text-light);
+}
+
+.deal-partner-quality-empty {
+    margin: 0;
+    padding: 1rem 0;
+    font-size: 0.9rem;
+    color: var(--text-light);
+    text-align: center;
+}
+
+/* ----- Карта партнёра (в стиле детальной страницы верификации, без кнопок) ----- */
+.deal-partner-map {
+    margin-top: 2rem;
+    padding: 0;
+}
+
+.deal-partner-map-title {
+    font-size: 1.25rem;
+    font-weight: 700;
+    color: var(--text-color);
+    margin: 0 0 1.25rem 0;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+}
+
+.deal-partner-map-title::before {
+    content: '';
+    width: 4px;
+    height: 1.2em;
+    background: linear-gradient(to bottom, var(--primary-color), var(--primary-light));
+    border-radius: 2px;
+}
+
+.deal-partner-map-inner {
+    display: flex;
+    flex-direction: column;
+    gap: 1.5rem;
+}
+
+.deal-detail-section {
+    background: var(--bg-color, #fff);
+    border-radius: var(--border-radius);
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.06);
+    border: 1px solid var(--border-light);
+    overflow: hidden;
+}
+
+.deal-detail-section-title {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    font-size: 1.1rem;
+    font-weight: 600;
+    color: var(--text-color);
+    margin: 0;
+    padding: 1rem 1.25rem;
+    background: var(--bg-light, #f8f9fa);
+    border-bottom: 1px solid var(--border-light);
+}
+
+.deal-detail-section-title i {
+    color: var(--primary-color);
+}
+
+.deal-partner-personal-grid {
+    display: grid;
+    grid-template-columns: auto 1fr;
+    gap: 1.5rem;
+    padding: 1.25rem 1.5rem;
+}
+
+.deal-partner-avatar-block {
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+}
+
+.deal-partner-avatar-wrap {
+    width: 120px;
+    height: 120px;
+    border-radius: var(--border-radius);
+    background: linear-gradient(145deg, #f0f2f5, #e4e8ec);
+    border: 2px solid var(--border-light);
+    overflow: hidden;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.deal-partner-avatar-placeholder {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 0.35rem;
+    color: var(--text-light);
+    font-size: 0.85rem;
+}
+
+.deal-partner-avatar-placeholder i {
+    font-size: 2.5rem;
+    color: var(--primary-color);
+    opacity: 0.8;
+}
+
+.deal-partner-meta-plaque {
+    display: flex;
+    flex-direction: column;
+    gap: 0.6rem;
+    padding: 1rem 1.25rem;
+    background: var(--bg-light, #f8f9fa);
+    border-radius: var(--border-radius);
+    border: 1px solid var(--border-light);
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.04);
+}
+
+.deal-partner-meta-item {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    font-size: 0.9rem;
+    color: var(--text-color);
+}
+
+.deal-partner-meta-item i {
+    color: var(--primary-color);
+    width: 1rem;
+    text-align: center;
+}
+
+.deal-partner-verification-badge {
+    display: inline-block;
+    padding: 0.35rem 0.75rem;
+    border-radius: 20px;
+    font-size: 0.8rem;
+    font-weight: 600;
+    background: rgba(37, 89, 70, 0.12);
+    color: var(--primary-color);
+    border: 1px solid rgba(37, 89, 70, 0.25);
+}
+
+.deal-partner-fields {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 1rem;
+}
+
+.deal-partner-form-group {
+    display: flex;
+    flex-direction: column;
+    gap: 0.35rem;
+}
+
+.deal-partner-form-group-full {
+    grid-column: 1 / -1;
+}
+
+.deal-partner-form-row {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 1rem;
+}
+
+.deal-partner-label {
+    font-size: 0.8rem;
+    font-weight: 600;
+    color: var(--text-light);
+}
+
+.deal-partner-value {
+    padding: 0.6rem 0.9rem;
+    background: var(--bg-light, #f8f9fa);
+    border-radius: var(--border-radius-sm);
+    border: 1px solid var(--border-light);
+    font-size: 0.95rem;
+    color: var(--text-color);
+}
+
+.deal-partner-org-fields {
+    padding: 1.25rem 1.5rem;
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+}
+
+.deal-partner-org-fields .deal-partner-form-row {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 1rem;
+}
+
+/* Раздел "Качество культуры" в карте партнёра (только для фермера) */
+.deal-partner-quality-section {
+    margin-top: 0;
+}
+
+.deal-partner-quality-section .deal-detail-section-title {
+    margin-bottom: 1rem;
+}
+
+.deal-partner-quality-fields {
+    padding: 0 1.25rem 1.25rem;
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 1rem 1.5rem;
+}
+
+.deal-partner-quality-row {
+    display: flex;
+    flex-direction: column;
+    gap: 0.35rem;
+}
+
+.deal-partner-quality-label {
+    font-size: 0.8rem;
+    font-weight: 600;
+    color: var(--text-light);
+}
+
+.deal-partner-quality-value {
+    padding: 0.5rem 0.75rem;
+    background: var(--bg-light, #f8f9fa);
+    border-radius: var(--border-radius-sm);
+    border: 1px solid var(--border-light);
+    font-size: 0.9rem;
+    color: var(--text-color);
+}
+
+.deal-partner-quality-value.is-empty {
+    color: #999;
+    font-style: italic;
+}
+
+.deal-partner-quality-docs-wrap {
+    padding: 0 1.25rem 1.25rem;
+    border-top: 1px solid var(--border-light);
+    padding-top: 1.25rem;
+}
+
+.deal-partner-quality-docs-title {
+    font-size: 0.95rem;
+    font-weight: 600;
+    color: var(--text-color);
+    margin: 0 0 0.75rem 0;
+}
+
+.deal-partner-quality-docs {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+    gap: 1rem;
+}
+
+.deal-partner-quality-doc-card {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    padding: 1rem;
+    background: var(--bg-light, #f8f9fa);
+    border-radius: var(--border-radius);
+    border: 1px solid var(--border-light);
+}
+
+.deal-partner-quality-doc-card .document-icon {
+    width: 48px;
+    height: 48px;
+    border-radius: var(--border-radius-sm);
+    background: rgba(37, 89, 70, 0.1);
+    color: var(--primary-color);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.5rem;
+}
+
+.deal-partner-quality-doc-card .document-info {
+    flex: 1;
+    min-width: 0;
+}
+
+.deal-partner-quality-doc-card .document-info h4 {
+    font-size: 0.9rem;
+    font-weight: 600;
+    margin: 0 0 0.25rem 0;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
+.deal-partner-quality-doc-card .document-actions .btn {
+    padding: 0.4rem 0.75rem;
+    font-size: 0.85rem;
+    border-radius: var(--border-radius-sm);
+}
+
+.deal-partner-quality-no-docs {
+    grid-column: 1 / -1;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    padding: 2rem 1.5rem;
+    color: var(--text-light);
+    font-size: 0.9rem;
+}
+
+.deal-partner-quality-no-docs i {
+    display: block;
+    font-size: 2rem;
+    margin-bottom: 0.5rem;
+    opacity: 0.7;
+}
+
+@media (max-width: 768px) {
+    .deal-partner-personal-grid {
+        grid-template-columns: 1fr;
+    }
+
+    .deal-partner-fields {
+        grid-template-columns: 1fr;
+    }
+
+    .deal-partner-org-fields .deal-partner-form-row {
+        grid-template-columns: 1fr;
+    }
+
+    .deal-partner-quality-fields {
+        grid-template-columns: 1fr;
+    }
+}
+
+/* --- Модалка: управление документооборотом (mega) --- */
+.deal-docflow-modal-body {
+    padding-top: 0.5rem;
+}
+
+.docflow-mega-tabs {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 0.6rem;
+    margin-bottom: 1.25rem;
+}
+
+.docflow-mega-tab {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 0.4rem;
+    padding: 0.85rem 0.6rem;
+    border: 1px solid var(--border-light);
+    border-radius: 12px;
+    background: linear-gradient(180deg, #fafbfc 0%, #f1f3f5 100%);
+    color: var(--text-light);
+    font-size: 0.8rem;
+    font-weight: 700;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    text-align: center;
+    line-height: 1.2;
+}
+
+.docflow-mega-tab i {
+    font-size: 1.25rem;
+    color: var(--primary-color);
+    opacity: 0.9;
+}
+
+.docflow-mega-tab:hover {
+    border-color: rgba(37, 89, 70, 0.3);
+    color: var(--text-color);
+    background: linear-gradient(180deg, #fff 0%, #f5f7f6 100%);
+    box-shadow: 0 2px 8px rgba(37, 89, 70, 0.08);
+}
+
+.docflow-mega-tab.is-active {
+    background: #fff;
+    color: var(--text-color);
+    border-color: rgba(37, 89, 70, 0.35);
+    box-shadow: 0 4px 16px rgba(37, 89, 70, 0.12), 0 0 0 1px rgba(37, 89, 70, 0.06);
+}
+
+.docflow-sub-tabs {
+    display: flex;
+    gap: 0.5rem;
+    margin-bottom: 1.25rem;
+}
+
+.docflow-sub-tab {
+    flex: 1;
+    padding: 0.6rem 0.85rem;
+    border-radius: 10px;
+    border: 1px solid var(--border-light);
+    background: linear-gradient(180deg, #fafbfc 0%, #f0f2f1 100%);
+    font-weight: 700;
+    font-size: 0.85rem;
+    color: var(--text-light);
+    cursor: pointer;
+    transition: all 0.2s;
+}
+
+.docflow-sub-tab:hover {
+    border-color: rgba(37, 89, 70, 0.2);
+    color: var(--text-color);
+}
+
+.docflow-sub-tab.is-active {
+    background: rgba(37, 89, 70, 0.08);
+    color: var(--primary-color);
+    border-color: rgba(37, 89, 70, 0.25);
+    box-shadow: inset 0 1px 0 rgba(255,255,255,0.5);
+}
+
+.docflow-manage-list {
+    display: flex;
+    flex-direction: column;
+    gap: 0.75rem;
+}
+
+.docflow-manage-empty {
+    text-align: center;
+    color: var(--text-light);
+    padding: 2rem 1.25rem;
+    border: 1px dashed rgba(37, 89, 70, 0.2);
+    border-radius: 14px;
+    background: linear-gradient(180deg, rgba(37, 89, 70, 0.03) 0%, transparent 100%);
+    font-size: 0.9rem;
+}
+
+.docflow-mg-card {
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+    gap: 0.75rem;
+    padding: 1rem 1.1rem;
+    border: 1px solid var(--border-light);
+    border-radius: 12px;
+    background: #fff;
+    box-shadow: 0 1px 4px rgba(0, 0, 0, 0.05);
+    transition: border-color 0.2s, box-shadow 0.2s;
+}
+
+.docflow-mg-card:hover {
+    border-color: rgba(37, 89, 70, 0.25);
+    box-shadow: 0 2px 10px rgba(37, 89, 70, 0.08);
+}
+
+.docflow-mg-main {
+    flex: 1;
+    min-width: 0;
+}
+
+.docflow-mg-name {
+    font-weight: 800;
+    color: var(--primary-color);
+    text-decoration: none;
+    display: inline-block;
+    max-width: 100%;
+    word-break: break-word;
+}
+
+.docflow-mg-name:hover {
+    text-decoration: underline;
+}
+
+.docflow-mg-name-plain {
+    font-weight: 800;
+    color: var(--text-color);
+}
+
+.docflow-mg-meta {
+    margin-top: 0.45rem;
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 0.5rem;
+}
+
+.docflow-mg-date {
+    font-size: 0.82rem;
+    color: var(--text-light);
+}
+
+.docflow-mg-number {
+    font-size: 0.82rem;
+    color: var(--text-light);
+}
+
+.docflow-mg-tools {
+    display: flex;
+    gap: 0.25rem;
+    flex-shrink: 0;
+}
+
+.docflow-mg-icon-btn {
+    width: 36px;
+    height: 36px;
+    border: none;
+    border-radius: 10px;
+    background: var(--bg-light, #f3f4f6);
+    color: var(--text-light);
+    cursor: pointer;
+    transition: background 0.2s, color 0.2s;
+}
+
+.docflow-mg-icon-btn:hover {
+    background: #e8eaed;
+    color: var(--text-color);
+}
+
+.docflow-mg-icon-danger:hover {
+    background: rgba(220, 38, 38, 0.12);
+    color: #b91c1c;
+}
+
+.docflow-mg-card-edit {
+    flex-direction: column;
+    align-items: stretch;
+}
+
+.docflow-mg-edit-row {
+    margin-bottom: 0.65rem;
+}
+
+.docflow-mg-edit-row label {
+    display: block;
+    font-size: 0.78rem;
+    color: var(--text-light);
+    margin-bottom: 0.25rem;
+    font-weight: 600;
+}
+
+.docflow-mg-input,
+.docflow-mg-select {
+    width: 100%;
+    border: 1px solid var(--border-light);
+    border-radius: 10px;
+    padding: 0.5rem 0.65rem;
+    font-size: 0.9rem;
+}
+
+.docflow-mg-actions {
+    display: flex;
+    gap: 0.5rem;
+    flex-wrap: wrap;
+}
+
+.docflow-mg-btn-sm {
+    padding: 0.45rem 0.9rem;
+    font-size: 0.85rem;
+}
+
+.docflow-staged-block {
+    margin-bottom: 1rem;
+}
+
+.docflow-staged-title {
+    font-size: 0.72rem;
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+    color: var(--text-light);
+    font-weight: 700;
+    margin-bottom: 0.5rem;
+}
+
+.docflow-staged-row {
+    display: flex;
+    align-items: center;
+    gap: 0.65rem;
+    flex-wrap: wrap;
+    padding: 0.65rem 0.85rem;
+    border: 1px solid rgba(37, 89, 70, 0.2);
+    border-radius: 12px;
+    background: rgba(37, 89, 70, 0.04);
+    margin-bottom: 0.5rem;
+}
+
+.docflow-staged-link {
+    font-weight: 800;
+    color: var(--primary-color);
+    text-decoration: none;
+    flex: 1;
+    min-width: 0;
+    word-break: break-word;
+}
+
+.docflow-staged-link:hover {
+    text-decoration: underline;
+}
+
+.docflow-staged-number {
+    font-size: 0.85rem;
+    color: var(--text-light);
+}
+
+.docflow-form-card {
+    position: relative;
+    border: 1px solid var(--border-light);
+    border-radius: 14px;
+    padding: 1rem 1rem 1rem 1rem;
+    margin-bottom: 0.75rem;
+    background: #fff;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
+    transition: box-shadow 0.2s, border-color 0.2s;
+}
+
+.docflow-form-card:hover {
+    border-color: rgba(37, 89, 70, 0.18);
+    box-shadow: 0 2px 8px rgba(37, 89, 70, 0.08);
+}
+
+.docflow-form-card-header {
+    position: absolute;
+    top: 0.5rem;
+    right: 0.5rem;
+    z-index: 1;
+}
+
+.docflow-form-row-remove {
+    width: 28px;
+    height: 28px;
+    border: none;
+    border-radius: 8px;
+    background: transparent;
+    color: var(--text-light);
+    cursor: pointer;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    transition: background 0.2s, color 0.2s;
+}
+
+.docflow-form-row-remove:hover {
+    background: rgba(220, 38, 38, 0.1);
+    color: #b91c1c;
+}
+
+.docflow-form-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr 1.2fr auto;
+    gap: 0.75rem;
+    align-items: end;
+}
+
+.docflow-form-grid--finish {
+    grid-template-columns: 1fr 0.85fr 1fr 1.2fr auto;
+}
+
+.docflow-file-field .docflow-file-field-label {
+    display: block;
+    font-size: 0.78rem;
+    color: var(--text-light);
+    margin-bottom: 0.25rem;
+    font-weight: 600;
+}
+
+.docflow-file-wrap {
+    display: inline-flex;
+    align-items: center;
+    min-height: 40px;
+    padding: 0 1rem;
+    border-radius: 10px;
+    border: 1px solid var(--border-light);
+    background: linear-gradient(180deg, #fff 0%, var(--bg-light, #f8f9fa) 100%);
+    cursor: pointer;
+    transition: border-color 0.2s, box-shadow 0.2s;
+}
+
+.docflow-file-wrap:hover {
+    border-color: rgba(37, 89, 70, 0.35);
+    box-shadow: 0 0 0 3px rgba(37, 89, 70, 0.08);
+}
+
+.docflow-file-input {
+    position: absolute;
+    width: 0.1px;
+    height: 0.1px;
+    opacity: 0;
+    overflow: hidden;
+    z-index: -1;
+}
+
+.docflow-file-label {
+    font-size: 0.88rem;
+    color: var(--text-color);
+    max-width: 160px;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
+.docflow-file-wrap:has(.docflow-file-input:disabled) {
+    opacity: 0.7;
+    cursor: not-allowed;
+}
+
+.docflow-upload-btn-cell {
+    min-width: 44px;
+}
+
+.docflow-upload-label-spacer {
+    visibility: hidden;
+    display: block;
+    height: 0;
+    margin: 0;
+    padding: 0;
+}
+
+.docflow-upload-submit-btn {
+    width: 44px;
+    height: 40px;
+    min-width: 44px;
+    padding: 0;
+    border: none;
+    border-radius: 10px;
+    background: linear-gradient(135deg, var(--primary-color) 0%, #2a6b52 100%);
+    color: #fff;
+    cursor: pointer;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    transition: transform 0.15s, box-shadow 0.2s;
+}
+
+.docflow-upload-submit-btn:hover:not(:disabled) {
+    box-shadow: 0 4px 12px rgba(37, 89, 70, 0.35);
+}
+
+.docflow-upload-submit-btn:disabled {
+    opacity: 0.85;
+    cursor: not-allowed;
+}
+
+.docflow-upload-submit-btn.is-loading {
+    min-width: 44px;
+}
+
+.docflow-form-err {
+    margin-top: 0.5rem;
+    font-size: 0.82rem;
+    color: #dc2626;
+}
+
+.docflow-add-row-btn {
+    width: 100%;
+    margin: 0.25rem 0 1rem 0;
+    padding: 0.65rem 1rem;
+    border: 1px dashed var(--border-light);
+    border-radius: 12px;
+    background: var(--bg-light, #f8f9fa);
+    font-weight: 700;
+    color: var(--text-color);
+    cursor: pointer;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.5rem;
+    transition: background 0.2s;
+}
+
+.docflow-add-row-btn:hover {
+    background: #eef2f0;
+}
+
+.docflow-upload-footer {
+    display: flex;
+    justify-content: flex-end;
+}
+
+@media (max-width: 900px) {
+    .docflow-mega-tabs {
+        grid-template-columns: 1fr;
+    }
+
+    .docflow-form-grid,
+    .docflow-form-grid--finish {
+        grid-template-columns: 1fr;
+    }
+
+    .docflow-upload-footer .deal-btn-primary {
+        width: 100%;
+    }
+}
+
+/* ----- Детальная логистика (плашка перевозчика) ----- */
+.deal-logistics-section .deal-detail-section-title {
+    background: linear-gradient(135deg, rgba(37, 89, 70, 0.08) 0%, transparent 100%);
+}
+
+.deal-logistics-emph {
+    color: var(--primary-color);
+    font-weight: 800;
+}
+
+.deal-logistics-fields {
+    padding: 0 1.5rem 1.25rem 1.5rem;
+}
+
+.deal-logistics-volume-block .deal-partner-label {
+    font-weight: 700;
+    letter-spacing: 0.01em;
+}
+
+.deal-logistics-volume-progress {
+    width: 100%;
+    height: 10px;
+    background: rgba(37, 89, 70, 0.12);
+    border: 1px solid rgba(37, 89, 70, 0.25);
+    border-radius: 999px;
+    overflow: hidden;
+    position: relative;
+    margin: 0.45rem 0 0.55rem 0;
+}
+
+.deal-logistics-volume-progress-fill {
+    height: 100%;
+    background: linear-gradient(90deg, var(--primary-color), var(--primary-light));
+    width: 0%;
+    border-radius: 999px;
+}
+
+.deal-logistics-volume-percent {
+    font-size: 1.05rem;
+    font-weight: 800;
+    color: var(--primary-color);
+    margin: 0 0 0.35rem 0;
+}
+
+.deal-logistics-volume-numbers {
+    font-size: 0.9rem;
+    color: var(--text-light);
+}
+
+.deal-logistics-dates-full {
+    margin-top: 0.15rem;
+}
+
+/* ----- Логистика: статус лота ----- */
+.deal-logistics-status-pill {
+    margin-left: 0;
+}
+
+.deal-logistics-header {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    justify-content: space-between;
+    width: 100%;
+    margin-bottom: 1rem;
+}
+
+.deal-logistics-header-left {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+}
+
+.lot-status-1 {
+    background: rgba(255, 193, 7, 0.2);
+    color: #856404;
+    border-color: rgba(255, 193, 7, 0.4);
+}
+
+.lot-status-2 {
+    background: rgba(40, 167, 69, 0.15);
+    color: var(--success-color, #16a34a);
+    border-color: rgba(40, 167, 69, 0.3);
+}
+
+.lot-status-3 {
+    background: rgba(148, 163, 184, 0.15);
+    color: #475569;
+    border-color: rgba(148, 163, 184, 0.35);
+}
+
+/* ----- Логистика: кнопки публикации ----- */
+.deal-logistics-header-actions {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    flex-wrap: wrap;
+    justify-content: flex-end;
+}
+
+.deal-logistics-header-btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.45rem;
+    padding: 0.55rem 1.1rem;
+    font-size: 0.9rem;
+    min-width: 170px;
+}
+
+.deal-logistics-header-btn i {
+    font-size: 0.95rem;
+}
+
+.deal-logistics-header-btn .deal-logistics-agree-icon {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+}
+
+.deal-logistics-header-btn .deal-logistics-agree-icon svg {
+    display: block;
+}
+
+/* ----- Модалка лота: редактирование ----- */
+.deal-lot-edit-info {
+    text-align: left;
+    background: rgba(29, 78, 216, 0.06);
+    border: 1px solid rgba(29, 78, 216, 0.18);
+    border-left: 3px solid #1d4ed8;
+    border-radius: var(--border-radius);
+    padding: 1rem 1.25rem 1.25rem;
+    color: var(--text-color);
+    line-height: 1.55;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.04);
+    margin: 0 0 1.25rem 0;
+}
+
+.deal-lot-edit-form {
+    display: grid;
+    gap: 0.75rem;
+    text-align: left;
+}
+
+.deal-lot-edit-row label {
+    display: block;
+    font-size: 0.85rem;
+    color: var(--text-light);
+    font-weight: 700;
+    margin-bottom: 0.35rem;
+}
+
+.deal-lot-edit-row input {
+    width: 100%;
+    padding: 0.65rem 0.8rem;
+    border-radius: 10px;
+    border: 1px solid var(--border-light);
+    background: var(--bg-light, #f8f9fa);
+    color: var(--text-color);
+    font-size: 0.95rem;
+    outline: none;
+}
+
+.deal-lot-edit-row input:focus {
+    border-color: var(--primary-color);
+    box-shadow: 0 0 0 3px rgba(37, 89, 70, 0.15);
+}
+
+.deal-lot-edit-input-wrap {
+    position: relative;
+    width: 100%;
+}
+
+.deal-lot-edit-input-wrap input {
+    width: 100%;
+    box-sizing: border-box;
+}
+
+.deal-lot-edit-input-wrap.is-field-locked input {
+    padding-right: 2.65rem;
+}
+
+.deal-lot-edit-lock-icon {
+    display: none;
+    position: absolute;
+    right: 0.55rem;
+    top: 50%;
+    transform: translateY(-50%);
+    align-items: center;
+    justify-content: center;
+    width: 1.75rem;
+    height: 1.75rem;
+    border-radius: 8px;
+    background: rgba(148, 163, 184, 0.2);
+    color: #64748b;
+    font-size: 0.85rem;
+    pointer-events: none;
+}
+
+.deal-lot-edit-input-wrap.is-field-locked .deal-lot-edit-lock-icon {
+    display: inline-flex;
+}
+
+.deal-lot-edit-field-locked {
+    background: rgba(148, 163, 184, 0.12) !important;
+    color: var(--text-light);
+    cursor: not-allowed;
+}
+
+.deal-lot-edit-checkbox-row {
+    margin-top: 0.25rem;
+    text-align: left;
+}
+
+.deal-lot-edit-checkbox-label {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    font-size: 0.9rem;
+    font-weight: 600;
+    color: var(--text-color);
+    cursor: pointer;
+    user-select: none;
+}
+
+.deal-lot-edit-checkbox-label input[type='checkbox'] {
+    width: 1.05rem;
+    height: 1.05rem;
+    accent-color: var(--primary-color);
+    cursor: pointer;
+    flex-shrink: 0;
+}
+
+.deal-lot-edit-actions {
+    justify-content: space-between !important;
+    flex-wrap: nowrap;
+    gap: 0.75rem;
+    overflow-x: hidden;
+}
+
+.deal-lot-edit-actions .deal-btn-primary,
+.deal-lot-edit-actions .btn {
+    min-width: 0;
+    flex: 1 1 auto;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+}
+
+.deal-btn-warning {
+    padding: 0.75rem 1.5rem;
+    background: linear-gradient(135deg, #f59e0b, #fbbf24);
+    color: #2b1b00;
+    border: none;
+    border-radius: var(--border-radius-sm);
+    font-size: 0.95rem;
+    font-weight: 700;
+    cursor: pointer;
+    transition: all 0.2s ease;
+}
+
+.deal-btn-warning:hover {
+    opacity: 0.95;
+    transform: translateY(-1px);
+}
+
+.deal-lot-publish-actions {
+    display: flex;
+    flex-wrap: nowrap;
+    justify-content: space-between !important;
+    gap: 1rem;
+    margin-top: 1.5rem;
+    width: 100%;
+}
+
+.accept-modal-icon-warning {
+    background: #f59e0b;
+}
+
+.deal-logistics-actions {
+    padding: 0 1.5rem 1.25rem 1.5rem;
+    display: flex;
+    justify-content: space-between;
+    gap: 1rem;
+}
+
+.deal-logistics-actions .deal-btn-warning,
+.deal-logistics-actions .deal-btn-primary {
+    flex: 1;
+}
+
+/* ----- Логистика: объём/заполненность карточкой ----- */
+.deal-logistics-volume-card {
+    padding: 0.9rem 1rem;
+    background: rgba(37, 89, 70, 0.06);
+    border: 1px solid rgba(37, 89, 70, 0.18);
+    border-radius: var(--border-radius-sm);
+}
+
+.deal-logistics-volume-meta {
+    display: flex;
+    justify-content: space-between;
+    align-items: baseline;
+    gap: 0.75rem;
+    margin-top: 0.75rem;
+}
+
+.deal-logistics-volume-meta-item {
+    color: var(--text-light);
+    font-size: 0.9rem;
+}
+
+.deal-logistics-volume-meta-item strong {
+    display: block;
+    color: var(--primary-color);
+    font-size: 1.05rem;
+    font-weight: 900;
+}
+
+.deal-logistics-volume-meta-sub {
+    display: block;
+    font-size: 0.85rem;
+    margin-top: 0.15rem;
+    color: var(--text-light);
+}
+
+.deal-logistics-volume-percent {
+    text-align: right;
+    white-space: nowrap;
+}

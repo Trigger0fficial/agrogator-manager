@@ -1,0 +1,200 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>АГРОГАТОР - Регистрация менеджера</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="{% static 'main/assets/css/style.css' %}">
+    <link rel="stylesheet" href="{% static 'main/assets/css/list_verification.css' %}">
+    <link rel="stylesheet" href="{% static 'main/assets/css/register_manager.css' %}">
+</head>
+<body>
+    <!-- Хедер -->
+    <header class="header">
+        <div class="container header__container">
+            <div class="logo">
+                <i class="fas fa-tractor"></i>
+                <span>АГРОГАТОР</span>
+            </div>
+            <nav class="nav">
+                <a href="index.html" class="nav-link"><i class="fas fa-home"></i> Дашборд</a>
+                <a href="#" class="nav-link"><i class="fas fa-handshake"></i> Сделки</a>
+                <a href="#" class="nav-link"><i class="fas fa-users"></i> Участники</a>
+                <a href="#" class="nav-link"><i class="fas fa-chart-bar"></i> Аналитика</a>
+            </nav>
+            <div class="user-profile">
+                <div class="notification-bell">
+                    <i class="fas fa-bell"></i>
+                    <span class="notification-count">3</span>
+                </div>
+                <div class="user-info">
+                    <span class="user-name" id="headerUserName">Менеджер Иванов</span>
+                    <span class="user-role" id="headerUserRole">Администратор</span>
+                </div>
+                <div class="user-avatar" id="userAvatar">
+                    <img src="https://i.pravatar.cc/40?img=12" alt="Профиль">
+                    <div class="user-dropdown" id="userDropdown">
+                        <div class="dropdown-item">
+                            <i class="fas fa-user"></i>
+                            <span>Личный кабинет</span>
+                        </div>
+                        <div class="dropdown-item">
+                            <i class="fas fa-cog"></i>
+                            <span>Настройки</span>
+                        </div>
+                        <div class="dropdown-divider"></div>
+                        <div class="dropdown-item logout-item" id="logoutBtn">
+                            <i class="fas fa-sign-out-alt"></i>
+                            <span>Выйти</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <!-- Основной контент -->
+    <main class="main">
+        <div class="container">
+            <!-- Заголовок страницы -->
+            <section class="register-header">
+                <div class="header-content">
+                    <button class="btn-back" onclick="window.location.href='index.html'">
+                        <i class="fas fa-arrow-left"></i>
+                        Назад к дашборду
+                    </button>
+
+                    <div class="register-title">
+                        <div class="title-icon">
+                            <i class="fas fa-user-plus"></i>
+                        </div>
+                        <div class="title-text">
+                            <h1>Регистрация нового менеджера</h1>
+                            <p>Добавление нового пользователя в систему управления</p>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Форма регистрации -->
+            <section class="register-form-section">
+                <div class="form-container">
+                    <div class="form-card">
+                        <div class="form-header">
+                            <h2>Данные нового менеджера</h2>
+                            <p>Заполните обязательные поля для создания учетной записи</p>
+                        </div>
+
+                        <form class="register-form" id="registerForm">
+                            <div class="form-row">
+                                <div class="form-group full-width">
+                                    <label for="fullName" class="form-label">
+                                        <i class="fas fa-user"></i>
+                                        ФИО
+                                    </label>
+                                    <input type="text" class="form-input" id="fullName" placeholder="Введите полное имя" required>
+                                    <div class="error-message" id="fullNameError"></div>
+                                </div>
+                            </div>
+
+                            <div class="form-row">
+                                <div class="form-group full-width">
+                                    <label for="email" class="form-label">
+                                        <i class="fas fa-envelope"></i>
+                                        Почта
+                                    </label>
+                                    <input type="email" class="form-input" id="email" placeholder="example@domain.com" required>
+                                    <div class="error-message" id="emailError"></div>
+                                </div>
+                            </div>
+
+                            <div class="form-row">
+                                <div class="form-group full-width">
+                                    <label for="role" class="form-label">
+                                        <i class="fas fa-briefcase"></i>
+                                        Роль
+                                    </label>
+                                    <div class="select-container">
+                                        <select class="form-select" id="role" required>
+                                            <option value="">Выберите роль</option>
+                                            <option value="manager">Менеджер</option>
+                                            <option value="logistic">Логист</option>
+                                        </select>
+                                        <div class="select-arrow">
+                                            <i class="fas fa-chevron-down"></i>
+                                        </div>
+                                    </div>
+                                    <div class="error-message" id="roleError"></div>
+                                </div>
+                            </div>
+
+                            <div class="form-actions">
+                                <button type="button" class="btn btn-secondary btn-compact" onclick="window.location.href='index.html'">
+                                    Отмена
+                                </button>
+                                <button type="submit" class="btn btn-primary btn-compact" id="registerBtn">
+                                    Зарегистрировать
+                                </button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </section>
+        </div>
+    </main>
+
+    <!-- Модальное окно успешной регистрации -->
+    <div class="modal" id="successModal">
+        <div class="modal-content success-modal">
+            <div class="modal-header">
+                <div class="modal-icon success">
+                    <i class="fas fa-check-circle"></i>
+                </div>
+                <div class="modal-title">
+                    <h3>Новый пользователь успешно зарегистрирован</h3>
+                    <p>Пользователю отправлено уведомление на почту о регистрации его аккаунта в AGROGATOR-ERP</p>
+                </div>
+                <button class="modal-close" id="closeSuccessModal">&times;</button>
+            </div>
+            <div class="modal-body">
+                <div class="next-steps">
+                    <h4>Что делать дальше?</h4>
+                    <div class="steps-container">
+                        <div class="step-card">
+                            <div class="step-number">1</div>
+                            <div class="step-content">
+                                <h5>Проверить почту</h5>
+                                <p>Сотруднику необходимо проверить почту, там лежат доступы в систему</p>
+                            </div>
+                        </div>
+                        <div class="step-card">
+                            <div class="step-number">2</div>
+                            <div class="step-content">
+                                <h5>Перейти на сайт</h5>
+                                <p>Перейти на сайт <strong>agrorator.pro/erp/manager/auth/</strong></p>
+                            </div>
+                        </div>
+                        <div class="step-card">
+                            <div class="step-number">3</div>
+                            <div class="step-content">
+                                <h5>Настроить профиль</h5>
+                                <p>Настроить свой профиль и начинать работу</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button class="btn btn-primary" id="confirmSuccess">Понятно</button>
+            </div>
+        </div>
+    </div>
+
+    <script src="{% static 'main/assets/js/register_manager.js'%}"></script>
+</body>
+</html>

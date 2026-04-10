@@ -1,0 +1,768 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>АГРОГАТОР - Мои сделки</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="{% static 'main/assets/css/style.css' %}">
+    <link rel="stylesheet" href="{% static 'main/assets/css/list_quality_check.css' %}">
+    <link rel="stylesheet" href="{% static 'order/css/deal_detail.css' %}">
+    <style>
+        /* Стили карточки сделки — в стилистике списка качества культур */
+
+        .deal-card {
+            background: var(--white);
+            border-radius: var(--border-radius-lg);
+            padding: 1rem 1.5rem 1rem;
+            margin-bottom: 1.5rem;
+            box-shadow: var(--shadow);
+            border: 1px solid var(--border-light);
+            transition: all 0.3s ease;
+        }
+
+        .deal-card:hover {
+            transform: translateY(-5px);
+            box-shadow: var(--shadow-lg);
+        }
+
+        .deal-header {
+            display: flex;
+            flex-direction: row;
+            justify-content: space-between;
+            align-items: stretch;
+            margin-bottom: 1rem;
+            padding-bottom: 1rem;
+            border-bottom: 1px solid var(--border-light);
+        }
+
+        .deal-header-left {
+            display: flex;
+            flex-direction: column;
+            gap: 0.25rem;
+            align-items: flex-start;
+        }
+
+        .deal-id {
+            font-size: 1rem;
+            font-weight: 700;
+            color: var(--text-color);
+        }
+
+        .deal-created {
+            font-size: 0.8rem;
+            color: var(--text-light);
+        }
+
+        .deal-badge-wrap {
+            display: flex;
+            align-items: center;
+        }
+
+        .deal-badge {
+            padding: 0.35rem 0.75rem;
+            border-radius: 50px;
+            font-size: 0.7rem;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .deal-badge.active { background: #d1fae5; color: #065f46; }
+        .deal-badge.search { background: #dbeafe; color: #1e40af; }
+        .deal-badge.work { background: #fef3c7; color: #92400e; }
+        .deal-badge.completed { background: #f3f4f6; color: #4b5563; }
+
+        /* Четыре одинаковые плашки: способ доставки, километраж, тонны, дата сделки */
+        .deal-plates {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 0.75rem;
+            margin-bottom: 1rem;
+        }
+
+        .deal-plate {
+            background: var(--white);
+            border: 2px solid var(--border-light);
+            border-radius: var(--border-radius);
+            padding: 0.75rem 1rem;
+            box-shadow: var(--shadow);
+            position: relative;
+            overflow: hidden;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            gap: 0.35rem;
+            text-align: center;
+        }
+
+        .deal-plate::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 4px;
+            background: linear-gradient(135deg, var(--primary-color), var(--primary-light));
+        }
+
+        .deal-plate-label {
+            font-size: 0.7rem;
+            font-weight: 700;
+            color: var(--text-light);
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .deal-plate-value {
+            font-size: 0.85rem;
+            font-weight: 600;
+            color: var(--text-color);
+        }
+
+        /* Блок цены и кнопок фермер/экспортер (как на деталке — со стрелкой) */
+        .deal-price-block {
+            background: var(--white);
+            border: 2px solid var(--border-light);
+            border-radius: var(--border-radius);
+            padding: 1.25rem;
+            margin-bottom: 1rem;
+            box-shadow: var(--shadow);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .deal-price-block::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 4px;
+            background: linear-gradient(135deg, var(--primary-color), var(--primary-light));
+        }
+
+        .deal-price-per-ton {
+            font-size: 1.75rem;
+            font-weight: 700;
+            color: var(--primary-color);
+            margin-bottom: 1rem;
+            text-align: center;
+        }
+
+        .deal-price-actions {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: space-between;
+            gap: 0.75rem;
+        }
+
+        .deal-btn-link {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 0.5rem;
+            padding: 0.75rem 1rem;
+            background: var(--white);
+            border: 2px solid var(--border-light);
+            border-radius: var(--border-radius);
+            font-size: 0.9rem;
+            font-weight: 600;
+            color: var(--primary-color);
+            cursor: pointer;
+            transition: all 0.3s ease;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+        }
+
+        .deal-btn-link:hover {
+            border-color: var(--primary-color);
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(37, 105, 70, 0.15);
+        }
+
+        .deal-btn-link i {
+            font-size: 0.7rem;
+            opacity: 0.9;
+        }
+
+        /* Блок действий: кнопки внизу, ближе к краю карточки */
+        .deal-actions {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 0.75rem;
+            align-items: center;
+            justify-content: flex-end;
+            padding-top: 0.75rem;
+            margin-top: 0.25rem;
+            border-top: 1px solid var(--border-light);
+            background: transparent;
+        }
+
+        .deal-actions .btn-show-farmer,
+        .deal-actions .btn-details {
+            padding: 0.75rem 1.25rem;
+            font-size: 0.9rem;
+            white-space: nowrap;
+        }
+
+        .deal-actions .btn-show-farmer {
+            border: 2px solid #d1d5db;
+        }
+
+        .deal-actions .btn-show-farmer:hover {
+            border-color: var(--primary-color);
+        }
+
+        .party-info {
+            display: flex;
+            flex-direction: column;
+            gap: 0.35rem;
+        }
+
+        .party-role {
+            font-size: 0.7rem;
+            font-weight: 700;
+            color: var(--text-light);
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .party-btn {
+            padding: 0.5rem 1rem;
+            border-radius: 50px;
+            font-size: 0.8rem;
+            font-weight: 600;
+            color: var(--primary-color);
+            background: var(--white);
+            border: 2px solid var(--border-light);
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+
+        .party-btn:hover {
+            border-color: var(--primary-light);
+            background: rgba(37, 105, 70, 0.06);
+        }
+
+        /* Плашка: общая информация — белый + зелёная полоска сверху */
+        .deal-details {
+            background: var(--white);
+            border: 2px solid var(--border-light);
+            border-radius: var(--border-radius);
+            padding: 1.25rem;
+            margin-bottom: 1rem;
+            box-shadow: var(--shadow);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .deal-details::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 4px;
+            background: linear-gradient(135deg, var(--primary-color), var(--primary-light));
+        }
+
+        .detail-main {
+            margin-bottom: 1rem;
+            padding-bottom: 1rem;
+            border-bottom: 1px dashed var(--border-light);
+            width: 100%;
+        }
+
+        .detail-section-head {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            width: 100%;
+            gap: 1rem;
+        }
+
+        .detail-section-title {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            flex: 0 1 auto;
+        }
+
+        .detail-section-icon {
+            width: 36px;
+            height: 36px;
+            border-radius: 10px;
+            background: rgba(37, 105, 70, 0.08);
+            border: 1px solid var(--border-light);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: var(--primary-color);
+            font-size: 1rem;
+        }
+
+        .detail-section-name {
+            font-weight: 700;
+            font-size: 0.95rem;
+            color: var(--text-color);
+        }
+
+        .detail-created {
+            margin-left: auto;
+            flex-shrink: 0;
+            font-size: 0.8rem;
+            color: var(--text-light);
+            font-weight: 500;
+            display: flex;
+            align-items: center;
+            gap: 0.35rem;
+            white-space: nowrap;
+        }
+
+        .deal-metrics {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 0.75rem;
+        }
+
+        .metric-card {
+            background: var(--white);
+            border: 2px solid var(--border-light);
+            border-radius: var(--border-radius);
+            padding: 0.75rem 0.5rem;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            gap: 0.4rem;
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .metric-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 4px;
+            height: 100%;
+            background: linear-gradient(180deg, var(--primary-color), var(--primary-light));
+        }
+
+        .metric-card:hover {
+            border-color: var(--primary-light);
+            box-shadow: 0 2px 8px rgba(37, 105, 70, 0.08);
+        }
+
+        .metric-icon {
+            width: 36px;
+            height: 36px;
+            border-radius: 10px;
+            background: rgba(37, 105, 70, 0.08);
+            border: 1px solid var(--border-light);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: var(--primary-color);
+            font-size: 1rem;
+            flex-shrink: 0;
+        }
+
+        .metric-card .metric-value {
+            font-size: 0.8rem;
+            font-weight: 600;
+            color: var(--text-color);
+            text-align: center;
+            word-break: break-word;
+        }
+
+        .btn {
+            padding: 0.75rem 1.25rem;
+            border-radius: 10px;
+            font-size: 0.9rem;
+            font-weight: 600;
+            border: none;
+            cursor: pointer;
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            text-decoration: none;
+            transition: all 0.3s ease;
+        }
+
+        .btn-primary {
+            background: linear-gradient(135deg, var(--primary-color), var(--primary-light));
+            color: var(--white);
+            box-shadow: 0 4px 15px rgba(37, 105, 70, 0.2);
+        }
+
+        .btn-primary:hover {
+            background: linear-gradient(135deg, var(--primary-dark), var(--primary-color));
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(37, 105, 70, 0.3);
+        }
+
+        .load-more-container {
+            display: flex;
+            justify-content: center;
+            margin-top: 2rem;
+            margin-bottom: 3rem;
+        }
+
+        .btn-load-more {
+            padding: 0.875rem 1.5rem;
+            border-radius: var(--border-radius);
+            font-size: 0.95rem;
+            font-weight: 600;
+            background: var(--white);
+            border: 2px solid var(--border-light);
+            color: var(--primary-color);
+            cursor: pointer;
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            transition: all 0.3s ease;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+        }
+
+        .btn-load-more:hover {
+            border-color: var(--primary-light);
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(37, 105, 70, 0.1);
+        }
+
+        /* Расширяем модалки (партнёр/культура) */
+        #partnerModalOverlay .deal-modal,
+        #cropModalOverlay .deal-modal {
+            max-width: 920px;
+        }
+
+        #partnerModalOverlay .deal-modal-body,
+        #cropModalOverlay .deal-modal-body {
+            max-height: 80vh;
+            overflow: auto;
+        }
+
+        /* Красивая загрузка в модалке культуры */
+        .deal-modal-loading {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            min-height: 220px;
+            padding: 2rem;
+            gap: 1rem;
+        }
+
+        .deal-modal-loading-spinner {
+            width: 56px;
+            height: 56px;
+            border-radius: 50%;
+            background: rgba(37, 105, 70, 0.1);
+            border: 2px solid var(--primary-light);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: var(--primary-color);
+            font-size: 1.5rem;
+        }
+
+        .deal-modal-loading-spinner i {
+            animation: deal-modal-spin 1s linear infinite;
+        }
+
+        @keyframes deal-modal-spin {
+            from { transform: rotate(0deg); }
+            to { transform: rotate(360deg); }
+        }
+
+        .deal-modal-loading-text {
+            margin: 0;
+            font-size: 0.95rem;
+            color: var(--text-light);
+            font-weight: 500;
+        }
+
+        @media (max-width: 768px) {
+            .deal-plates {
+                grid-template-columns: 1fr 1fr;
+            }
+
+            #partnerModalOverlay .deal-modal,
+            #cropModalOverlay .deal-modal {
+                max-width: 96vw;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Хедер -->
+    <header class="header">
+        <div class="container header__container">
+            <div class="logo">
+                <i class="fas fa-tractor"></i>
+                <span>АГРОГАТОР</span>
+            </div>
+            <nav class="nav">
+                <a href="{% url 'main' %}" class="nav-link"><i class="fas fa-home"></i> Дашборд</a>
+                <a href="#" class="nav-link active"><i class="fas fa-handshake"></i> Сделки</a>
+                <a href="#" class="nav-link"><i class="fas fa-users"></i> Участники</a>
+                <a href="#" class="nav-link"><i class="fas fa-chart-bar"></i> Аналитика</a>
+            </nav>
+            <div class="user-profile">
+                <div class="notification-bell">
+                    <i class="fas fa-bell"></i>
+                    <span class="notification-count">3</span>
+                </div>
+                <div class="user-info">
+                    <span class="user-name" id="headerUserName">Менеджер Иванов</span>
+                    <span class="user-role" id="headerUserRole">Администратор</span>
+                </div>
+                <div class="user-avatar" id="userAvatar">
+                    <img src="https://i.pravatar.cc/40?img=12" alt="Профиль">
+                    <div class="user-dropdown" id="userDropdown">
+                        <div class="dropdown-item">
+                            <i class="fas fa-user"></i>
+                            <span>Личный кабинет</span>
+                        </div>
+                        <div class="dropdown-item">
+                            <i class="fas fa-cog"></i>
+                            <span>Настройки</span>
+                        </div>
+                        <div class="dropdown-divider"></div>
+                        <div class="dropdown-item logout-item" id="logoutBtn">
+                            <i class="fas fa-sign-out-alt"></i>
+                            <span>Выйти</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <!-- Основной контент -->
+    <main class="main">
+        <div class="container">
+            <!-- Заголовок и навигация -->
+            <section class="quality-header">
+                <div class="header-content">
+                    <a href="{% url 'main' %}" class="btn-back" id="backToDashboard">
+                        <i class="fas fa-arrow-left"></i>
+                        Назад к дашборду
+                    </a>
+
+                    <div class="quality-title">
+                        <div class="title-icon">
+                            <i class="fas fa-handshake"></i>
+                        </div>
+                        <div class="title-text">
+                            <h1>Мои сделки</h1>
+                            <p>Управление вашими сделками и мониторинг их статуса</p>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Фильтры и поиск -->
+            <section class="filters-section">
+                <div class="filters-container">
+                    <div class="filter-main">
+                        <div class="filter-tabs">
+                            <button class="filter-tab" data-filter-type="farmers" style="cursor: not-allowed; opacity: 0.6;">
+                                <i class="fas fa-user-tag"></i>
+                                По фермеру
+                            </button>
+                            <button class="filter-tab" data-filter-type="crops" style="cursor: not-allowed; opacity: 0.6;">
+                                <i class="fas fa-seedling"></i>
+                                По культуре
+                            </button>
+                            <button class="filter-tab" data-filter-type="regions" style="cursor: not-allowed; opacity: 0.6;">
+                                <i class="fas fa-map-marker-alt"></i>
+                                По региону
+                            </button>
+                        </div>
+                    </div>
+
+                    <div class="filter-search">
+                        <div class="search-container">
+                            <i class="fas fa-search search-icon"></i>
+                            <input type="text" class="search-input" placeholder="Поиск сделок..." disabled style="cursor: not-allowed; opacity: 0.6;">
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Список сделок -->
+            <section class="deals-section">
+                <div class="deals-grid" id="dealsGrid">
+                    <!-- Карточки будут сгенерированы JavaScript -->
+                </div>
+
+                <!-- Состояние загрузки -->
+                <div class="loading-state" id="loadingState">
+                    <div class="spinner"></div>
+                    <p>Загрузка сделок...</p>
+                </div>
+
+                <!-- Кнопка загрузить еще -->
+                <div class="load-more-container" id="loadMoreContainer" style="display: none;">
+                    <button class="btn-load-more" id="loadMoreBtn">
+                        <i class="fas fa-sync-alt"></i> Загрузить еще
+                    </button>
+                </div>
+
+                <!-- Состояние пустого результата -->
+                <div class="empty-state" id="emptyState" style="display: none;">
+                    <div class="empty-icon">
+                        <i class="fas fa-handshake-slash"></i>
+                    </div>
+                    <h3>Сделки не найдены</h3>
+                    <p>У вас пока нет активных сделок</p>
+                </div>
+
+                <!-- Состояние ошибки сети -->
+                <div class="error-state" id="errorState" style="display: none;">
+                    <div class="error-icon">
+                        <i class="fas fa-exclamation-triangle"></i>
+                    </div>
+                    <h3>Проблема с сетью</h3>
+                    <p>Не удалось загрузить данные с сервера. Пожалуйста, повторите попытку позже.</p>
+                    <div class="error-actions">
+                        <button class="btn btn-primary" id="retryLoadBtn">
+                            <i class="fas fa-redo"></i>
+                            Повторить попытку
+                        </button>
+                    </div>
+                </div>
+            </section>
+        </div>
+    </main>
+
+    <!-- Модалка «Карта партнёра» (фермер/экспортер) — как на деталке сделки -->
+    <div class="deal-modal-overlay" id="partnerModalOverlay" aria-hidden="true">
+        <div class="deal-modal" id="partnerModal">
+            <div class="deal-modal-header">
+                <h3 class="deal-modal-title" id="partnerModalTitle">Карта партнёра</h3>
+                <button type="button" class="deal-modal-close" id="partnerModalClose" aria-label="Закрыть"><i class="fas fa-times"></i></button>
+            </div>
+            <div class="deal-modal-body" id="partnerModalBody">
+                <div class="deal-partner-map-inner" id="partnerModalInner">
+                    <div class="deal-modal-loading" id="partnerModalLoading">
+                        <div class="deal-modal-loading-spinner"><i class="fas fa-spinner fa-spin"></i></div>
+                        <p class="deal-modal-loading-text">Загрузка данных партнёра...</p>
+                    </div>
+                    <div id="partnerModalContent" style="display: none;">
+                        <section class="deal-detail-section personal-data">
+                            <h4 class="deal-detail-section-title"><i class="fas fa-user"></i> Личные данные</h4>
+                            <div class="deal-partner-personal-grid">
+                                <div class="deal-partner-avatar-block">
+                                    <div class="deal-partner-avatar-wrap" id="partnerModalAvatar">
+                                        <span class="deal-partner-avatar-placeholder"><i class="fas fa-user"></i><span>Нет фото</span></span>
+                                    </div>
+                                    <div class="deal-partner-meta-plaque">
+                                        <div class="deal-partner-meta-item"><i class="fas fa-calendar-plus"></i><span>Зарегистрирован: <span id="partnerModalCreatedAt">—</span></span></div>
+                                        <div class="deal-partner-meta-item"><i class="fas fa-phone"></i><span id="partnerModalPhone">—</span></div>
+                                        <div class="deal-partner-meta-item"><i class="fas fa-star"></i><span>Рейтинг: <span id="partnerModalRating">—</span></span></div>
+                                        <div class="deal-partner-verification" id="partnerModalVerificationWrap">
+                                            <span class="deal-partner-verification-badge" id="partnerModalVerification">—</span>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="deal-partner-fields">
+                                    <div class="deal-partner-form-group">
+                                        <span class="deal-partner-label">Фамилия</span>
+                                        <span class="deal-partner-value" id="partnerModalLastName">—</span>
+                                    </div>
+                                    <div class="deal-partner-form-group">
+                                        <span class="deal-partner-label">Имя</span>
+                                        <span class="deal-partner-value" id="partnerModalFirstName">—</span>
+                                    </div>
+                                    <div class="deal-partner-form-group">
+                                        <span class="deal-partner-label">Отчество</span>
+                                        <span class="deal-partner-value" id="partnerModalPatronymic">—</span>
+                                    </div>
+                                    <div class="deal-partner-form-group">
+                                        <span class="deal-partner-label">Дата рождения</span>
+                                        <span class="deal-partner-value" id="partnerModalDateOfBirth">—</span>
+                                    </div>
+                                    <div class="deal-partner-form-group deal-partner-form-group-full">
+                                        <span class="deal-partner-label">Email</span>
+                                        <span class="deal-partner-value" id="partnerModalEmail">—</span>
+                                    </div>
+                                </div>
+                            </div>
+                        </section>
+                        <section class="deal-detail-section organization-data">
+                            <h4 class="deal-detail-section-title"><i class="fas fa-building"></i> Данные организации</h4>
+                            <div class="deal-partner-org-fields">
+                                <div class="deal-partner-form-row">
+                                    <div class="deal-partner-form-group">
+                                        <span class="deal-partner-label">ИНН</span>
+                                        <span class="deal-partner-value" id="partnerModalInn">—</span>
+                                    </div>
+                                    <div class="deal-partner-form-group">
+                                        <span class="deal-partner-label">ОГРНИП</span>
+                                        <span class="deal-partner-value" id="partnerModalOgrnip">—</span>
+                                    </div>
+                                </div>
+                                <div class="deal-partner-form-group deal-partner-form-group-full">
+                                    <span class="deal-partner-label">Название организации</span>
+                                    <span class="deal-partner-value" id="partnerModalOrgName">—</span>
+                                </div>
+                                <div class="deal-partner-form-group deal-partner-form-group-full">
+                                    <span class="deal-partner-label">Юридический адрес</span>
+                                    <span class="deal-partner-value" id="partnerModalLegalAddress">—</span>
+                                </div>
+                                <div class="deal-partner-form-group deal-partner-form-group-full">
+                                    <span class="deal-partner-label">Наименование банка</span>
+                                    <span class="deal-partner-value" id="partnerModalBankName">—</span>
+                                </div>
+                                <div class="deal-partner-form-row">
+                                    <div class="deal-partner-form-group">
+                                        <span class="deal-partner-label">БИК</span>
+                                        <span class="deal-partner-value" id="partnerModalBik">—</span>
+                                    </div>
+                                    <div class="deal-partner-form-group">
+                                        <span class="deal-partner-label">Корреспондентский счёт</span>
+                                        <span class="deal-partner-value" id="partnerModalCorrAccount">—</span>
+                                    </div>
+                                </div>
+                                <div class="deal-partner-form-group deal-partner-form-group-full">
+                                    <span class="deal-partner-label">Расчётный счёт</span>
+                                    <span class="deal-partner-value" id="partnerModalCheckingAccount">—</span>
+                                </div>
+                            </div>
+                        </section>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Модалка «Культура» — как на деталке сделки (кнопка "Подробнее о культуре") -->
+    <div class="deal-modal-overlay" id="cropModalOverlay" aria-hidden="true">
+        <div class="deal-modal" id="cropModal">
+            <div class="deal-modal-header">
+                <h3 class="deal-modal-title" id="cropModalTitle">Качество культуры</h3>
+                <button type="button" class="deal-modal-close" id="cropModalClose" aria-label="Закрыть"><i class="fas fa-times"></i></button>
+            </div>
+            <div class="deal-modal-body" id="cropModalBody">
+                <div class="deal-modal-loading" id="cropModalLoading">
+                    <div class="deal-modal-loading-spinner"><i class="fas fa-spinner fa-spin"></i></div>
+                    <p class="deal-modal-loading-text">Загрузка информации о культуре...</p>
+                </div>
+                <div id="cropModalContent" style="display:none;"></div>
+            </div>
+        </div>
+    </div>
+
+    <script src="{% static 'server/js/total_post.js' %}"></script>
+    <script src="{% static 'order/js/my_deals.js' %}"></script>
+</body>
+</html>

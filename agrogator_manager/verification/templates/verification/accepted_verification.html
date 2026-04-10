@@ -1,0 +1,615 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>АГРОГАТОР - Детали верификации</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="assets/css/style.css">
+    <link rel="stylesheet" href="assets/css/verification.css">
+</head>
+<body>
+    <!-- Хедер -->
+    <header class="header">
+        <div class="container header__container">
+            <div class="logo">
+                <i class="fas fa-tractor"></i>
+                <span>АГРОГАТОР</span>
+            </div>
+            <nav class="nav">
+                <a href="index.html" class="nav-link"><i class="fas fa-home"></i> Дашборд</a>
+                <a href="#" class="nav-link"><i class="fas fa-handshake"></i> Сделки</a>
+                <a href="#" class="nav-link"><i class="fas fa-users"></i> Участники</a>
+                <a href="list_verification.html" class="nav-link active"><i class="fas fa-user-check"></i> Верификация</a>
+                <a href="#" class="nav-link"><i class="fas fa-chart-bar"></i> Аналитика</a>
+            </nav>
+            <div class="user-profile">
+                <div class="notification-bell">
+                    <i class="fas fa-bell"></i>
+                    <span class="notification-count">3</span>
+                </div>
+                <div class="user-info">
+                    <span class="user-name" id="headerUserName">Менеджер Иванов</span>
+                    <span class="user-role" id="headerUserRole">Администратор</span>
+                </div>
+                <div class="user-avatar" id="userAvatar">
+                    <img src="https://i.pravatar.cc/40?img=12" alt="Профиль">
+                    <div class="user-dropdown" id="userDropdown">
+                        <div class="dropdown-item">
+                            <i class="fas fa-user"></i>
+                            <span>Личный кабинет</span>
+                        </div>
+                        <div class="dropdown-item">
+                            <i class="fas fa-cog"></i>
+                            <span>Настройки</span>
+                        </div>
+                        <div class="dropdown-divider"></div>
+                        <div class="dropdown-item logout-item" id="logoutBtn">
+                            <i class="fas fa-sign-out-alt"></i>
+                            <span>Выйти</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <!-- Основной контент -->
+    <main class="main">
+        <div class="container">
+            <!-- Заголовок и навигация -->
+            <section class="verification-detail-header">
+                <div class="header-content">
+                    <div class="header-main">
+                        <button class="btn-back" onclick="window.location.href='list_verification.html'">
+                            <i class="fas fa-arrow-left"></i>
+                            Назад к списку
+                        </button>
+
+                        <div class="verification-title">
+                            <div class="title-icon">
+                                <i class="fas fa-user-check"></i>
+                            </div>
+                            <div class="title-text">
+                                <h1>Детали верификации</h1>
+                                <p>Петров Сергей Иванович • ООО "Золотые нивы"</p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="verification-status-badge">
+                        <div class="status-indicator accepted expanded">
+                            <div class="status-content">
+                                <i class="fas fa-check-circle status-icon"></i>
+                                <span class="status-text">Принята</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Основной контент -->
+                       <!-- Основной контент -->
+            <div class="verification-detail-content">
+                <!-- Левая колонка - информация о пользователе -->
+                <div class="detail-main-column">
+                    <!-- Информационная плашка для принятой заявки -->
+                    <section class="accepted-info-section">
+                        <div class="accepted-info-header">
+                            <i class="fas fa-check-circle"></i>
+                            <h3>Верификация успешно пройдена</h3>
+                        </div>
+                        <div class="accepted-info-content">
+                            <div class="acceptance-details">
+                                <div class="acceptance-detail-item">
+                                    <span class="acceptance-detail-label">Дата принятия</span>
+                                    <div class="acceptance-detail-value">28.03.2023 11:15</div>
+                                </div>
+                                <div class="acceptance-detail-item">
+                                    <span class="acceptance-detail-label">Менеджер</span>
+                                    <div class="acceptance-detail-value">Иванов Алексей (Администратор)</div>
+                                </div>
+                            </div>
+                        </div>
+                    </section>
+
+                    <!-- Блок 1: Личные данные -->
+                    <section class="detail-section personal-data">
+                        <div class="section-header">
+                            <h2><i class="fas fa-user"></i> Личные данные</h2>
+                            <div class="section-actions">
+                                <span class="verification-badge verified">
+                                    <i class="fas fa-check-circle"></i>
+                                    Проверено
+                                </span>
+                            </div>
+                        </div>
+
+                        <div class="personal-info-grid">
+                            <div class="user-avatar-section">
+                                <div class="user-avatar-large">
+                                    <img src="https://i.pravatar.cc/150?img=32" alt="Петров Сергей Иванович" id="userAvatarLarge">
+                                    <div class="avatar-actions">
+                                        <button class="icon-btn" title="Профиль активен">
+                                            <i class="fas fa-check"></i>
+                                        </button>
+                                    </div>
+                                </div>
+
+                                <div class="user-meta-info">
+                                    <div class="meta-item">
+                                        <i class="fas fa-calendar-plus"></i>
+                                        <span>Зарегистрирован: 15.03.2023</span>
+                                    </div>
+                                    <div class="meta-item">
+                                        <i class="fas fa-user-tag"></i>
+                                        <span>Фермер • Продавец</span>
+                                    </div>
+                                    <div class="meta-item">
+                                        <i class="fas fa-phone"></i>
+                                        <span>+7 (912) 555-44-33</span>
+                                    </div>
+                                    <div class="meta-item">
+                                        <i class="fas fa-bolt"></i>
+                                        <span>Активен с 28.03.2023</span>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="personal-fields">
+                                <div class="form-group">
+                                    <label class="form-label">Фамилия</label>
+                                    <div class="form-value">Петров</div>
+                                </div>
+                                <div class="form-group">
+                                    <label class="form-label">Имя</label>
+                                    <div class="form-value">Сергей</div>
+                                </div>
+                                <div class="form-group">
+                                    <label class="form-label">Отчество</label>
+                                    <div class="form-value">Иванович</div>
+                                </div>
+                                <div class="form-group">
+                                    <label class="form-label">Дата рождения</label>
+                                    <div class="form-value">15.08.1985</div>
+                                </div>
+                                <div class="form-group">
+                                    <label class="form-label">Email</label>
+                                    <div class="form-value">petrov@agro.ru</div>
+                                </div>
+                            </div>
+                        </div>
+                    </section>
+
+                    <!-- Блок 2: Данные организации -->
+                    <section class="detail-section organization-data">
+                        <div class="section-header">
+                            <h2><i class="fas fa-building"></i> Данные организации</h2>
+                            <div class="section-actions">
+                                <span class="verification-badge verified">
+                                    <i class="fas fa-check-circle"></i>
+                                    Проверено
+                                </span>
+                            </div>
+                        </div>
+
+                        <div class="info-alert">
+                            <div class="alert-icon">
+                                <i class="fas fa-check-circle"></i>
+                            </div>
+                            <div class="alert-content">
+                                <h4>Данные организации подтверждены</h4>
+                                <p>Все реквизиты проверены и соответствуют требованиям платформы. Организация может участвовать в торгах и заключать сделки.</p>
+                            </div>
+                        </div>
+
+                        <div class="organization-fields">
+                            <div class="form-row">
+                                <div class="form-group">
+                                    <label class="form-label">ИНН</label>
+                                    <div class="form-value">123456789012</div>
+                                </div>
+                                <div class="form-group">
+                                    <label class="form-label">ОГРНИП</label>
+                                    <div class="form-value">321456789012345</div>
+                                </div>
+                            </div>
+
+                            <div class="form-group full-width">
+                                <label class="form-label">Название организации</label>
+                                <div class="form-value">ООО "Золотые нивы"</div>
+                            </div>
+
+                            <div class="form-group full-width">
+                                <label class="form-label">Юридический адрес</label>
+                                <div class="form-value">г. Москва, ул. Ленина, д. 123, офис 45</div>
+                            </div>
+
+                            <div class="form-group full-width">
+                                <label class="form-label">Наименование банка</label>
+                                <div class="form-value">ПАО "Сбербанк"</div>
+                            </div>
+
+                            <div class="form-row">
+                                <div class="form-group">
+                                    <label class="form-label">БИК</label>
+                                    <div class="form-value">044525225</div>
+                                </div>
+                                <div class="form-group">
+                                    <label class="form-label">Корреспондентский счет</label>
+                                    <div class="form-value">30101810400000000225</div>
+                                </div>
+                            </div>
+
+                            <div class="form-group full-width">
+                                <label class="form-label">Расчетный счет</label>
+                                <div class="form-value">40817810099910004312</div>
+                            </div>
+                        </div>
+                    </section>
+
+                    <!-- Блок 3: Подписание договора -->
+                    <section class="detail-section contract-signing">
+                        <div class="section-header">
+                            <h2><i class="fas fa-file-signature"></i> Подписание договора</h2>
+                            <div class="section-actions">
+                                <span class="signed-badge">
+                                    <i class="fas fa-signature"></i>
+                                    Подписан
+                                </span>
+                            </div>
+                        </div>
+
+                        <div class="info-alert">
+                            <div class="alert-icon">
+                                <i class="fas fa-check-circle"></i>
+                            </div>
+                            <div class="alert-content">
+                                <h4>Договор успешно подписан</h4>
+                                <p>Договор подписан электронной подписью через сервис Контур.Диадок. Все условия сотрудничества активированы.</p>
+                            </div>
+                        </div>
+
+                        <div class="contract-document">
+                            <div class="document-card contract-signed">
+                                <div class="document-icon">
+                                    <i class="fas fa-file-contract"></i>
+                                </div>
+                                <div class="document-info">
+                                    <h4>Договор о сотрудничестве №ВР-2023-0456</h4>
+                                    <p>Договор между АГРОГАТОР и ООО "Золотые нивы"</p>
+                                    <div class="document-meta">
+                                        <span class="document-date">
+                                            <i class="fas fa-calendar"></i>
+                                            Создан: 15.03.2023
+                                        </span>
+                                        <span class="document-size">
+                                            <i class="fas fa-file"></i>
+                                            2.4 МБ
+                                        </span>
+                                        <span class="document-status">
+                                            <i class="fas fa-check"></i>
+                                            Подписан: 28.03.2023
+                                        </span>
+                                    </div>
+                                </div>
+                                <div class="document-actions">
+                                    <button class="btn btn-primary">
+                                        <i class="fas fa-download"></i>
+                                        Скачать
+                                    </button>
+                                    <button class="btn btn-outline">
+                                        <i class="fas fa-external-link-alt"></i>
+                                        Посмотреть
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                    </section>
+                </div>
+
+                <!-- Правая колонка - информация о статусе и история -->
+                <div class="detail-sidebar">
+                    <!-- Информация о статусе -->
+                    <section class="sidebar-section status-info-section">
+                        <h3>Статус аккаунта</h3>
+                        <div class="status-info-success">
+                            <div class="status-success-alert">
+                                <i class="fas fa-check-circle"></i>
+                                <div class="status-success-content">
+                                    <h4>Аккаунт активен</h4>
+                                    <p>Пользователь имеет полный доступ к платформе</p>
+                                </div>
+                            </div>
+                            <div class="user-active-since">
+                                <i class="fas fa-user-check"></i>
+                                <span>Активен с 28.03.2023</span>
+                            </div>
+                        </div>
+                    </section>
+
+                    <!-- История действий -->
+                    <section class="sidebar-section history-section">
+                        <h3>История заявки</h3>
+                        <div class="timeline-compact">
+                            <div class="timeline-item">
+                                <div class="timeline-marker success"></div>
+                                <div class="timeline-content">
+                                    <h4>Пользователь зарегистрировался</h4>
+                                    <span class="timeline-date">15.03.2023 14:30</span>
+                                </div>
+                            </div>
+                            <div class="timeline-item">
+                                <div class="timeline-marker info"></div>
+                                <div class="timeline-content">
+                                    <h4>Подана заявка на верификацию</h4>
+                                    <span class="timeline-date">16.03.2023 10:15</span>
+                                </div>
+                            </div>
+                            <div class="timeline-item">
+                                <div class="timeline-marker danger"></div>
+                                <div class="timeline-content">
+                                    <h4>Верификация отклонена с правками</h4>
+                                    <span class="timeline-date">18.03.2023 11:20</span>
+                                </div>
+                            </div>
+                            <div class="timeline-item">
+                                <div class="timeline-marker warning"></div>
+                                <div class="timeline-content">
+                                    <h4>Повторная заявка на верификацию</h4>
+                                    <span class="timeline-date">20.03.2023 09:45</span>
+                                </div>
+                            </div>
+                            <div class="timeline-item">
+                                <div class="timeline-marker success"></div>
+                                <div class="timeline-content">
+                                    <h4>Договор подписан</h4>
+                                    <span class="timeline-date">28.03.2023 10:30</span>
+                                </div>
+                            </div>
+                            <div class="timeline-item">
+                                <div class="timeline-marker success"></div>
+                                <div class="timeline-content">
+                                    <h4>Верификация принята</h4>
+                                    <span class="timeline-date">28.03.2023 11:15</span>
+                                </div>
+                            </div>
+                        </div>
+                    </section>
+                </div>
+            </div>
+
+            <!-- Секция отказа (скрыта по умолчанию) -->
+            <section class="rejection-section hidden" id="rejectionSection">
+                <div class="rejection-header">
+                    <h2><i class="fas fa-times-circle"></i> Отказ в верификации</h2>
+                    <p>Укажите причину отказа и выберите поля, которые необходимо исправить</p>
+                </div>
+
+                <div class="rejection-content">
+                    <!-- Блок комментария -->
+                    <div class="rejection-block">
+                        <h3>Комментарий к отказу</h3>
+                        <div class="form-group">
+                            <label class="form-label">Причина отказа *</label>
+                            <textarea class="form-textarea" placeholder="Опишите подробно причину отказа в верификации..." rows="4" id="rejectionComment"></textarea>
+                            <div class="form-hint">Минимум 20 символов</div>
+                        </div>
+                    </div>
+
+                    <!-- Блок выбора полей для исправления -->
+                    <div class="rejection-block">
+                        <h3>Поля для исправления</h3>
+
+                        <div class="info-alert">
+                            <div class="alert-icon">
+                                <i class="fas fa-exclamation-triangle"></i>
+                            </div>
+                            <div class="alert-content">
+                                <h4>Внимание!</h4>
+                                <p>Укажите поля, которые необходимо пользователю изменить. Если вы не выбираете ни одного поля, это означает полный отказ в верификации, и пользователь не сможет работать на платформе АГРОГАТОР.</p>
+                            </div>
+                        </div>
+
+                        <div class="fields-checklist-compact">
+                            <div class="checklist-group">
+                                <h4>Личные данные</h4>
+                                <div class="checklist-row">
+                                    <div class="checklist-item">
+                                        <label class="checkbox-label">
+                                            <input type="checkbox" name="rejectionFields" value="last_name">
+                                            <span class="checkbox-custom"></span>
+                                            Фамилия
+                                        </label>
+                                    </div>
+                                    <div class="checklist-item">
+                                        <label class="checkbox-label">
+                                            <input type="checkbox" name="rejectionFields" value="first_name">
+                                            <span class="checkbox-custom"></span>
+                                            Имя
+                                        </label>
+                                    </div>
+                                    <div class="checklist-item">
+                                        <label class="checkbox-label">
+                                            <input type="checkbox" name="rejectionFields" value="middle_name">
+                                            <span class="checkbox-custom"></span>
+                                            Отчество
+                                        </label>
+                                    </div>
+                                </div>
+                                <div class="checklist-row">
+                                    <div class="checklist-item">
+                                        <label class="checkbox-label">
+                                            <input type="checkbox" name="rejectionFields" value="birth_date">
+                                            <span class="checkbox-custom"></span>
+                                            Дата рождения
+                                        </label>
+                                    </div>
+                                    <div class="checklist-item">
+                                        <label class="checkbox-label">
+                                            <input type="checkbox" name="rejectionFields" value="email">
+                                            <span class="checkbox-custom"></span>
+                                            Email
+                                        </label>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="checklist-group">
+                                <h4>Данные организации</h4>
+                                <div class="checklist-row">
+                                    <div class="checklist-item">
+                                        <label class="checkbox-label">
+                                            <input type="checkbox" name="rejectionFields" value="inn">
+                                            <span class="checkbox-custom"></span>
+                                            ИНН
+                                        </label>
+                                    </div>
+                                    <div class="checklist-item">
+                                        <label class="checkbox-label disabled">
+                                            <input type="checkbox" name="rejectionFields" value="ogrnip" disabled>
+                                            <span class="checkbox-custom"></span>
+                                            ОГРНИП
+                                        </label>
+                                    </div>
+                                    <div class="checklist-item">
+                                        <label class="checkbox-label disabled">
+                                            <input type="checkbox" name="rejectionFields" value="company_name" disabled>
+                                            <span class="checkbox-custom"></span>
+                                            Название организации
+                                        </label>
+                                    </div>
+                                </div>
+                                <div class="checklist-row">
+                                    <div class="checklist-item">
+                                        <label class="checkbox-label disabled">
+                                            <input type="checkbox" name="rejectionFields" value="legal_address" disabled>
+                                            <span class="checkbox-custom"></span>
+                                            Юридический адрес
+                                        </label>
+                                    </div>
+                                    <div class="checklist-item">
+                                        <label class="checkbox-label">
+                                            <input type="checkbox" name="rejectionFields" value="bank_name">
+                                            <span class="checkbox-custom"></span>
+                                            Наименование банка
+                                        </label>
+                                    </div>
+                                </div>
+                                <div class="checklist-row">
+                                    <div class="checklist-item">
+                                        <label class="checkbox-label">
+                                            <input type="checkbox" name="rejectionFields" value="bik">
+                                            <span class="checkbox-custom"></span>
+                                            БИК
+                                        </label>
+                                    </div>
+                                    <div class="checklist-item">
+                                        <label class="checkbox-label">
+                                            <input type="checkbox" name="rejectionFields" value="correspondent_account">
+                                            <span class="checkbox-custom"></span>
+                                            Корреспондентский счет
+                                        </label>
+                                    </div>
+                                    <div class="checklist-item">
+                                        <label class="checkbox-label">
+                                            <input type="checkbox" name="rejectionFields" value="payment_account">
+                                            <span class="checkbox-custom"></span>
+                                            Расчетный счет
+                                        </label>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Кнопки действий -->
+                    <div class="rejection-actions">
+                        <button class="btn btn-outline" id="cancelRejection">
+                            <i class="fas fa-arrow-left"></i>
+                            Отмена
+                        </button>
+                        <button class="btn btn-danger" id="confirmRejection">
+                            <i class="fas fa-times-circle"></i>
+                            Подтвердить отказ
+                        </button>
+                    </div>
+                </div>
+            </section>
+        </div>
+    </main>
+
+    <!-- Модальное окно подтверждения отказа -->
+    <div class="modal" id="rejectionConfirmModal">
+        <div class="modal-content rejection-modal">
+            <div class="modal-header">
+                <div class="modal-icon">
+                    <i class="fas fa-exclamation-triangle"></i>
+                </div>
+                <div class="modal-title">
+                    <h3>Подтверждение отказа</h3>
+                    <p id="rejectionModalText">Вы уверены, что хотите отказать в верификации?</p>
+                </div>
+                <button class="modal-close">&times;</button>
+            </div>
+
+            <div class="modal-body">
+                <div class="rejection-warning" id="rejectionWarning">
+                    <i class="fas fa-exclamation-circle"></i>
+                    <p>Вы не выбрали ни одного поля для исправления. Это означает полный отказ в верификации, и пользователь не сможет работать на платформе АГРОГАТОР.</p>
+                </div>
+
+                <div class="rejection-actions-modal">
+                    <button class="btn btn-outline" id="cancelRejectionModal">
+                        <i class="fas fa-times"></i>
+                        Отмена
+                    </button>
+                    <button class="btn btn-danger" id="confirmRejectionModal">
+                        <i class="fas fa-check"></i>
+                        Да, уверен
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Модальное окно подтверждения выхода -->
+    <div class="modal" id="logoutConfirmModal">
+        <div class="modal-content logout-modal">
+            <div class="modal-header">
+                <div class="modal-icon">
+                    <i class="fas fa-sign-out-alt"></i>
+                </div>
+                <div class="modal-title">
+                    <h3>Выход из системы</h3>
+                    <p>Вы уверены, что хотите выйти?</p>
+                </div>
+                <button class="modal-close">&times;</button>
+            </div>
+
+            <div class="modal-body">
+                <div class="logout-warning">
+                    <i class="fas fa-exclamation-triangle"></i>
+                    <p>После выхода вам потребуется снова войти в систему для доступа к платформе.</p>
+                </div>
+
+                <div class="logout-actions">
+                    <button class="btn btn-outline" id="cancelLogout">
+                        <i class="fas fa-times"></i>
+                        Отмена
+                    </button>
+                    <button class="btn btn-danger" id="confirmLogout">
+                        <i class="fas fa-sign-out-alt"></i>
+                        Выйти
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="assets/js/verification.js"></script>
+</body>
+</html>

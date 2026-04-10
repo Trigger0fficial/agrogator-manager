@@ -1,0 +1,635 @@
+{% extends 'main/base.html' %}
+{% load static %}
+
+{% block title %}АГРОГАТОР - Проверка качества культуры{% endblock %}
+
+{% block extra_css %}
+<link rel="stylesheet" href="{% static 'main/assets/css/quality.css' %}">
+{% endblock %}
+
+{% block content %}
+    <!-- Скрытый элемент с ID культуры для JavaScript -->
+    <div id="culture_id" style="display: none;">{{ culture_id }}</div>
+
+    <div class="container">
+        <!-- Заголовок и навигация -->
+        <section class="quality-detail-header">
+            <div class="header-content">
+                <div class="header-main">
+                    <button class="btn-back" onclick="window.location.href='{% url 'verification:list_quality' %}'">
+                        <i class="fas fa-arrow-left"></i>
+                        Назад к списку
+                    </button>
+
+                    <div class="quality-title">
+                        <div class="title-icon">
+                            <i class="fas fa-seedling"></i>
+                        </div>
+                        <div class="title-text">
+                            <h1>Проверка качества культуры</h1>
+                            <p>Пшеница озимая • ООО "Золотые нивы"</p>
+                        </div>
+                    </div>
+
+                    <div class="header-actions">
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Основной контент -->
+        <div class="quality-detail-content">
+            <!-- Левая колонка - информация -->
+            <div class="detail-main-column">
+                <!-- Информационная плашка для отклоненной культуры -->
+                <section class="rejected-info-section" id="rejectedInfoSection" style="display: none;">
+                    <div class="rejected-info-header">
+                        <i class="fas fa-ban" id="rejectionStatusIcon"></i>
+                        <h3 id="rejectionStatusTitle">Качество отклонено</h3>
+                    </div>
+                    <div class="rejected-info-content">
+                        <div class="rejection-details">
+                            <div class="rejection-detail-item">
+                                <span class="rejection-detail-label">Дата отклонения</span>
+                                <div class="rejection-detail-value" id="rejectionDate">25.03.2023 14:30</div>
+                            </div>
+                            <div class="rejection-detail-item">
+                                <span class="rejection-detail-label">Менеджер</span>
+                                <div class="rejection-detail-value" id="rejectionManager">Иванов Алексей (Администратор)</div>
+                            </div>
+                            <div class="rejection-detail-item full-width">
+                                <span class="rejection-detail-label">Причина отклонения</span>
+                                <div class="rejection-detail-value" id="rejectionReason">
+                                    Предоставленные показатели качества не соответствуют требованиям. Необходимо предоставить актуальные данные и исправить указанные поля.
+                                </div>
+                            </div>
+                            <div class="rejection-detail-item full-width" id="rejectionFieldsContainer">
+                                <span class="rejection-detail-label">Требуемые исправления</span>
+                                <div class="rejection-fields-list" id="rejectionFieldsList">
+                                    <!-- Поля будут добавлены динамически -->
+                                </div>
+                            </div>
+                        
+                    </section>
+
+                    <!-- Информационная плашка для принятой культуры -->
+                    <section class="accepted-info-section" id="acceptedInfoSection" style="display: none;">
+                        <div class="accepted-info-header">
+                            <i class="fas fa-check-circle"></i>
+                            <h3>Качество культуры подтверждено</h3>
+                        </div>
+                        <div class="accepted-info-content">
+                            <div class="acceptance-details">
+                                <div class="acceptance-detail-item">
+                                    <span class="acceptance-detail-label">Дата принятия</span>
+                                    <div class="acceptance-detail-value" id="acceptanceDate">28.03.2023 11:15</div>
+                                </div>
+                                <div class="acceptance-detail-item">
+                                    <span class="acceptance-detail-label">Менеджер</span>
+                                    <div class="acceptance-detail-value" id="acceptanceManager">Иванов Алексей (Администратор)</div>
+                                </div>
+                            </div>
+                        </div>
+                    </section>
+
+                    <!-- Блок 1: Информация о фермере -->
+                    <section class="detail-section farmer-data">
+                        <div class="section-header">
+                            <h2><i class="fas fa-user-tie"></i> Информация о фермере</h2>
+                        </div>
+
+                        <div class="farmer-info-grid">
+                            <div class="farmer-avatar-section">
+                                <div class="farmer-avatar-large">
+                                    <div class="avatar-placeholder">
+                                        <i class="fas fa-user-tie"></i>
+                                        <span>Нет фото</span>
+                                    </div>
+                                </div>
+
+                                <div class="farmer-meta-info">
+                                    <div class="meta-item">
+                                        <i class="fas fa-calendar-plus"></i>
+                                        <span>Зарегистрирован: 15.03.2022</span>
+                                    </div>
+                                    <div class="meta-item">
+                                        <i class="fas fa-seedling"></i>
+                                        <span>Культур: 8</span>
+                                    </div>
+                                    <div class="meta-item">
+                                        <i class="fas fa-map-marker-alt"></i>
+                                        <span>Точек выгрузки: 12</span>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="farmer-fields">
+                                <div class="form-row">
+                                    <div class="form-group">
+                                        <label class="form-label">ФИО</label>
+                                        <div class="form-value">Петров Сергей Иванович</div>
+                                    </div>
+                                    <div class="form-group">
+                                        <label class="form-label">Дата рождения</label>
+                                        <div class="form-value">15.08.1985</div>
+                                    </div>
+                                </div>
+
+                                <div class="form-group full-width">
+                                    <label class="form-label">ИНН</label>
+                                    <div class="form-value">123456789012</div>
+                                </div>
+
+                                <div class="form-group full-width">
+                                    <label class="form-label">Организация</label>
+                                    <div class="form-value">ООО "Золотые нивы"</div>
+                                </div>
+
+                                <div class="form-row">
+                                    <div class="form-group">
+                                        <label class="form-label">Дата регистрации</label>
+                                        <div class="form-value">15.03.2022</div>
+                                    </div>
+                                    <div class="form-group">
+                                        <label class="form-label">Статус</label>
+                                        <div class="form-value verified">
+                                            <i class="fas fa-check-circle"></i>
+                                            Верифицирован
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </section>
+
+                    <!-- Блок 2: Описание культуры -->
+                    <section class="detail-section culture-description">
+                        <div class="section-header">
+                            <h2><i class="fas fa-info-circle"></i> Описание культуры</h2>
+                            <div class="section-actions">
+                                <span class="quality-badge pending">
+                                    <i class="fas fa-clock"></i>
+                                    Требует проверки
+                                </span>
+                            </div>
+                        </div>
+
+                        <div class="culture-fields">
+                            <div class="form-row">
+                                <div class="form-group">
+                                    <label class="form-label">Культура</label>
+                                    <div class="form-value">Пшеница озимая</div>
+                                </div>
+                                <div class="form-group">
+                                    <label class="form-label">Год урожая</label>
+                                    <div class="form-value">2024</div>
+                                </div>
+                            </div>
+
+                            <div class="form-group full-width">
+                                <label class="form-label">Регион происхождения</label>
+                                <div class="form-value">Краснодарский край</div>
+                            </div>
+
+                            <div class="form-group full-width">
+                                <label class="form-label">Срок хранения</label>
+                                <div class="form-value">24 месяца</div>
+                            </div>
+
+                            <div class="form-group full-width">
+                                <label class="form-label">Точка погрузки</label>
+                                <div class="form-value">г. Краснодар, ул. Сельская, д. 45, склад №3</div>
+                            </div>
+                        </div>
+                    </section>
+
+                    <!-- Блок 3: Описание качества -->
+                    <section class="detail-section quality-description">
+                        <div class="section-header">
+                            <h2><i class="fas fa-flask"></i> Показатели качества</h2>
+                            <div class="section-actions">
+                                <span class="quality-badge pending">
+                                    <i class="fas fa-clock"></i>
+                                    Требует проверки
+                                </span>
+                            </div>
+                        </div>
+
+                        <div class="quality-fields">
+                            <div class="form-row">
+                                <div class="form-group">
+                                    <label class="form-label">Протеин, %</label>
+                                    <div class="form-value">14.2</div>
+                                </div>
+                                <div class="form-group">
+                                    <label class="form-label">ИДК, ед.</label>
+                                    <div class="form-value">75</div>
+                                </div>
+                            </div>
+
+                            <div class="form-row">
+                                <div class="form-group">
+                                    <label class="form-label">Влажность, %</label>
+                                    <div class="form-value">12.5</div>
+                                </div>
+                                <div class="form-group">
+                                    <label class="form-label">Натура, г/л</label>
+                                    <div class="form-value">780</div>
+                                </div>
+                            </div>
+
+                            <div class="form-row">
+                                <div class="form-group">
+                                    <label class="form-label">Клейковина, %</label>
+                                    <div class="form-value">28.4</div>
+                                </div>
+                                <div class="form-group">
+                                    <label class="form-label">Стекловидность, %</label>
+                                    <div class="form-value">64</div>
+                                </div>
+                            </div>
+
+                            <div class="form-group full-width">
+                                <label class="form-label">Запах</label>
+                                <div class="form-value">Свойственный зерну, без посторонних запахов</div>
+                            </div>
+                        </div>
+                    </section>
+
+                    <!-- Блок 4: Документы качества -->
+                    <section class="detail-section quality-documents">
+                        <div class="section-header">
+                            <h2><i class="fas fa-file-contract"></i> Документы качества</h2>
+                        </div>
+
+                        <div class="documents-grid">
+                            <div class="document-card">
+                                <div class="document-icon">
+                                    <i class="fas fa-file-pdf"></i>
+                                </div>
+                                <div class="document-info">
+                                    <h4>Протокол испытаний №245-2024</h4>
+                                    <p>Лаборатория качества зерна "Агротест"</p>
+                                    <div class="document-meta">
+                                        <span class="document-date">
+                                            <i class="fas fa-calendar"></i>
+                                            Дата: 15.11.2024
+                                        </span>
+                                        <span class="document-size">
+                                            <i class="fas fa-file"></i>
+                                            1.8 МБ
+                                        </span>
+                                    </div>
+                                </div>
+                                <div class="document-actions">
+                                    <button class="btn btn-primary download-document">
+                                        <i class="fas fa-download"></i>
+                                        Скачать
+                                    </button>
+                                </div>
+                            </div>
+
+                            <div class="document-card">
+                                <div class="document-icon">
+                                    <i class="fas fa-file-pdf"></i>
+                                </div>
+                                <div class="document-info">
+                                    <h4>Сертификат соответствия СТ-789456</h4>
+                                    <p>Федеральная служба по ветеринарному и фитосанитарному надзору</p>
+                                    <div class="document-meta">
+                                        <span class="document-date">
+                                            <i class="fas fa-calendar"></i>
+                                            Дата: 10.11.2024
+                                        </span>
+                                        <span class="document-size">
+                                            <i class="fas fa-file"></i>
+                                            2.1 МБ
+                                        </span>
+                                    </div>
+                                </div>
+                                <div class="document-actions">
+                                    <button class="btn btn-primary download-document">
+                                        <i class="fas fa-download"></i>
+                                        Скачать
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                    </section>
+                </div>
+
+                <!-- Правая колонка - действия и история -->
+                <div class="detail-sidebar">
+                    <!-- Действия -->
+                    <section class="sidebar-section actions-section">
+                        <div class="actions-section-header">
+                            <h3>Действия</h3>
+                            <span class="actions-section-status" id="actionsSectionStatusBadge"></span>
+                        </div>
+                        <div class="action-cards">
+                            <div class="action-card primary">
+                                <div class="action-icon">
+                                    <i class="fas fa-comment-dots"></i>
+                                </div>
+                                <div class="action-content">
+                                    <h4>Чат с фермером</h4>
+                                    <p>Обсудите детали качества</p>
+                                </div>
+                                <button class="btn-action" id="goToChat">
+                                    <i class="fas fa-arrow-right"></i>
+                                </button>
+                            </div>
+
+                            <div class="action-card success action-card-status-dependent" id="acceptQualityCard" style="display: none;">
+                                <div class="action-icon">
+                                    <i class="fas fa-check-circle"></i>
+                                </div>
+                                <div class="action-content">
+                                    <h4>Подтвердить качество</h4>
+                                    <p>Одобрить культуру</p>
+                                </div>
+                                <button class="btn-action" id="acceptQuality">
+                                    <i class="fas fa-arrow-right"></i>
+                                </button>
+                            </div>
+
+                            <div class="action-card danger action-card-status-dependent" id="rejectQualityCard" style="display: none;">
+                                <div class="action-icon">
+                                    <i class="fas fa-times-circle"></i>
+                                </div>
+                                <div class="action-content">
+                                    <h4>Отклонить качество</h4>
+                                    <p>Требуются исправления</p>
+                                </div>
+                                <button class="btn-action" id="rejectQuality">
+                                    <i class="fas fa-arrow-right"></i>
+                                </button>
+                            </div>
+                        </div>
+                    </section>
+
+                    <!-- История проверок -->
+                    <section class="sidebar-section history-section">
+                        <h3>История проверок</h3>
+                        <div class="timeline-compact">
+                            <div class="timeline-item">
+                                <div class="timeline-marker success"></div>
+                                <div class="timeline-content">
+                                    <h4>Культура добавлена</h4>
+                                    <span class="timeline-date">10.11.2024 14:30</span>
+                                </div>
+                            </div>
+                            <div class="timeline-item">
+                                <div class="timeline-marker info"></div>
+                                <div class="timeline-content">
+                                    <h4>Документы загружены</h4>
+                                    <span class="timeline-date">12.11.2024 10:15</span>
+                                </div>
+                            </div>
+                            <div class="timeline-item">
+                                <div class="timeline-marker warning"></div>
+                                <div class="timeline-content">
+                                    <h4>Отправлена на проверку</h4>
+                                    <span class="timeline-date">14.11.2024 09:45</span>
+                                </div>
+                            </div>
+                            <div class="timeline-item">
+                                <div class="timeline-marker info"></div>
+                                <div class="timeline-content">
+                                    <h4>Проверка менеджером</h4>
+                                    <span class="timeline-date">15.11.2024 11:20</span>
+                                </div>
+                            </div>
+                        </div>
+                    </section>
+                </div>
+            </div>
+
+            <!-- Секция отказа (скрыта по умолчанию) -->
+            <section class="rejection-section hidden" id="rejectionSection">
+                <div class="rejection-header">
+                    <h2><i class="fas fa-times-circle"></i> Отклонение качества</h2>
+                    <p>Укажите причину отклонения и выберите проблемные поля</p>
+                </div>
+
+                <div class="rejection-content">
+                    <!-- Блок комментария -->
+                    <div class="rejection-block">
+                        <h3>Комментарий к отклонению</h3>
+                        <div class="form-group">
+                            <label class="form-label">Причина отклонения *</label>
+                            <textarea class="form-textarea" placeholder="Опишите подробно причину отклонения качества культуры..." rows="4" id="rejectionComment"></textarea>
+                            <div class="form-hint">Минимум 20 символов</div>
+                        </div>
+                    </div>
+
+                    <!-- Блок выбора полей для исправления -->
+                    <div class="rejection-block">
+                        <h3>Проблемные поля</h3>
+
+                        <div class="info-alert">
+                            <div class="alert-icon">
+                                <i class="fas fa-exclamation-triangle"></i>
+                            </div>
+                            <div class="alert-content">
+                                <h4>Внимание!</h4>
+                                <p>Укажите поля, которые не соответствуют требованиям. Если вы не выбираете ни одного поля, это означает полное отклонение качества.</p>
+                            </div>
+                        </div>
+
+                        <div class="fields-checklist-compact">
+                            <!-- Описание культуры -->
+                            <div class="checklist-group">
+                                <h4>Описание культуры</h4>
+                                <div class="checklist-row">
+                                    <div class="checklist-item">
+                                        <label class="checkbox-label">
+                                            <input type="checkbox" name="rejectionFields" value="culture_name">
+                                            <span class="checkbox-custom"></span>
+                                            Культура
+                                        </label>
+                                    </div>
+                                    <div class="checklist-item">
+                                        <label class="checkbox-label">
+                                            <input type="checkbox" name="rejectionFields" value="harvest_year">
+                                            <span class="checkbox-custom"></span>
+                                            Год урожая
+                                        </label>
+                                    </div>
+                                    <div class="checklist-item">
+                                        <label class="checkbox-label">
+                                            <input type="checkbox" name="rejectionFields" value="region">
+                                            <span class="checkbox-custom"></span>
+                                            Регион происхождения
+                                        </label>
+                                    </div>
+                                </div>
+                                <div class="checklist-row">
+                                    <div class="checklist-item">
+                                        <label class="checkbox-label">
+                                            <input type="checkbox" name="rejectionFields" value="storage_period">
+                                            <span class="checkbox-custom"></span>
+                                            Срок хранения
+                                        </label>
+                                    </div>
+                                    <div class="checklist-item">
+                                        <label class="checkbox-label">
+                                            <input type="checkbox" name="rejectionFields" value="loading_point">
+                                            <span class="checkbox-custom"></span>
+                                            Точка погрузки
+                                        </label>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- Показатели качества -->
+                            <div class="checklist-group">
+                                <h4>Показатели качества</h4>
+                                <div class="checklist-row">
+                                    <div class="checklist-item">
+                                        <label class="checkbox-label">
+                                            <input type="checkbox" name="rejectionFields" value="protein">
+                                            <span class="checkbox-custom"></span>
+                                            Протеин
+                                        </label>
+                                    </div>
+                                    <div class="checklist-item">
+                                        <label class="checkbox-label">
+                                            <input type="checkbox" name="rejectionFields" value="idk">
+                                            <span class="checkbox-custom"></span>
+                                            ИДК
+                                        </label>
+                                    </div>
+                                    <div class="checklist-item">
+                                        <label class="checkbox-label">
+                                            <input type="checkbox" name="rejectionFields" value="humidity">
+                                            <span class="checkbox-custom"></span>
+                                            Влажность
+                                        </label>
+                                    </div>
+                                </div>
+                                <div class="checklist-row">
+                                    <div class="checklist-item">
+                                        <label class="checkbox-label">
+                                            <input type="checkbox" name="rejectionFields" value="nature">
+                                            <span class="checkbox-custom"></span>
+                                            Натура
+                                        </label>
+                                    </div>
+                                    <div class="checklist-item">
+                                        <label class="checkbox-label">
+                                            <input type="checkbox" name="rejectionFields" value="gluten">
+                                            <span class="checkbox-custom"></span>
+                                            Клейковина
+                                        </label>
+                                    </div>
+                                    <div class="checklist-item">
+                                        <label class="checkbox-label">
+                                            <input type="checkbox" name="rejectionFields" value="vitreousness">
+                                            <span class="checkbox-custom"></span>
+                                            Стекловидность
+                                        </label>
+                                    </div>
+                                </div>
+                                <div class="checklist-row">
+                                    <div class="checklist-item">
+                                        <label class="checkbox-label">
+                                            <input type="checkbox" name="rejectionFields" value="smell">
+                                            <span class="checkbox-custom"></span>
+                                            Запах
+                                        </label>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- Документы качества -->
+                            <div class="checklist-group">
+                                <h4>Документы качества</h4>
+                                <div class="checklist-row">
+                                    <div class="checklist-item">
+                                        <label class="checkbox-label">
+                                            <input type="checkbox" name="rejectionFields" value="protocol_245">
+                                            <span class="checkbox-custom"></span>
+                                            Протокол испытаний №245-2024
+                                        </label>
+                                    </div>
+                                    <div class="checklist-item">
+                                        <label class="checkbox-label">
+                                            <input type="checkbox" name="rejectionFields" value="certificate_789">
+                                            <span class="checkbox-custom"></span>
+                                            Сертификат СТ-789456
+                                        </label>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- Дополнительно -->
+                            <div class="checklist-group">
+                                <h4>Дополнительно</h4>
+                                <div class="checklist-row">
+                                    <div class="checklist-item">
+                                        <label class="checkbox-label">
+                                            <input type="checkbox" name="rejectionFields" value="other_reasons">
+                                            <span class="checkbox-custom"></span>
+                                            Иные причины
+                                        </label>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Кнопки действий -->
+                    <div class="rejection-actions">
+                        <button class="btn btn-outline" id="cancelRejection">
+                            <i class="fas fa-arrow-left"></i>
+                            Отмена
+                        </button>
+                        <button class="btn btn-danger" id="confirmRejection">
+                            <i class="fas fa-times-circle"></i>
+                            Подтвердить отклонение
+                        </button>
+                    </div>
+                </div>
+            </section>
+
+    <!-- Модальное окно подтверждения отклонения -->
+    <div class="modal" id="rejectionConfirmModal">
+        <div class="modal-content rejection-modal">
+            <div class="modal-header">
+                <div class="modal-icon">
+                    <i class="fas fa-exclamation-triangle"></i>
+                </div>
+                <div class="modal-title">
+                    <h3>Подтверждение отклонения</h3>
+                    <p id="rejectionModalText">Вы уверены, что хотите отклонить качество культуры?</p>
+                </div>
+                <button class="modal-close">&times;</button>
+            </div>
+
+            <div class="modal-body">
+                <div class="rejection-warning" id="rejectionWarning">
+                    <i class="fas fa-exclamation-circle"></i>
+                    <p>Вы не выбрали ни одного поля для исправления. Это означает полное отклонение качества культуры.</p>
+                </div>
+
+                <div class="rejection-actions-modal">
+                    <button class="btn btn-outline" id="cancelRejectionModal">
+                        <i class="fas fa-times"></i>
+                        Отмена
+                    </button>
+                    <button class="btn btn-danger" id="confirmRejectionModal">
+                        <i class="fas fa-check"></i>
+                        Да, уверен
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Передача culture_id в JavaScript
+        window.culture_id = '{{ culture_id }}';
+    </script>
+    <script src="{% static 'verification/js/quality_detail.js' %}"></script>
+    {% endblock %}

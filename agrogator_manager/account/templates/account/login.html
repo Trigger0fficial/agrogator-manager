@@ -1,0 +1,542 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>АГРОГАТОР - Вход в систему</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="{% static 'main/assets/css/login.css' %}">
+</head>
+<body>
+    <!-- Анимированный фон -->
+    <div class="background-animation">
+        <div class="floating-shapes">
+            <div class="shape"></div>
+            <div class="shape"></div>
+            <div class="shape"></div>
+        </div>
+    </div>
+
+    <div class="login-page">
+        <!-- Левая часть - форма -->
+        <section class="login-form-section">
+            <div class="form-container">
+                <div class="form-card">
+                    <div class="card-header">
+                        <h1>Добро пожаловать</h1>
+                        <p>Войдите в свою учетную запись</p>
+                    </div>
+
+                    <!-- Django форма авторизации -->
+                    <form method="post" action="{% url 'account:login' %}" class="login-form" id="loginForm">
+                        {% csrf_token %}
+                        
+                        {% if messages %}
+                            <div class="messages-container">
+                                {% for message in messages %}
+                                    <div class="alert alert-{{ message.tags }} {% if message.tags == 'error' %}alert-error-design{% endif %}">
+                                        <div class="alert-icon">
+                                            <i class="fas fa-{% if message.tags == 'error' %}exclamation-triangle{% elif message.tags == 'success' %}check-circle{% else %}info-circle{% endif %}"></i>
+                                        </div>
+                                        <div class="alert-content">
+                                            <div class="alert-title">
+                                                {% if message.tags == 'error' %}Ошибка{% elif message.tags == 'success' %}Успешно{% else %}Информация{% endif %}
+                                            </div>
+                                            <div class="alert-message">
+                                                {{ message }}
+                                            </div>
+                                        </div>
+                                        <button type="button" class="alert-close" onclick="this.parentElement.remove()">
+                                            <i class="fas fa-times"></i>
+                                        </button>
+                                    </div>
+                                {% endfor %}
+                            </div>
+                        {% endif %}
+
+                        <div class="form-group">
+                            <label for="phone" class="form-label">Телефон</label>
+                            <div class="input-container">
+                                <i class="input-icon fas fa-phone"></i>
+                                <input
+                                    type="tel"
+                                    name="phone"
+                                    id="phone"
+                                    class="form-input"
+                                    placeholder="+7 (___)-___-__-__"
+                                    maxlength="18"
+                                    required
+                                    value="{{ form.phone.value|default:'' }}"
+                                >
+                                <div class="input-border"></div>
+                            </div>
+                            {% if form.phone.errors %}
+                                <div class="error-message show">
+                                    {% for error in form.phone.errors %}
+                                        {{ error }}
+                                    {% endfor %}
+                                </div>
+                            {% endif %}
+                        </div>
+
+                        <div class="form-group">
+                            <div class="input-container">
+                                <div class="input-icon">
+                                    <i class="fas fa-lock"></i>
+                                </div>
+                                {{ form.password }}
+                                {% if form.password.errors %}
+                                    <div class="error-message">
+                                        {% for error in form.password.errors %}
+                                            {{ error }}
+                                        {% endfor %}
+                                    </div>
+                                {% endif %}
+                                <button type="button" class="password-toggle" id="passwordToggle" aria-label="Показать пароль">
+                                    <i class="fas fa-eye"></i>
+                                </button>
+                            </div>
+                        </div>
+
+                        <div class="form-options">
+                            <label class="checkbox-container">
+                                <input type="checkbox" id="rememberMe" name="remember_me">
+                                <span class="checkmark">
+                                    <i class="fas fa-check"></i>
+                                </span>
+                                Запомнить меня
+                            </label>
+                            <button type="button" class="forgot-password" id="forgotPassword">
+                                Забыли пароль?
+                            </button>
+                        </div>
+
+                        <button type="submit" class="btn-login" id="loginBtn">
+                            <div class="btn-content">
+                                <span>Войти в систему</span>
+                                <i class="fas fa-arrow-right btn-icon"></i>
+                            </div>
+                            <div class="btn-loader">
+                                <div class="spinner"></div>
+                            </div>
+                        </button>
+                    </form>
+
+                    <div class="legal-footer">
+                        <div class="legal-links">
+                            <a href="#" class="legal-link">Пользовательское соглашение</a>
+                            <a href="#" class="legal-link">Политика конфиденциальности</a>
+                        </div>
+                        <div class="copyright">
+                            © 2024 АГРОГАТОР. Все права защищены.
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Правая часть - информация -->
+        <section class="login-info-section">
+            <div class="info-container">
+                <div class="info-card">
+                    <div class="info-header">
+                        <div class="info-logo">
+                            <div class="info-logo-icon">
+                                <i class="fas fa-tractor"></i>
+                            </div>
+                            <div class="info-logo-text">АГРОГАТОР</div>
+                        </div>
+                        <h2>Управление агробизнесом</h2>
+                        <p>Комплексная платформа для менеджеров и специалистов</p>
+                    </div>
+
+                    <div class="slider-container">
+                        <div class="slider" id="featureSlider">
+                            <!-- Слайд 1 -->
+                            <div class="slide">
+                                <div class="feature-card">
+                                    <div class="feature-icon">
+                                        <i class="fas fa-chart-line"></i>
+                                    </div>
+                                    <h3>Мониторинг деятельности фермеров</h3>
+                                    <p>Отслеживание выполнения планов, контроль качества работ и оперативное реагирование на отклонения. Полная прозрачность производственных процессов.</p>
+                                </div>
+                            </div>
+                            <!-- Слайд 2 -->
+                            <div class="slide">
+                                <div class="feature-card">
+                                    <div class="feature-icon">
+                                        <i class="fas fa-handshake"></i>
+                                    </div>
+                                    <h3>Управление сделками</h3>
+                                    <p>Автоматизация процесса заключения договоров, контроль исполнения обязательств и управление взаиморасчетами с контрагентами.</p>
+                                </div>
+                            </div>
+                            <!-- Слайд 3 -->
+                            <div class="slide">
+                                <div class="feature-card">
+                                    <div class="feature-icon">
+                                        <i class="fas fa-analytics"></i>
+                                    </div>
+                                    <h3>Аналитика и отчетность</h3>
+                                    <p>Глубокая аналитика эффективности производства, формирование отчетов в реальном времени и прогнозирование ключевых показателей.</p>
+                                </div>
+                            </div>
+                            <!-- Слайд 4 -->
+                            <div class="slide">
+                                <div class="feature-card">
+                                    <div class="feature-icon">
+                                        <i class="fas fa-truck"></i>
+                                    </div>
+                                    <h3>Оптимизация логистики</h3>
+                                    <p>Планирование маршрутов, контроль транспорта и управление цепочками поставок для минимизации издержек и сроков доставки.</p>
+                                </div>
+                            </div>
+                            <!-- Слайд 5 -->
+                            <div class="slide">
+                                <div class="feature-card">
+                                    <div class="feature-icon">
+                                        <i class="fas fa-cogs"></i>
+                                    </div>
+                                    <h3>Автоматизация процессов</h3>
+                                    <p>Интеграция всех бизнес-процессов в единую систему, сокращение рутинных операций и повышение эффективности управления.</p>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="slider-nav" id="sliderNav">
+                            <!-- Навигация будет добавлена через JavaScript -->
+                        </div>
+                    </div>
+
+                    <div class="management-info" id="managementInfo">
+                        <h4><i class="fas fa-bullseye"></i> <span id="managementTitle">Ключевые возможности</span></h4>
+                        <div class="management-features" id="managementFeatures"></div>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </div>
+
+    <!-- Модальное окно восстановления пароля -->
+    <div class="modal" id="passwordRecoveryModal">
+        <div class="recovery-modal">
+            <div class="modal-header">
+                <div class="modal-icon">
+                    <i class="fas fa-key"></i>
+                </div>
+                <div class="modal-title">
+                    <h3>Восстановление пароля</h3>
+                    <p>Введите данные для восстановления доступа</p>
+                </div>
+                <button class="modal-close">&times;</button>
+            </div>
+            <div class="modal-body">
+                <div class="recovery-note">
+                    <i class="fas fa-info-circle"></i>
+                    <p>На указанный email будет отправлено письмо с инструкциями по восстановлению пароля</p>
+                </div>
+
+                <form class="login-form" id="recoveryForm">
+                    <div class="form-group">
+                        <div class="input-container">
+                            <div class="input-icon">
+                                <i class="fas fa-envelope"></i>
+                            </div>
+                            <input type="email" class="form-input" id="recoveryEmail" placeholder="Введите ваш email" required>
+                            <div class="error-message" id="recoveryEmailError"></div>
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <div class="input-container">
+                            <div class="input-icon">
+                                <i class="fas fa-shield-alt"></i>
+                            </div>
+                            <input type="password" class="form-input" id="cooperativePassword" placeholder="Кооперативный пароль" required>
+                            <div class="error-message" id="cooperativePasswordError"></div>
+                        </div>
+                    </div>
+
+                    <button type="submit" class="btn-login btn-recovery" id="recoveryBtn">
+                        <div class="btn-content">
+                            <span>Восстановить пароль</span>
+                            <i class="fas fa-paper-plane btn-icon"></i>
+                        </div>
+                        <div class="btn-loader">
+                            <div class="spinner"></div>
+                        </div>
+                    </button>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <script src="{% static 'main/assets/js/login.js' %}" ></script>
+    <script src="{% static 'server/js/total_post.js' %}"></script>
+    <script src="{% static 'account/js/auth.js' %}"></script>
+    <!-- Дополнительные стили для сообщений Django -->
+    <style>
+        .messages-container {
+            margin-bottom: 1.5rem;
+        }
+
+        .alert {
+            display: flex;
+            align-items: flex-start;
+            gap: 1rem;
+            padding: 1rem 1.25rem;
+            border-radius: 12px;
+            margin-bottom: 1rem;
+            position: relative;
+            animation: slideInDown 0.3s ease-out;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+            backdrop-filter: blur(10px);
+        }
+
+        .alert-error-design {
+            background: linear-gradient(135deg, #fee2e2 0%, #fecaca 100%);
+            border: 2px solid #ef4444;
+            color: #991b1b;
+        }
+
+        .alert-success {
+            background: linear-gradient(135deg, #d1fae5 0%, #a7f3d0 100%);
+            border: 2px solid #10b981;
+            color: #065f46;
+        }
+
+        .alert-info {
+            background: linear-gradient(135deg, #dbeafe 0%, #bfdbfe 100%);
+            border: 2px solid #3b82f6;
+            color: #1e3a8a;
+        }
+
+        .alert-icon {
+            flex-shrink: 0;
+            width: 2rem;
+            height: 2rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 50%;
+            font-size: 1rem;
+        }
+
+        .alert-error-design .alert-icon {
+            background: #ef4444;
+            color: white;
+        }
+
+        .alert-success .alert-icon {
+            background: #10b981;
+            color: white;
+        }
+
+        .alert-info .alert-icon {
+            background: #3b82f6;
+            color: white;
+        }
+
+        .alert-content {
+            flex: 1;
+            min-width: 0;
+        }
+
+        .alert-title {
+            font-weight: 600;
+            font-size: 0.875rem;
+            margin-bottom: 0.25rem;
+            text-transform: uppercase;
+            letter-spacing: 0.025em;
+        }
+
+        .alert-message {
+            font-size: 0.875rem;
+            line-height: 1.4;
+            word-wrap: break-word;
+        }
+
+        .alert-close {
+            position: absolute;
+            top: 0.75rem;
+            right: 0.75rem;
+            background: none;
+            border: none;
+            color: inherit;
+            opacity: 0.6;
+            cursor: pointer;
+            padding: 0.25rem;
+            border-radius: 4px;
+            transition: all 0.2s ease;
+            font-size: 0.875rem;
+        }
+
+        .alert-close:hover {
+            opacity: 1;
+            background: rgba(0, 0, 0, 0.1);
+        }
+
+        @keyframes slideInDown {
+            from {
+                transform: translateY(-20px);
+                opacity: 0;
+            }
+            to {
+                transform: translateY(0);
+            }
+        }
+
+        /* Стили для ошибок формы */
+        .error-message {
+            color: #dc3545;
+            font-size: 0.875rem;
+            margin-top: 0.25rem;
+            display: flex;
+            align-items: center;
+            gap: 0.25rem;
+        }
+
+        .error-message:before {
+            content: "";
+            font-size: 0.75rem;
+        }
+
+        /* Стили для индикатора загрузки успеха - Аграрный дизайн */
+        .loading-success-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: transparent;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            z-index: 9999;
+            pointer-events: none;
+        }
+
+        .loading-success-content {
+            text-align: center;
+            color: #2d5016;
+            background: rgba(255, 255, 255, 0.95);
+            padding: 3rem 4rem;
+            border-radius: 20px;
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.1);
+            border: 1px solid rgba(139, 195, 74, 0.2);
+            pointer-events: auto;
+            animation: contentSlideIn 0.5s ease-out;
+            position: relative;
+            z-index: 10000;
+        }
+
+        .loading-success-spinner {
+            margin-bottom: 2rem;
+            position: relative;
+            height: 120px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .agricultural-icon {
+            font-size: 4rem;
+            color: #4caf50;
+            animation: tractorMove 2s ease-in-out infinite;
+            position: relative;
+            z-index: 2;
+        }
+
+        .wheat-decoration {
+            position: absolute;
+            width: 100%;
+            display: flex;
+            justify-content: space-around;
+            align-items: center;
+            top: 50%;
+            transform: translateY(-50%);
+        }
+
+        .wheat-decoration i {
+            font-size: 1.5rem;
+            color: #8bc34a;
+            opacity: 0.7;
+            animation: wheatSway 3s ease-in-out infinite;
+        }
+
+        .wheat-decoration i:nth-child(1) {
+            animation-delay: 0s;
+            transform: translateX(-30px);
+        }
+
+        .wheat-decoration i:nth-child(2) {
+            animation-delay: 0.5s;
+        }
+
+        .wheat-decoration i:nth-child(3) {
+            animation-delay: 1s;
+            transform: translateX(30px);
+        }
+
+        .loading-success-text {
+            font-size: 1.5rem;
+            font-weight: 600;
+            margin-bottom: 0.5rem;
+            color: #2d5016;
+            font-family: 'Inter', sans-serif;
+            animation: textFadeIn 0.8s ease-out;
+        }
+
+        .loading-success-subtitle {
+            font-size: 1rem;
+            color: #689f38;
+            font-weight: 400;
+            font-family: 'Inter', sans-serif;
+            opacity: 0.8;
+            animation: textFadeIn 1s ease-out;
+        }
+
+        @keyframes contentSlideIn {
+            from {
+                opacity: 0;
+                transform: translateY(30px) scale(0.9);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0) scale(1);
+            }
+        }
+
+        @keyframes tractorMove {
+            0%, 100% {
+                transform: translateX(-10px) rotate(-5deg);
+            }
+            50% {
+                transform: translateX(10px) rotate(5deg);
+            }
+        }
+
+        @keyframes wheatSway {
+            0%, 100% {
+                transform: translateY(0) rotate(-10deg);
+            }
+            50% {
+                transform: translateY(-10px) rotate(10deg);
+            }
+        }
+
+        @keyframes textFadeIn {
+            from {
+                opacity: 0;
+                transform: translateY(10px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+    </style>
+</body>
+</html>

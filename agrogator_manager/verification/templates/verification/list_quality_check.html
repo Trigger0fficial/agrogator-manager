@@ -1,0 +1,572 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>АГРОГАТОР - Проверка качества культур</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="{% static 'main/assets/css/style.css' %}">
+    <link rel="stylesheet" href="{% static 'main/assets/css/list_quality_check.css' %}">
+</head>
+<body>
+    <!-- Хедер -->
+    <header class="header">
+        <div class="container header__container">
+            <div class="logo">
+                <i class="fas fa-tractor"></i>
+                <span>АГРОГАТОР</span>
+            </div>
+            <nav class="nav">
+                <a href="index.html" class="nav-link"><i class="fas fa-home"></i> Дашборд</a>
+                <a href="#" class="nav-link"><i class="fas fa-handshake"></i> Сделки</a>
+                <a href="#" class="nav-link"><i class="fas fa-users"></i> Участники</a>
+                <a href="#" class="nav-link"><i class="fas fa-chart-bar"></i> Аналитика</a>
+            </nav>
+            <div class="user-profile">
+                <div class="notification-bell">
+                    <i class="fas fa-bell"></i>
+                    <span class="notification-count">3</span>
+                </div>
+                <div class="user-info">
+                    <span class="user-name" id="headerUserName">Менеджер Иванов</span>
+                    <span class="user-role" id="headerUserRole">Администратор</span>
+                </div>
+                <div class="user-avatar" id="userAvatar">
+                    <img src="https://i.pravatar.cc/40?img=12" alt="Профиль">
+                    <div class="user-dropdown" id="userDropdown">
+                        <div class="dropdown-item">
+                            <i class="fas fa-user"></i>
+                            <span>Личный кабинет</span>
+                        </div>
+                        <div class="dropdown-item">
+                            <i class="fas fa-cog"></i>
+                            <span>Настройки</span>
+                        </div>
+                        <div class="dropdown-divider"></div>
+                        <div class="dropdown-item logout-item" id="logoutBtn">
+                            <i class="fas fa-sign-out-alt"></i>
+                            <span>Выйти</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <!-- Основной контент -->
+    <main class="main">
+        <div class="container">
+            <!-- Заголовок и навигация -->
+            <section class="quality-header">
+                <div class="header-content">
+                    <button class="btn-back" id="backToDashboard">
+                        <i class="fas fa-arrow-left"></i>
+                        Назад к дашборду
+                    </button>
+
+                    <div class="quality-title">
+                        <div class="title-icon">
+                            <i class="fas fa-seedling"></i>
+                        </div>
+                        <div class="title-text">
+                            <h1>Проверка качества культур</h1>
+                            <p>Управление процессом проверки и подтверждения качества сельскохозяйственных культур</p>
+                        </div>
+                    </div>
+
+                    <div class="quality-stats">
+                        <div class="stat-card">
+                            <div class="stat-value" id="totalCultures">0</div>
+                            <div class="stat-label">Всего культур</div>
+                        </div>
+                        <div class="stat-card">
+                            <div class="stat-value" id="pendingCultures">0</div>
+                            <div class="stat-label">На проверке</div>
+                        </div>
+                        <div class="stat-card">
+                            <div class="stat-value" id="approvedCultures">0</div>
+                            <div class="stat-label">Принято</div>
+                        </div>
+                        <div class="stat-card">
+                            <div class="stat-value" id="rejectedCultures">0</div>
+                            <div class="stat-label">Отклонено</div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Фильтры и поиск -->
+            <section class="filters-section">
+                <div class="filters-container">
+                    <div class="filter-main">
+                        <div class="filter-tabs">
+                            <button class="filter-tab active" data-filter-type="farmers">
+                                <i class="fas fa-user-tag"></i>
+                                По фермерам
+                            </button>
+                            <button class="filter-tab" data-filter-type="statuses">
+                                <i class="fas fa-check-circle"></i>
+                                По статусам
+                            </button>
+                            <button class="filter-tab" data-filter-type="regions">
+                                <i class="fas fa-map-marker-alt"></i>
+                                По регионам
+                            </button>
+                            <button class="filter-tab" id="resetAllFilters">
+                                <i class="fas fa-undo"></i>
+                                Сбросить все
+                            </button>
+                        </div>
+
+                        <div class="filter-content" id="farmersFilter">
+                            <div class="selected-farmers-info">
+                                <span id="selectedFarmersCount">Выбрано 0 фермеров</span>
+                            </div>
+                            <div class="filter-buttons">
+                                <button class="filter-btn" id="selectFarmersBtn">
+                                    <i class="fas fa-users"></i>
+                                    Выбрать фермеров
+                                </button>
+                            </div>
+                        </div>
+
+                        <div class="filter-content hidden" id="statusesFilter">
+                            <div class="filter-buttons">
+                                <button class="filter-btn" data-status="checking">
+                                    <i class="fas fa-hourglass-half"></i>
+                                    На проверке
+                                    <span class="filter-count">0</span>
+                                </button>
+                                <button class="filter-btn" data-status="approved">
+                                    <i class="fas fa-check-circle"></i>
+                                    Принят
+                                    <span class="filter-count">0</span>
+                                </button>
+                                <button class="filter-btn" data-status="rejected">
+                                    <i class="fas fa-times-circle"></i>
+                                    Отклонен
+                                    <span class="filter-count">0</span>
+                                </button>
+                                <button class="filter-btn active" data-status="all">
+                                    <i class="fas fa-list"></i>
+                                    Все статусы
+                                    <span class="filter-count">0</span>
+                                </button>
+                            </div>
+                        </div>
+
+                        <div class="filter-content hidden" id="regionsFilter">
+                            <div class="selected-regions-info">
+                                <span id="selectedRegionsCount">Выбрано 0 регионов</span>
+                            </div>
+                            <div class="filter-buttons">
+                                <button class="filter-btn" id="selectRegionsBtn">
+                                    <i class="fas fa-map-marker-alt"></i>
+                                    Выбрать регионы
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="filter-search">
+                        <div class="search-container">
+                            <i class="fas fa-search search-icon"></i>
+                            <input type="text" class="search-input" placeholder="Поиск по ID культуры, названию...">
+                            <button class="search-clear">
+                                <i class="fas fa-times"></i>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Сетка культур -->
+            <section class="cultures-grid-section">
+                <div class="cultures-grid" id="culturesGrid">
+                    <!-- Карточки будут сгенерированы JavaScript -->
+                </div>
+
+                <!-- Состояние загрузки -->
+                <div class="loading-state" id="loadingState">
+                    <div class="spinner"></div>
+                    <p>Загрузка культур...</p>
+                </div>
+
+                <!-- Состояние пустого результата -->
+                <div class="empty-state" id="emptyState" style="display: none;">
+                    <div class="empty-icon">
+                        <i class="fas fa-seedling"></i>
+                    </div>
+                    <h3>Культуры не найдены</h3>
+                    <p>Попробуйте изменить параметры фильтрации</p>
+                </div>
+
+                <!-- Состояние ошибки сети -->
+                <div class="error-state" id="errorState" style="display: none;">
+                    <div class="error-icon">
+                        <i class="fas fa-exclamation-triangle"></i>
+                    </div>
+                    <h3>Проблема с сетью</h3>
+                    <p>Не удалось загрузить данные с сервера. Пожалуйста, повторите попытку позже или обратитесь к администратору.</p>
+                    <div class="error-actions">
+                        <button class="btn btn-primary" id="retryLoadBtn">
+                            <i class="fas fa-redo"></i>
+                            Повторить попытку
+                        </button>
+                        <button class="btn btn-outline" id="contactAdminBtn">
+                            <i class="fas fa-headset"></i>
+                            Связаться с администратором
+                        </button>
+                    </div>
+                </div>
+            </section>
+        </div>
+    </main>
+
+    <!-- Модальное окно выбора фермеров -->
+    <div class="modal" id="farmersModal">
+        <div class="modal-content farmers-modal">
+            <div class="modal-header">
+                <div class="modal-icon">
+                    <i class="fas fa-users"></i>
+                </div>
+                <div class="modal-title">
+                    <h3>Выбор фермеров</h3>
+                    <p id="selectedFarmersModalText">Выбрано 0 фермеров</p>
+                </div>
+                <button class="modal-close">&times;</button>
+            </div>
+
+            <div class="modal-body">
+                <div class="search-container modal-search">
+                    <i class="fas fa-search search-icon"></i>
+                    <input type="text" class="search-input" id="farmersSearch" placeholder="Поиск по ФИО, компании или ИНН...">
+                    <button class="search-clear">
+                        <i class="fas fa-times"></i>
+                    </button>
+                </div>
+
+                <div class="farmers-grid" id="farmersGrid">
+                    <!-- Фермеры будут сгенерированы динамически -->
+                </div>
+
+                <div class="empty-state modal-empty" id="farmersEmptyState" style="display: none;">
+                    <div class="empty-icon">
+                        <i class="fas fa-user-slash"></i>
+                    </div>
+                    <h3>Фермеры не найдены</h3>
+                    <p>Попробуйте изменить поисковый запрос</p>
+                </div>
+            </div>
+
+            <div class="modal-footer">
+                <button class="btn btn-outline" id="cancelFarmersSelection">
+                    <i class="fas fa-times"></i>
+                    Отмена
+                </button>
+                <button class="btn btn-primary" id="applyFarmersSelection">
+                    <i class="fas fa-check"></i>
+                    Применить выбор
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Модальное окно выбора регионов -->
+    <div class="modal" id="regionsModal">
+        <div class="modal-content regions-modal">
+            <div class="modal-header">
+                <div class="modal-title">
+                    <h3><i class="fas fa-map-marker-alt"></i> Выбор регионов</h3>
+                    <p id="selectedRegionsModalText">Выбрано 0 регионов</p>
+                </div>
+                <button class="modal-close">&times;</button>
+            </div>
+
+            <div class="modal-body">
+                <div class="search-container modal-search">
+                    <i class="fas fa-search search-icon"></i>
+                    <input type="text" class="search-input" id="regionsSearch" placeholder="Поиск по названию региона...">
+                    <button class="search-clear">
+                        <i class="fas fa-times"></i>
+                    </button>
+                </div>
+
+                <div class="regions-grid" id="regionsList">
+                    <!-- Регионы будут сгенерированы динамически -->
+                </div>
+
+                <div class="empty-state modal-empty" id="regionsEmptyState" style="display: none;">
+                    <div class="empty-icon">
+                        <i class="fas fa-map-slash"></i>
+                    </div>
+                    <h3>Регионы не найдены</h3>
+                    <p>Попробуйте изменить поисковый запрос</p>
+                </div>
+            </div>
+
+            <div class="modal-footer">
+                <button class="btn btn-outline" id="cancelRegionsSelection">
+                    <i class="fas fa-times"></i>
+                    Отмена
+                </button>
+                <button class="btn btn-primary" id="applyRegionsSelection">
+                    <i class="fas fa-check"></i>
+                    Применить выбор
+                </button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Модальное окно информации о фермере -->
+<div class="modal" id="farmerInfoModal">
+    <div class="modal-content farmer-info-modal">
+        <div class="modal-header">
+            <div class="modal-icon">
+                <i class="fas fa-user-tie"></i>
+            </div>
+            <div class="modal-title">
+                <h3>Профиль фермера</h3>
+                <p>Подробная информация о фермере и его деятельности</p>
+            </div>
+            <button class="modal-close">&times;</button>
+        </div>
+
+        <div class="modal-body">
+            <!-- Состояние загрузки -->
+            <div class="loading-state" id="farmerLoadingState">
+                <div class="loading-animation">
+                    <div class="loading-spinner">
+                        <i class="fas fa-spinner fa-spin"></i>
+                    </div>
+                    <div class="loading-dots">
+                        <span></span>
+                        <span></span>
+                        <span></span>
+                    </div>
+                </div>
+                <p>Загружаем информацию о фермере...</p>
+            </div>
+
+            <!-- Состояние с данными -->
+            <div class="farmer-info-content" id="farmerInfoContent" style="display: none;">
+                <!-- Профиль фермера -->
+                <div class="farmer-profile-header">
+                    <div class="farmer-avatar-large">
+                        <div class="avatar-background">
+                            <i class="fas fa-user-circle"></i>
+                        </div>
+                        <div class="avatar-status">
+                            <i class="fas fa-check-circle"></i>
+                        </div>
+                    </div>
+                    <div class="farmer-info-main">
+                        <div class="farmer-name-large" id="farmerName">
+                            <!-- Имя фермера -->
+                        </div>
+                        <div class="farmer-status">
+                            <span class="status-badge verified">
+                                <i class="fas fa-shield-alt"></i>
+                                Верифицированный фермер
+                            </span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Быстрая статистика -->
+                <div class="farmer-quick-stats">
+                    <div class="stat-card primary">
+                        <div class="stat-icon">
+                            <i class="fas fa-seedling"></i>
+                        </div>
+                        <div class="stat-content">
+                            <div class="stat-value" id="cropsCount">0</div>
+                            <div class="stat-label">Культур</div>
+                        </div>
+                        <div class="stat-trend">
+                            <i class="fas fa-arrow-up"></i>
+                        </div>
+                    </div>
+                    <div class="stat-card success">
+                        <div class="stat-icon">
+                            <i class="fas fa-map-marker-alt"></i>
+                        </div>
+                        <div class="stat-content">
+                            <div class="stat-value" id="loadingPointsCount">0</div>
+                            <div class="stat-label">Точек сбора</div>
+                        </div>
+                        <div class="stat-trend">
+                            <i class="fas fa-arrow-up"></i>
+                        </div>
+                    </div>
+                    <div class="stat-card info">
+                        <div class="stat-icon">
+                            <i class="fas fa-star"></i>
+                        </div>
+                        <div class="stat-content">
+                            <div class="stat-value">100</div>
+                            <div class="stat-label">Рейтинг</div>
+                        </div>
+                        <div class="stat-trend">
+                            <i class="fas fa-minus"></i>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Детальная информация -->
+                <div class="farmer-details-section">
+                    <div class="section-header">
+                        <h4><i class="fas fa-info-circle"></i> Основная информация</h4>
+                    </div>
+                    <div class="info-cards-grid">
+                        <div class="info-card">
+                            <div class="info-card-icon">
+                                <i class="fas fa-building"></i>
+                            </div>
+                            <div class="info-card-content">
+                                <div class="info-label">Организация</div>
+                                <div class="info-value" id="farmerOrganization">-</div>
+                            </div>
+                        </div>
+                        <div class="info-card">
+                            <div class="info-card-icon">
+                                <i class="fas fa-id-card"></i>
+                            </div>
+                            <div class="info-card-content">
+                                <div class="info-label">ИНН</div>
+                                <div class="info-value" id="farmerInn">-</div>
+                            </div>
+                        </div>
+                        <div class="info-card">
+                            <div class="info-card-icon">
+                                <i class="fas fa-calendar-alt"></i>
+                            </div>
+                            <div class="info-card-content">
+                                <div class="info-label">Дата регистрации</div>
+                                <div class="info-value" id="farmerRegistrationDate">-</div>
+                            </div>
+                        </div>
+                        <div class="info-card">
+                            <div class="info-card-icon">
+                                <i class="fas fa-phone"></i>
+                            </div>
+                            <div class="info-card-content">
+                                <div class="info-label">Телефон</div>
+                                <div class="info-value" id="farmerPhone">-</div>
+                            </div>
+                        </div>
+                        <div class="info-card">
+                            <div class="info-card-icon">
+                                <i class="fas fa-envelope"></i>
+                            </div>
+                            <div class="info-card-content">
+                                <div class="info-label">Email</div>
+                                <div class="info-value" id="farmerEmail">-</div>
+                            </div>
+                        </div>
+                        <div class="info-card">
+                            <div class="info-card-icon">
+                                <i class="fas fa-map-marked-alt"></i>
+                            </div>
+                            <div class="info-card-content">
+                                <div class="info-label">Адрес</div>
+                                <div class="info-value" id="farmerAddress">-</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Дополнительная информация -->
+                <div class="farmer-additional-section">
+                    <div class="section-header">
+                        <h4><i class="fas fa-chart-line"></i> Активность</h4>
+                    </div>
+                    <div class="activity-cards">
+                        <div class="activity-card">
+                            <div class="activity-icon">
+                                <i class="fas fa-clipboard-check"></i>
+                            </div>
+                            <div class="activity-content">
+                                <div class="activity-title">Последняя проверка</div>
+                                <div class="activity-date" id="lastVerificationDate">-</div>
+                            </div>
+                        </div>
+                        <div class="activity-card">
+                            <div class="activity-icon">
+                                <i class="fas fa-file-contract"></i>
+                            </div>
+                            <div class="activity-content">
+                                <div class="activity-title">Документы</div>
+                                <div class="activity-status verified">Подтверждены</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Состояние ошибки -->
+            <div class="error-state" id="farmerErrorState" style="display: none;">
+                <div class="error-animation">
+                    <div class="error-icon">
+                        <i class="fas fa-exclamation-triangle"></i>
+                    </div>
+                    <div class="error-dots">
+                        <span></span>
+                        <span></span>
+                        <span></span>
+                    </div>
+                </div>
+                <h3>Не удалось загрузить информацию</h3>
+                <p>Произошла ошибка при загрузке данных фермера. Попробуйте повторить попытку.</p>
+                <button class="btn btn-primary" id="retryLoadFarmer">
+                    <i class="fas fa-redo"></i>
+                    Попробовать снова
+                </button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Модальное окно подтверждения выхода -->
+<div class="modal" id="logoutConfirmModal">
+    <div class="modal-content logout-modal">
+        <div class="modal-header">
+            <div class="modal-icon">
+                <i class="fas fa-sign-out-alt"></i>
+            </div>
+            <div class="modal-title">
+                <h3>Выход из системы</h3>
+                <p>Вы уверены, что хотите выйти?</p>
+            </div>
+            <button class="modal-close">&times;</button>
+        </div>
+
+        <div class="modal-body">
+            <div class="logout-warning">
+                <i class="fas fa-exclamation-triangle"></i>
+                <p>После выхода вам потребуется снова войти в систему для доступа к платформе.</p>
+            </div>
+
+            <div class="logout-actions">
+                <button class="btn btn-outline" id="cancelLogout">
+                    <i class="fas fa-times"></i>
+                    Отмена
+                </button>
+                <button class="btn btn-danger" id="confirmLogout">
+                    <i class="fas fa-sign-out-alt"></i>
+                    Выйти
+                </button>
+            </div>
+        </div>
+    </div>
+</div>
+
+    <script src="{% static 'server/js/total_post.js' %}"></script>
+    <script src="{% static 'verification/js/list_quality_check_new.js' %}"></script>
+</body>
+</html>

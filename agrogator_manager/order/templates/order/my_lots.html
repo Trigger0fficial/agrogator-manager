@@ -1,0 +1,442 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>АГРОГАТОР - Мои лоты</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="{% static 'main/assets/css/style.css' %}">
+    <link rel="stylesheet" href="{% static 'main/assets/css/list_quality_check.css' %}">
+    <link rel="stylesheet" href="{% static 'order/css/deal_detail.css' %}">
+    <style>
+        .lot-card {
+            background: var(--white);
+            border-radius: var(--border-radius-lg);
+            padding: 1rem 1.5rem;
+            margin-bottom: 1.25rem;
+            box-shadow: var(--shadow);
+            border: 1px solid var(--border-light);
+            transition: all 0.3s ease;
+        }
+        .lot-card:hover { transform: translateY(-4px); box-shadow: var(--shadow-lg); }
+
+        .lot-header {
+            display: flex;
+            align-items: flex-start;
+            justify-content: space-between;
+            gap: 1rem;
+            padding-bottom: 0.65rem;
+            margin-bottom: 0.65rem;
+        }
+        .lot-title { font-size: 1.25rem; font-weight: 950; color: var(--text-color); }
+        .lot-ucode {
+            display: inline-block;
+            margin-left: 0.5rem;
+            font-size: 0.95rem;
+            font-weight: 900;
+            color: var(--text-light);
+            white-space: nowrap;
+        }
+
+        .lot-header-status {
+            display: flex;
+            align-items: center;
+            justify-content: flex-end;
+            flex-shrink: 0;
+        }
+
+        .lot-price-ton {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            font-weight: 900;
+            font-size: 1.2rem;
+            color: #16a34a;
+            text-align: center;
+            min-width: 0;
+            padding: 0.15rem 0;
+        }
+        .lot-price-ton small { font-weight: 800; font-size: 1rem; color: #15803d; }
+
+        .lot-price-ton-bottom {
+            margin-top: 0.95rem;
+            padding-top: 0.95rem;
+            border-top: 1px solid var(--border-light);
+        }
+
+        .lot-footer {
+            margin-top: 0.95rem;
+            padding-top: 0.95rem;
+            border-top: 1px solid var(--border-light);
+            display: flex;
+            gap: 0.75rem;
+            align-items: center;
+            justify-content: space-between;
+            flex-wrap: nowrap;
+        }
+        .lot-footer .lot-status {
+            display: flex;
+            align-items: center;
+            justify-content: flex-end;
+            gap: 0.5rem;
+            flex-shrink: 0;
+        }
+        .lot-footer .lot-actions {
+            flex: 1;
+            display: flex;
+            gap: 0.75rem;
+        }
+        .lot-footer .lot-actions .btn {
+            flex: 1;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 0.45rem;
+        }
+
+        .lot-body {
+            display: grid;
+            grid-template-columns: repeat(12, 1fr);
+            gap: 0.75rem;
+        }
+        .lot-pill {
+            grid-column: span 6;
+            background: var(--bg-light, #f8f9fa);
+            border: 1px solid var(--border-light);
+            border-radius: 14px;
+            padding: 0.9rem 1rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            gap: 0.75rem;
+            min-width: 0;
+        }
+        .lot-pill-label { color: var(--text-light); font-size: 0.82rem; font-weight: 700; }
+        .lot-pill-value { color: var(--text-color); font-size: 0.92rem; font-weight: 800; text-align: right; min-width: 0; }
+        .lot-pill-value.emph { color: #1d4ed8; }
+
+        /* ----- Фильтры лотов ----- */
+        .filter-tabs.lots-filters { flex-wrap: wrap; }
+
+        /* Используем базовый стиль .filter-tab из list_quality_check.css */
+        .filter-tab .chip-value {
+            font-weight: 800;
+            opacity: 0.9;
+        }
+
+        .lots-filters-toprow {
+            display: flex;
+            align-items: flex-start;
+            justify-content: space-between;
+            gap: 1rem;
+            flex-wrap: wrap;
+        }
+        .lots-filters-toprow .filter-tabs {
+            flex: 1;
+            margin-bottom: 0;
+        }
+        .lots-reset-all-btn {
+            height: 44px;
+            white-space: nowrap;
+            align-self: flex-start;
+        }
+
+        .lots-filters-meta-row {
+            display: flex;
+            align-items: center;
+            justify-content: flex-start;
+            gap: 0.75rem;
+            flex-wrap: wrap;
+            margin-bottom: 1rem;
+            margin-top: 0.75rem;
+        }
+        .lots-filters-selected {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            padding: 0.55rem 0.9rem;
+            border-radius: 999px;
+            background: rgba(37, 105, 70, 0.06);
+            border: 1px solid rgba(37, 105, 70, 0.14);
+            font-size: 0.9rem;
+            font-weight: 900;
+            color: var(--text-color);
+        }
+        .lots-filters-selected .count {
+            color: #16a34a;
+            font-weight: 950;
+        }
+
+        .lots-filters-panels {
+            margin-top: 0.75rem;
+            width: 100%;
+        }
+        .lots-filter-panel {
+            background: #fff;
+            border: 1px solid var(--border-light);
+            border-radius: 14px;
+            padding: 0.9rem 1rem;
+            box-shadow: 0 8px 24px rgba(0,0,0,0.05);
+        }
+        .lots-filter-panel-title { font-weight: 900; color: var(--text-color); margin-bottom: 0.6rem; }
+        .lots-filter-row { display: flex; gap: 0.75rem; flex-wrap: wrap; }
+        .lots-filter-row .field { flex: 1; min-width: 180px; }
+        .lots-filter-row label { display:block; font-size: 0.8rem; font-weight: 800; color: var(--text-light); margin-bottom: 0.25rem; }
+        .lots-filter-row input, .lots-filter-row select {
+            width: 100%;
+            padding: 0.6rem 0.75rem;
+            border: 1px solid var(--border-light);
+            border-radius: 10px;
+            background: var(--bg-light, #f8f9fa);
+            outline: none;
+            color: var(--text-color);
+            font-weight: 700;
+        }
+        .lots-filter-row select {
+            appearance: none;
+            -webkit-appearance: none;
+            -moz-appearance: none;
+            background-image:
+                linear-gradient(45deg, transparent 50%, #64748b 50%),
+                linear-gradient(135deg, #64748b 50%, transparent 50%),
+                linear-gradient(to right, transparent, transparent);
+            background-position:
+                calc(100% - 18px) calc(50% - 2px),
+                calc(100% - 12px) calc(50% - 2px),
+                calc(100% - 2.5rem) 50%;
+            background-size: 6px 6px, 6px 6px, 1px 1.6rem;
+            background-repeat: no-repeat;
+            padding-right: 2.4rem;
+        }
+        /* На некоторых браузерах/темах стили select "съедаются" — дублируем для конкретных полей регионов */
+        #fromRegionSelect,
+        #toRegionSelect {
+            appearance: none;
+            -webkit-appearance: none;
+            -moz-appearance: none;
+            background-color: var(--bg-light, #f8f9fa);
+            border: 1px solid var(--border-light);
+            border-radius: 10px;
+            padding-right: 2.4rem;
+        }
+        #fromRegionSelect::-ms-expand,
+        #toRegionSelect::-ms-expand {
+            display: none;
+        }
+        .lots-filter-row select:focus,
+        .lots-filter-row input:focus {
+            border-color: rgba(37, 105, 70, 0.45);
+            box-shadow: 0 0 0 3px rgba(37, 105, 70, 0.12);
+        }
+        .lots-filter-actions { margin-top: 0.75rem; display:flex; gap: 0.6rem; justify-content: flex-end; }
+        .lots-filter-actions .btn { display:inline-flex; align-items:center; justify-content:center; gap:0.45rem; }
+
+        @media (max-width: 900px) { .lot-pill { grid-column: span 12; } }
+    </style>
+</head>
+<body>
+    <!-- Хедер — как в my_deals.html -->
+    <header class="header">
+        <div class="container header__container">
+            <div class="logo">
+                <i class="fas fa-tractor"></i>
+                <span>АГРОГАТОР</span>
+            </div>
+            <nav class="nav">
+                <a href="{% url 'main' %}" class="nav-link"><i class="fas fa-home"></i> Дашборд</a>
+                <a href="{% url 'order:my_deals' %}" class="nav-link"><i class="fas fa-handshake"></i> Сделки</a>
+                <a href="#" class="nav-link active"><i class="fas fa-box-open"></i> Лоты</a>
+                <a href="#" class="nav-link"><i class="fas fa-users"></i> Участники</a>
+                <a href="#" class="nav-link"><i class="fas fa-chart-bar"></i> Аналитика</a>
+            </nav>
+            <div class="user-profile">
+                <div class="notification-bell">
+                    <i class="fas fa-bell"></i>
+                    <span class="notification-count">3</span>
+                </div>
+                <div class="user-info">
+                    <span class="user-name" id="headerUserName">Менеджер</span>
+                    <span class="user-role" id="headerUserRole">Администратор</span>
+                </div>
+                <div class="user-avatar" id="userAvatar">
+                    <img src="https://i.pravatar.cc/40?img=12" alt="Профиль">
+                    <div class="user-dropdown" id="userDropdown">
+                        <div class="dropdown-item">
+                            <i class="fas fa-user"></i>
+                            <span>Личный кабинет</span>
+                        </div>
+                        <div class="dropdown-item">
+                            <i class="fas fa-cog"></i>
+                            <span>Настройки</span>
+                        </div>
+                        <div class="dropdown-divider"></div>
+                        <div class="dropdown-item logout-item" id="logoutBtn">
+                            <i class="fas fa-sign-out-alt"></i>
+                            <span>Выйти</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <main class="main">
+        <div class="container">
+            <!-- Заголовок + кнопка к дашборду -->
+            <section class="quality-header">
+                <div class="header-content">
+                    <a href="{% url 'main' %}" class="btn-back" id="backToDashboard">
+                        <i class="fas fa-arrow-left"></i>
+                        Назад к дашборду
+                    </a>
+
+                    <div class="quality-title">
+                        <div class="title-icon">
+                            <i class="fas fa-truck"></i>
+                        </div>
+                        <div class="title-text">
+                            <h1>Мои лоты</h1>
+                            <p>Список лотов и быстрый пересчёт логистики</p>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Фильтры лотов -->
+            <section class="filters-section">
+                <div class="filters-container">
+                    <div class="filter-main">
+                        <div class="lots-filters-toprow">
+                            <div class="filter-tabs" id="lotsFiltersChips">
+                                <!-- Плашки фильтров генерируются JS -->
+                            </div>
+                            <button type="button" class="btn btn-outline lots-reset-all-btn" id="lotsResetAllBtn">
+                                <i class="fas fa-undo"></i> Сбросить все
+                            </button>
+                        </div>
+                        <div class="lots-filters-meta-row">
+                            <div class="lots-filters-selected" id="lotsSelectedFiltersCount">Выбраны фильтры: 0</div>
+                        </div>
+                        <div class="lots-filters-panels" id="lotsFiltersPanels" style="display:none;"></div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Список лотов -->
+            <section class="deals-section">
+                <div class="deals-grid" id="lotsGrid">
+                    <!-- Карточки будут сгенерированы JavaScript -->
+                </div>
+
+                <div class="loading-state" id="loadingState">
+                    <div class="spinner"></div>
+                    <p>Загрузка лотов...</p>
+                </div>
+
+                <div class="load-more-container" id="loadMoreContainer" style="display: none;">
+                    <button class="btn-load-more" id="loadMoreBtn">
+                        <i class="fas fa-sync-alt"></i> Загрузить еще
+                    </button>
+                </div>
+
+                <div class="empty-state" id="emptyState" style="display: none;">
+                    <div class="empty-icon">
+                        <i class="fas fa-box-open"></i>
+                    </div>
+                    <h3>Лоты не найдены</h3>
+                    <p>Пока нет лотов для отображения</p>
+                </div>
+
+                <div class="error-state" id="errorState" style="display: none;">
+                    <div class="error-icon">
+                        <i class="fas fa-exclamation-triangle"></i>
+                    </div>
+                    <h3>Проблема с сетью</h3>
+                    <p>Не удалось загрузить данные с сервера. Пожалуйста, повторите попытку позже.</p>
+                    <div class="error-actions">
+                        <button class="btn btn-primary" id="retryLoadBtn">
+                            <i class="fas fa-redo"></i>
+                            Повторить попытку
+                        </button>
+                    </div>
+                </div>
+            </section>
+        </div>
+    </main>
+
+    <!-- Модалка редактирования лота (переиспользуем IDs/стили из deal_detail) -->
+    <div class="accept-confirmation-modal" id="dealLotPublishOverlay" aria-hidden="true">
+        <div class="accept-modal-content" role="dialog" aria-modal="true" aria-labelledby="dealLotPublishTitle">
+            <div class="accept-modal-icon" style="background: #1d4ed8;">
+                <i class="fas fa-truck" aria-hidden="true"></i>
+            </div>
+            <h3 id="dealLotPublishTitle">Редактирование лота</h3>
+
+            <div id="dealLotPublishPanel">
+                <p id="dealLotPublishText">
+                    Измените расстояние и финансовые показатели. Цена может считаться автоматически или задаваться вручную.
+                </p>
+                <p id="dealLotPublishError" style="display: none;"></p>
+                <div class="accept-modal-actions deal-lot-publish-actions">
+                    <button type="button" class="deal-btn-warning" id="dealLotPublishEditBtn">Редактировать</button>
+                    <button type="button" class="deal-btn-primary" id="dealLotPublishConfirmBtn" style="cursor: not-allowed; opacity: 0.6;" disabled>Согласовать</button>
+                </div>
+            </div>
+
+            <div id="dealLotEditPanel" style="display: none;">
+                <p class="deal-lot-edit-info">
+                    Укажите расстояние в километрах и коэффициент — цена за тонну посчитается автоматически (до сотых). Если хотите изменить цену напрямую, то нажмите «Изменить цену вручную», тогда коэффициент будет считаться от цены и километража. После изменения необходимо опубликовать лот. На сервер расстояние уходит в метрах (км × 1000), не менее 1 км.
+                </p>
+                <div class="deal-lot-edit-form">
+                    <div class="deal-lot-edit-row">
+                        <label for="dealLotEditDistanceInput">Расстояние, км</label>
+                        <input id="dealLotEditDistanceInput" type="text" placeholder="не менее 1" inputmode="decimal" autocomplete="off" />
+                    </div>
+                    <div class="deal-lot-edit-row" id="dealLotEditCoeffRow">
+                        <label for="dealLotEditTransportCoeffInput">Коэффициент перевозки</label>
+                        <div class="deal-lot-edit-input-wrap" id="dealLotEditCoeffInputWrap">
+                            <input id="dealLotEditTransportCoeffInput" type="text" placeholder="" inputmode="decimal" autocomplete="off" />
+                            <span class="deal-lot-edit-lock-icon" id="dealLotEditCoeffLockIcon" aria-hidden="true" title="Поле заблокировано">
+                                <i class="fas fa-ban"></i>
+                            </span>
+                        </div>
+                    </div>
+                    <div class="deal-lot-edit-row" id="dealLotEditPriceRow">
+                        <label for="dealLotEditPricePerTonInput">Цена за тонну, ₽</label>
+                        <div class="deal-lot-edit-input-wrap" id="dealLotEditPriceInputWrap">
+                            <input id="dealLotEditPricePerTonInput" type="text" placeholder="" inputmode="decimal" autocomplete="off" />
+                            <span class="deal-lot-edit-lock-icon" id="dealLotEditPriceLockIcon" aria-hidden="true" title="Поле заблокировано">
+                                <i class="fas fa-ban"></i>
+                            </span>
+                        </div>
+                    </div>
+                    <div class="deal-lot-edit-checkbox-row">
+                        <label class="deal-lot-edit-checkbox-label">
+                            <input type="checkbox" id="dealLotEditManualPriceCheckbox" />
+                            <span>Изменить цену вручную</span>
+                        </label>
+                    </div>
+                </div>
+                <p id="dealLotEditError" style="display: none;"></p>
+                <div class="accept-modal-actions deal-lot-edit-actions">
+                    <button type="button" class="deal-btn-primary" id="dealLotEditSubmitBtn">Обновить</button>
+                    <button type="button" class="btn btn-secondary" id="dealLotEditCancelBtn">Отмена</button>
+                </div>
+            </div>
+
+            <button type="button" class="modal-close" id="dealLotPublishCloseBtn" aria-label="Закрыть">
+                <i class="fas fa-times" aria-hidden="true"></i>
+            </button>
+        </div>
+    </div>
+
+    <script src="{% static 'server/js/total_post.js' %}"></script>
+    <script src="{% static 'order/js/my_lots.js' %}"></script>
+    <script src="{% static 'main/assets/js/main_auth.js' %}"></script>
+</body>
+</html>
+

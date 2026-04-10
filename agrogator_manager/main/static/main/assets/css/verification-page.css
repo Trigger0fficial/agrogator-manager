@@ -1,0 +1,1702 @@
+/* Стили для детальной страницы верификации */
+
+/* Заголовок страницы */
+.verification-detail-header {
+    margin-bottom: 2rem;
+    background: var(--bg-color);
+    border-radius: var(--border-radius-lg);
+    box-shadow: var(--shadow);
+    border: 1px solid var(--border-light);
+    padding: 2rem;
+}
+
+.verification-detail-header .header-content {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 2rem;
+}
+
+.header-main {
+    display: flex;
+    align-items: center;
+    gap: 2rem;
+    flex: 1;
+}
+
+.btn-back {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    padding: 0.75rem 1.5rem;
+    background: var(--bg-light);
+    border: 1px solid var(--border-color);
+    border-radius: var(--border-radius-sm);
+    color: var(--text-color);
+    text-decoration: none;
+    font-weight: 500;
+    transition: all 0.2s ease;
+    cursor: pointer;
+    font-family: inherit;
+}
+
+.btn-back:hover {
+    background: var(--bg-lighter);
+    border-color: var(--primary-color);
+    color: var(--primary-color);
+    transform: translateX(-2px);
+}
+
+.verification-title {
+    display: flex;
+    align-items: center;
+    gap: 1.5rem;
+}
+
+.title-icon {
+    width: 60px;
+    height: 60px;
+    border-radius: 50%;
+    background: linear-gradient(135deg, var(--primary-color), var(--primary-light));
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: white;
+    font-size: 1.5rem;
+}
+
+.title-text h1 {
+    font-size: 1.8rem;
+    font-weight: 700;
+    color: var(--text-color);
+    margin-bottom: 0.25rem;
+}
+
+.title-text p {
+    color: var(--text-light);
+    font-size: 1rem;
+    margin: 0;
+}
+
+.header-actions {
+    display: flex;
+    align-items: center;
+}
+
+.verification-status-badge {
+    display: flex;
+    align-items: center;
+}
+
+.verification-status-badge .status-indicator {
+    position: static;
+    transform: none;
+    width: auto;
+    height: auto;
+    padding: 1rem 1.5rem;
+    border-radius: var(--border-radius-lg);
+}
+
+.verification-status-badge .status-indicator.expanded {
+    width: auto;
+    height: auto;
+    padding: 1rem 1.5rem;
+}
+
+.verification-status-badge .status-content {
+    opacity: 1;
+    transform: none;
+    flex-direction: row;
+    gap: 0.75rem;
+}
+
+.verification-status-badge .status-icon {
+    font-size: 1.2rem;
+    margin-bottom: 0;
+}
+
+.verification-status-badge .status-text {
+    position: static;
+    opacity: 1;
+    transform: none;
+    background: none;
+    padding: 0;
+    font-size: 0.9rem;
+    color: var(--white);
+}
+
+/* Основной контент */
+.verification-detail-content {
+    display: grid;
+    grid-template-columns: 1fr 400px;
+    gap: 2rem;
+    align-items: start;
+}
+
+/* Секции */
+.detail-section {
+    background: var(--bg-color);
+    border-radius: var(--border-radius-lg);
+    box-shadow: var(--shadow);
+    border: 1px solid var(--border-light);
+    margin-bottom: 2rem;
+    overflow: hidden;
+    transition: all 0.3s ease;
+}
+
+.detail-section:hover {
+    box-shadow: var(--shadow-lg);
+}
+
+.detail-section .section-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 1.5rem 2rem;
+    background: var(--bg-light);
+    border-bottom: 1px solid var(--border-light);
+    margin-bottom: 0;
+}
+
+.detail-section .section-header h2 {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    font-size: 1.3rem;
+    font-weight: 600;
+    color: var(--text-color);
+    margin: 0;
+}
+
+.detail-section .section-header h2 i {
+    color: var(--primary-color);
+}
+
+/* Бейджи верификации */
+.verification-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    padding: 0.5rem 1rem;
+    border-radius: 20px;
+    font-size: 0.8rem;
+    font-weight: 600;
+}
+
+.verification-badge.pending {
+    background: #fff3cd;
+    color: #856404;
+    border: 1px solid #ffeaa7;
+}
+
+.verification-badge.waiting {
+    background: #cce7ff;
+    color: #065fd4;
+    border: 1px solid #99ceff;
+}
+
+.verification-badge.verified {
+    background: #d4f4e1;
+    color: #166534;
+    border: 1px solid #a7f3d0;
+}
+
+/* Личные данные */
+.personal-data .personal-info-grid {
+    display: grid;
+    grid-template-columns: auto 1fr;
+    gap: 2rem;
+    padding: 2rem;
+}
+
+.user-avatar-section {
+    display: flex;
+    flex-direction: column;
+    gap: 1.5rem;
+}
+
+.user-avatar-large {
+    position: relative;
+    width: 150px;
+    height: 150px;
+}
+
+.user-avatar-large img {
+    width: 100%;
+    height: 100%;
+    border-radius: var(--border-radius-lg);
+    object-fit: cover;
+    border: 4px solid var(--bg-light);
+    box-shadow: var(--shadow-md);
+}
+
+.avatar-placeholder {
+    display: flex !important;
+    flex-direction: column !important;
+    align-items: center !important;
+    justify-content: center !important;
+    width: 150px !important;
+    height: 150px !important;
+    background: linear-gradient(135deg, #f8f9fa, #e9ecef) !important;
+    border: 2px dashed #dee2e6 !important;
+    border-radius: var(--border-radius-lg) !important;
+    color: #6c757d !important;
+    transition: all 0.2s ease !important;
+    animation: pulse 2s infinite !important;
+}
+
+.avatar-placeholder i {
+    font-size: 5rem !important;
+    margin-bottom: 0.5rem !important;
+}
+
+.avatar-placeholder span {
+    font-size: 0.875rem !important;
+    font-weight: 500 !important;
+}
+
+.avatar-placeholder:hover {
+    border-color: var(--primary-color) !important;
+    color: var(--primary-color) !important;
+    background: linear-gradient(135deg, #f0f8ff, #e6f3ff) !important;
+}
+
+@keyframes pulse {
+    0% { transform: scale(1); }
+    50% { transform: scale(1.02); }
+    100% { transform: scale(1); }
+}
+
+.avatar-actions {
+    position: absolute;
+    bottom: -10px;
+    right: -10px;
+}
+
+.user-meta-info {
+    display: flex;
+    flex-direction: column;
+    gap: 0.75rem;
+}
+
+.meta-item {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    padding: 0.75rem;
+    background: var(--bg-light);
+    border-radius: var(--border-radius-sm);
+    transition: all 0.2s ease;
+}
+
+.meta-item:hover {
+    background: var(--bg-lighter);
+    transform: translateX(5px);
+}
+
+.meta-item i {
+    color: var(--primary-color);
+    width: 16px;
+    text-align: center;
+}
+
+.meta-item span {
+    font-size: 0.9rem;
+    color: var(--text-color);
+    font-weight: 500;
+}
+
+.personal-fields {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 1.5rem;
+}
+
+/* Формы */
+.form-group {
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+}
+
+.form-group.full-width {
+    grid-column: 1 / -1;
+}
+
+.form-row {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 1.5rem;
+}
+
+.form-label {
+    font-weight: 600;
+    color: var(--text-color);
+    font-size: 0.9rem;
+}
+
+.form-value {
+    padding: 0.75rem 1rem;
+    background: var(--bg-light);
+    border-radius: var(--border-radius-sm);
+    border: 1px solid var(--border-color);
+    font-weight: 500;
+    min-height: 44px;
+    display: flex;
+    align-items: center;
+}
+
+.form-textarea {
+    padding: 0.75rem 1rem;
+    background: var(--bg-light);
+    border-radius: var(--border-radius-sm);
+    border: 1px solid var(--border-color);
+    font-family: inherit;
+    font-size: 0.9rem;
+    resize: vertical;
+    transition: all 0.2s ease;
+}
+
+.form-textarea:focus {
+    outline: none;
+    border-color: var(--primary-color);
+    box-shadow: 0 0 0 3px rgba(37, 89, 70, 0.1);
+}
+
+.form-hint {
+    font-size: 0.8rem;
+    color: var(--text-light);
+    margin-top: 0.25rem;
+}
+
+/* Информационные алерты */
+.info-alert {
+    display: flex;
+    gap: 1rem;
+    padding: 1.5rem;
+    background: #f0f9ff;
+    border-radius: var(--border-radius);
+    border-left: 4px solid var(--info-color);
+    margin: 0 2rem 1.5rem;
+}
+
+.alert-icon {
+    color: var(--info-color);
+    font-size: 1.2rem;
+    flex-shrink: 0;
+    margin-top: 0.1rem;
+}
+
+.alert-content h4 {
+    margin: 0 0 0.5rem 0;
+    color: var(--text-color);
+    font-size: 1rem;
+    font-weight: 600;
+}
+
+.alert-content p {
+    margin: 0;
+    color: var(--text-light);
+    font-size: 0.9rem;
+    line-height: 1.5;
+}
+
+/* Данные организации */
+.organization-data .organization-fields {
+    padding: 0 2rem 2rem;
+    display: flex;
+    flex-direction: column;
+    gap: 1.5rem;
+}
+
+/* Договор */
+.contract-document {
+    padding: 0 2rem 2rem;
+}
+
+.document-card {
+    display: flex;
+    align-items: center;
+    gap: 1.5rem;
+    padding: 1.5rem;
+    background: var(--bg-light);
+    border-radius: var(--border-radius);
+    border: 1px solid var(--border-color);
+    transition: all 0.3s ease;
+}
+
+.document-card:hover {
+    transform: translateY(-2px);
+    box-shadow: var(--shadow-md);
+    border-color: var(--primary-color);
+}
+
+.document-icon {
+    width: 60px;
+    height: 60px;
+    border-radius: 12px;
+    background: linear-gradient(135deg, var(--primary-color), var(--primary-light));
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: white;
+    font-size: 1.5rem;
+    flex-shrink: 0;
+}
+
+.document-info {
+    flex: 1;
+}
+
+.document-info h4 {
+    margin: 0 0 0.5rem 0;
+    color: var(--text-color);
+    font-weight: 600;
+}
+
+.document-info p {
+    margin: 0 0 0.75rem 0;
+    color: var(--text-light);
+    font-size: 0.9rem;
+}
+
+.document-meta {
+    display: flex;
+    gap: 1.5rem;
+}
+
+.document-meta span {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    font-size: 0.8rem;
+    color: var(--text-light);
+}
+
+.document-actions {
+    display: flex;
+    gap: 0.75rem;
+    flex-shrink: 0;
+}
+
+/* Сайдбар */
+.detail-sidebar {
+    display: flex;
+    flex-direction: column;
+    gap: 2rem;
+    position: sticky;
+    top: 2rem;
+    height: fit-content;
+    max-height: calc(100vh - 120px);
+    overflow-y: auto;
+}
+
+.sidebar-section {
+    background: var(--bg-color);
+    border-radius: var(--border-radius-lg);
+    box-shadow: var(--shadow);
+    border: 1px solid var(--border-light);
+    overflow: hidden;
+}
+
+.sidebar-section h3 {
+    padding: 1.5rem;
+    margin: 0;
+    background: var(--bg-light);
+    border-bottom: 1px solid var(--border-light);
+    font-size: 1.1rem;
+    font-weight: 600;
+    color: var(--text-color);
+}
+
+/* Карточки действий */
+.action-cards {
+    padding: 1.5rem;
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+}
+
+.action-card {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    padding: 1.25rem;
+    border-radius: var(--border-radius);
+    border: 1px solid var(--border-color);
+    transition: all 0.3s ease;
+    cursor: pointer;
+    position: relative;
+    overflow: hidden;
+    min-width: 0; /* Предотвращает переполнение flex элементов */
+    flex-wrap: nowrap; /* Запрещаем перенос строк */
+    justify-content: space-between; /* Равномерно распределяем элементы */
+}
+
+/* Специальный класс для управления видимостью плашки отказа */
+.action-card.hidden {
+    display: none !important;
+}
+
+.action-card:not(.hidden) {
+    display: flex !important;
+}
+
+.action-card::before {
+    content: '';
+    position: absolute;
+    left: 0;
+    top: 0;
+    bottom: 0;
+    width: 4px;
+    transition: all 0.3s ease;
+}
+
+.action-card.primary::before {
+    background: var(--primary-color);
+}
+
+.action-card.danger::before {
+    background: var(--danger-color);
+}
+
+.action-card.success::before {
+    background: var(--success-color);
+}
+
+.action-card:hover {
+    transform: translateY(-2px);
+    box-shadow: var(--shadow-md);
+}
+
+.action-card.primary:hover {
+    border-color: var(--primary-color);
+}
+
+.action-card.danger:hover {
+    border-color: var(--danger-color);
+}
+
+.action-card.success:hover {
+    border-color: var(--success-color);
+}
+
+.action-icon {
+    width: 50px;
+    height: 50px;
+    border-radius: 12px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.2rem;
+    flex-shrink: 0;
+}
+
+.action-card.primary .action-icon {
+    background: rgba(37, 89, 70, 0.1);
+    color: var(--primary-color);
+}
+
+.action-card.danger .action-icon {
+    background: rgba(220, 53, 69, 0.1);
+    color: var(--danger-color);
+}
+
+.action-card.success .action-icon {
+    background: rgba(40, 167, 69, 0.1);
+    color: var(--success-color);
+}
+
+.action-content {
+    flex: 1;
+    min-width: 0; /* Предотвращает переполнение */
+    overflow: hidden; /* Скрываем переполнение */
+}
+
+.action-content h4 {
+    margin: 0 0 0.25rem 0;
+    font-size: 0.95rem;
+    font-weight: 600;
+    color: var(--text-color);
+    white-space: nowrap; /* Запрещаем перенос заголовка */
+    overflow: hidden;
+    text-overflow: ellipsis; /* Добавляем ... если текст не помещается */
+}
+
+.action-content p {
+    margin: 0;
+    font-size: 0.8rem;
+    color: var(--text-light);
+    white-space: nowrap; /* Запрещаем перенос описания */
+    overflow: hidden;
+    text-overflow: ellipsis; /* Добавляем ... если текст не помещается */
+}
+
+.btn-action {
+    width: 36px;
+    height: 36px;
+    min-width: 36px; /* Гарантируем минимальную ширину */
+    max-width: 36px; /* Ограничиваем максимальную ширину */
+    border: none;
+    border-radius: 50%;
+    background: var(--bg-light);
+    color: var(--text-light);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    flex-shrink: 0;
+    position: relative; /* Гарантируем позиционирование */
+    z-index: 1; /* Поверх других элементов */
+}
+
+.action-card:hover .btn-action {
+    background: var(--primary-color);
+    color: white;
+}
+
+.action-card.danger:hover .btn-action {
+    background: var(--danger-color);
+}
+
+.action-card.success:hover .btn-action {
+    background: var(--success-color);
+}
+
+/* Компактный таймлайн истории */
+/* История заявки с внутренним скроллом */
+.history-section {
+    max-height: 400px; /* Ограничиваем высоту */
+    display: flex;
+    flex-direction: column;
+}
+
+.history-section .timeline-compact {
+    padding: 1.5rem;
+    display: flex;
+    flex-direction: column;
+    gap: 1.25rem;
+    flex: 1;
+    overflow-y: auto; /* Включаем скролл */
+    max-height: 300px; /* Высота для 4 элементов */
+}
+
+/* Стили для скроллбара */
+.history-section .timeline-compact::-webkit-scrollbar {
+    width: 6px;
+}
+
+.history-section .timeline-compact::-webkit-scrollbar-track {
+    background: var(--bg-light);
+    border-radius: 3px;
+}
+
+.history-section .timeline-compact::-webkit-scrollbar-thumb {
+    background: var(--border-color);
+    border-radius: 3px;
+}
+
+.history-section .timeline-compact::-webkit-scrollbar-thumb:hover {
+    background: var(--text-lighter);
+}
+
+.timeline-item {
+    display: flex;
+    gap: 1rem;
+    position: relative;
+}
+
+.timeline-item:not(:last-child)::after {
+    content: '';
+    position: absolute;
+    left: 12px;
+    top: 28px;
+    bottom: -1.5rem;
+    width: 2px;
+    background: var(--border-color);
+}
+
+.timeline-marker {
+    width: 24px;
+    height: 24px;
+    border-radius: 50%;
+    border: 3px solid var(--bg-color);
+    flex-shrink: 0;
+    z-index: 1;
+}
+
+.timeline-marker.success {
+    background: var(--success-color);
+}
+
+.timeline-marker.info {
+    background: var(--info-color);
+}
+
+.timeline-marker.warning {
+    background: var(--warning-color);
+}
+
+.timeline-marker.danger {
+    background: var(--danger-color);
+}
+
+.timeline-content {
+    flex: 1;
+}
+
+.timeline-content h4 {
+    margin: 0 0 0.25rem 0;
+    font-size: 0.85rem;
+    font-weight: 600;
+    color: var(--text-color);
+    line-height: 1.3;
+}
+
+.timeline-date {
+    font-size: 0.75rem;
+    color: var(--text-lighter);
+}
+
+/* Секция отказа */
+.rejection-section {
+    background: var(--bg-color);
+    border-radius: var(--border-radius-lg);
+    box-shadow: var(--shadow-lg);
+    border: 1px solid var(--border-light);
+    margin-top: 2rem;
+    overflow: hidden;
+    animation: slideDown 0.3s ease-out;
+}
+
+.rejection-header {
+    padding: 2rem;
+    background: #fef2f2;
+    border-bottom: 1px solid #fee2e2;
+}
+
+.rejection-header h2 {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    margin: 0 0 0.5rem 0;
+    color: var(--danger-color);
+    font-size: 1.5rem;
+}
+
+.rejection-header p {
+    margin: 0;
+    color: var(--text-light);
+}
+
+.rejection-content {
+    padding: 2rem;
+}
+
+.rejection-block {
+    margin-bottom: 2rem;
+}
+
+.rejection-block h3 {
+    margin: 0 0 1rem 0;
+    font-size: 1.2rem;
+    font-weight: 600;
+    color: var(--text-color);
+}
+
+/* Компактный чеклист полей */
+.fields-checklist-compact {
+    display: flex;
+    flex-direction: column;
+    gap: 1.5rem;
+}
+
+.checklist-group h4 {
+    margin: 0 0 1rem 0;
+    font-size: 1rem;
+    font-weight: 600;
+    color: var(--text-color);
+    padding-bottom: 0.5rem;
+    border-bottom: 1px solid var(--border-light);
+}
+
+.checklist-row {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: 1rem;
+    margin-bottom: 1rem;
+}
+
+.checklist-item {
+    margin-bottom: 0;
+}
+
+.checkbox-label {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    padding: 0.75rem;
+    background: var(--bg-light);
+    border-radius: var(--border-radius-sm);
+    cursor: pointer;
+    transition: all 0.2s ease;
+    user-select: none;
+    height: 100%;
+}
+
+.checkbox-label:hover {
+    background: var(--bg-lighter);
+}
+
+.checkbox-label.disabled {
+    opacity: 0.6;
+    cursor: not-allowed;
+    background: #f8f9fa;
+}
+
+.checkbox-label input[type="checkbox"] {
+    display: none;
+}
+
+.checkbox-custom {
+    width: 18px;
+    height: 18px;
+    border: 2px solid var(--border-color);
+    border-radius: 4px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: all 0.2s ease;
+    flex-shrink: 0;
+}
+
+.checkbox-label input[type="checkbox"]:checked + .checkbox-custom {
+    background: var(--primary-color);
+    border-color: var(--primary-color);
+}
+
+.checkbox-label input[type="checkbox"]:checked + .checkbox-custom::after {
+    content: '✓';
+    color: white;
+    font-size: 12px;
+    font-weight: bold;
+}
+
+.checkbox-label.disabled .checkbox-custom {
+    background: var(--border-light);
+    border-color: var(--border-color);
+}
+
+/* Действия отказа */
+.rejection-actions {
+    display: flex;
+    gap: 1rem;
+    justify-content: flex-end;
+    padding-top: 1.5rem;
+    border-top: 1px solid var(--border-light);
+}
+
+/* Модальное окно отказа */
+.rejection-modal {
+    max-width: 500px;
+}
+
+.rejection-modal .modal-icon {
+    width: 48px;
+    height: 48px;
+    background: linear-gradient(135deg, var(--warning-color), #eab308);
+    border-radius: 12px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+}
+
+.rejection-modal .modal-icon i {
+    font-size: 1.5rem;
+    color: white;
+}
+
+.rejection-warning {
+    display: flex;
+    align-items: flex-start;
+    gap: 0.75rem;
+    padding: 1rem;
+    background: #fffbeb;
+    border-radius: 12px;
+    border-left: 4px solid var(--warning-color);
+    margin-bottom: 1.5rem;
+}
+
+.rejection-warning i {
+    color: var(--warning-color);
+    font-size: 1.2rem;
+    margin-top: 0.1rem;
+    flex-shrink: 0;
+}
+
+.rejection-warning p {
+    color: #92400e;
+    font-size: 0.95rem;
+    line-height: 1.5;
+    margin: 0;
+}
+
+.rejection-actions-modal {
+    display: flex;
+    gap: 1rem;
+    justify-content: flex-end;
+}
+
+/* Анимации */
+@keyframes slideDown {
+    from {
+        opacity: 0;
+        transform: translateY(-20px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+    }
+    to {
+        opacity: 1;
+    }
+}
+
+/* Утилиты */
+.hidden {
+    display: none !important;
+}
+
+.btn-sm {
+    padding: 0.5rem 1rem;
+    font-size: 0.8rem;
+}
+
+/* Адаптивность */
+@media (max-width: 1200px) {
+    .verification-detail-content {
+        grid-template-columns: 1fr;
+    }
+
+    .detail-sidebar {
+        position: static;
+        max-height: none;
+    }
+}
+
+@media (max-width: 768px) {
+    .verification-detail-header .header-content {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 1rem;
+    }
+
+    .header-main {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 1rem;
+    }
+
+    .personal-data .personal-info-grid {
+        grid-template-columns: 1fr;
+        text-align: center;
+    }
+
+    .user-avatar-section {
+        align-items: center;
+    }
+
+    .personal-fields {
+        grid-template-columns: 1fr;
+    }
+
+    .form-row {
+        grid-template-columns: 1fr;
+    }
+
+    .document-card {
+        flex-direction: column;
+        text-align: center;
+    }
+
+    .document-meta {
+        justify-content: center;
+    }
+
+    .document-actions {
+        width: 100%;
+        justify-content: center;
+    }
+
+    .rejection-actions {
+        flex-direction: column;
+    }
+
+    .info-alert {
+        flex-direction: column;
+        text-align: center;
+    }
+
+    .checklist-row {
+        grid-template-columns: 1fr;
+    }
+
+    .action-card {
+        flex-direction: row; /* Сохраняем горизонтальное расположение */
+        text-align: left;   /* Возвращаем текст влево */
+        padding: 1rem;      /* Уменьшаем отступы для мобильных */
+    }
+
+    .action-content {
+        text-align: left;   /* Возвращаем текст влево */
+    }
+}
+
+/* Фиксирование заголовков при скролле */
+.detail-sidebar {
+    position: sticky;
+    top: 2rem;
+    height: fit-content;
+    max-height: calc(100vh - 120px);
+    overflow-y: auto;
+}
+
+.sidebar-section {
+    background: var(--bg-color);
+    border-radius: var(--border-radius-lg);
+    box-shadow: var(--shadow);
+    border: 1px solid var(--border-light);
+    overflow: hidden;
+}
+
+.sidebar-section h3 {
+    position: sticky;
+    top: 0;
+    background: var(--bg-light);
+    z-index: 10;
+    margin: 0;
+    padding: 1.5rem;
+    border-bottom: 1px solid var(--border-light);
+    font-size: 1.1rem;
+    font-weight: 600;
+    color: var(--text-color);
+}
+
+
+/* Стили для состояния отклоненной заявки */
+.status-blocked {
+    background: #fee2e2;
+    color: #dc2626;
+    border: 1px solid #fecaca;
+}
+
+.status-blocked .status-icon {
+    color: #dc2626;
+}
+
+/* Информационная плашка для отклоненной заявки */
+.rejected-info-section {
+    background: linear-gradient(135deg, #fef3f2, #fff6f6);
+    border: 1px solid #fecaca;
+    border-radius: var(--border-radius-lg);
+    box-shadow: var(--shadow);
+    margin-bottom: 2rem;
+    overflow: hidden;
+}
+
+.rejected-info-header {
+    padding: 1.5rem 2rem;
+    background: #fef2f2;
+    border-bottom: 1px solid #fee2e2;
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+}
+
+.rejected-info-header i {
+    color: #dc2626;
+    font-size: 1.5rem;
+}
+
+.rejected-info-header h3 {
+    margin: 0;
+    color: #dc2626;
+    font-size: 1.3rem;
+    font-weight: 600;
+}
+
+.rejected-info-content {
+    padding: 2rem;
+}
+
+.rejection-details {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    gap: 2rem;
+    margin-bottom: 2rem;
+}
+
+.rejection-detail-item {
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+}
+
+.rejection-detail-label {
+    font-weight: 600;
+    color: var(--text-color);
+    font-size: 0.9rem;
+}
+
+.rejection-detail-value {
+    padding: 0.75rem 1rem;
+    background: white;
+    border-radius: var(--border-radius-sm);
+    border: 1px solid var(--border-light);
+    font-weight: 500;
+}
+
+.rejection-fields-list {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.5rem;
+    margin-top: 0.5rem;
+}
+
+.rejection-field-tag {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    padding: 0.4rem 0.8rem;
+    background: #fef3f2;
+    border: 1px solid #fecaca;
+    border-radius: 20px;
+    font-size: 0.8rem;
+    color: #dc2626;
+    font-weight: 500;
+}
+
+.rejection-field-tag i {
+    font-size: 0.7rem;
+}
+
+.rejection-actions-info {
+    display: flex;
+    gap: 1rem;
+    padding-top: 1.5rem;
+    border-top: 1px solid #fee2e2;
+}
+
+/* Состояние ожидания исправлений */
+.status-waiting-corrections {
+    background: #fffbeb;
+    color: #d97706;
+    border: 1px solid #fed7aa;
+}
+
+.status-waiting-corrections .status-icon {
+    color: #d97706;
+}
+
+.waiting-info-section {
+    background: linear-gradient(135deg, #fffbeb, #fffdf6);
+    border: 1px solid #fed7aa;
+    border-radius: var(--border-radius-lg);
+    box-shadow: var(--shadow);
+    margin-bottom: 2rem;
+    overflow: hidden;
+}
+
+.waiting-info-header {
+    padding: 1.5rem 2rem;
+    background: #fffbeb;
+    border-bottom: 1px solid #fed7aa;
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+}
+
+.waiting-info-header i {
+    color: #d97706;
+    font-size: 1.5rem;
+}
+
+.waiting-info-header h3 {
+    margin: 0;
+    color: #d97706;
+    font-size: 1.3rem;
+    font-weight: 600;
+}
+
+.waiting-info-content {
+    padding: 2rem;
+}
+
+.waiting-deadline {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    padding: 0.75rem 1.5rem;
+    background: #fef3c7;
+    border: 1px solid #fbbf24;
+    border-radius: var(--border-radius);
+    font-weight: 600;
+    color: #92400e;
+    margin-bottom: 1.5rem;
+}
+
+/* Анимация для статусов */
+@keyframes pulse-gentle {
+    0%, 100% {
+        opacity: 1;
+    }
+    50% {
+        opacity: 0.8;
+    }
+}
+
+.status-waiting-corrections {
+    animation: pulse-gentle 2s ease-in-out infinite;
+}
+
+
+/* Блок информации о статусе */
+.status-info-section .status-info-content {
+    padding: 1.5rem;
+}
+
+.status-alert {
+    display: flex;
+    align-items: flex-start;
+    gap: 1rem;
+    padding: 1rem;
+    border-radius: var(--border-radius);
+    margin-bottom: 1rem;
+}
+
+.status-alert.rejected {
+    background: #fef2f2;
+    border: 1px solid #fecaca;
+}
+
+.status-alert.rejected i {
+    color: #dc2626;
+    font-size: 1.2rem;
+    margin-top: 0.1rem;
+}
+
+.status-alert-content h4 {
+    margin: 0 0 0.25rem 0;
+    font-size: 0.95rem;
+    font-weight: 600;
+    color: var(--text-color);
+}
+
+.status-alert-content p {
+    margin: 0;
+    font-size: 0.8rem;
+    color: var(--text-light);
+}
+
+.status-timeline {
+    border-top: 1px solid var(--border-light);
+    padding-top: 1rem;
+}
+
+.status-deadline {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    padding: 0.75rem;
+    background: #fffbeb;
+    border: 1px solid #fed7aa;
+    border-radius: var(--border-radius-sm);
+    margin-bottom: 1rem;
+    font-size: 0.85rem;
+    color: #92400e;
+    font-weight: 500;
+}
+
+.status-deadline i {
+    color: #d97706;
+}
+
+.status-actions {
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+}
+
+.btn-block {
+    width: 100%;
+    justify-content: center;
+}
+
+
+/* Анимация успеха */
+@keyframes successPulse {
+    0% {
+        box-shadow: 0 0 0 0 rgba(34, 197, 94, 0.4);
+    }
+    70% {
+        box-shadow: 0 0 0 10px rgba(34, 197, 94, 0);
+    }
+    100% {
+        box-shadow: 0 0 0 0 rgba(34, 197, 94, 0);
+    }
+}
+
+.status-indicator.accepted {
+    animation: successPulse 2s ease-in-out;
+}
+
+/* Стили для проверенных полей */
+.form-value.verified {
+    background: #f0fdf4;
+    border-color: #bbf7d0;
+    color: #065f46;
+}
+
+.verified-field {
+    position: relative;
+}
+
+.verified-field::after {
+    content: '✓';
+    position: absolute;
+    right: 10px;
+    top: 50%;
+    transform: translateY(-50%);
+    color: #16a34a;
+    font-weight: bold;
+}
+
+
+/* Стили для состояния принятой заявки */
+.status-accepted {
+    background: #d1fae5;
+    color: #065f46;
+    border: 1px solid #a7f3d0;
+}
+
+.status-accepted .status-icon {
+    color: #065f46;
+}
+
+/* Информационная плашка для принятой заявки */
+.accepted-info-section {
+    background: linear-gradient(135deg, #f0fdf4, #f7fee7);
+    border: 1px solid #bbf7d0;
+    border-radius: var(--border-radius-lg);
+    box-shadow: var(--shadow);
+    margin-bottom: 2rem;
+    overflow: hidden;
+}
+
+.accepted-info-header {
+    padding: 1.5rem 2rem;
+    background: #f0fdf4;
+    border-bottom: 1px solid #dcfce7;
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+}
+
+.accepted-info-header i {
+    color: #16a34a;
+    font-size: 1.5rem;
+}
+
+.accepted-info-header h3 {
+    margin: 0;
+    color: #16a34a;
+    font-size: 1.3rem;
+    font-weight: 600;
+}
+
+.accepted-info-content {
+    padding: 2rem;
+}
+
+.acceptance-details {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    gap: 2rem;
+    margin-bottom: 2rem;
+}
+
+.acceptance-detail-item {
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+}
+
+.acceptance-detail-label {
+    font-weight: 600;
+    color: var(--text-color);
+    font-size: 0.9rem;
+}
+
+.acceptance-detail-value {
+    padding: 0.75rem 1rem;
+    background: white;
+    border-radius: var(--border-radius-sm);
+    border: 1px solid var(--border-light);
+    font-weight: 500;
+}
+
+.user-access-badges {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.75rem;
+    margin-top: 0.5rem;
+}
+
+.access-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    padding: 0.5rem 1rem;
+    background: #d1fae5;
+    border: 1px solid #a7f3d0;
+    border-radius: 20px;
+    font-size: 0.8rem;
+    color: #065f46;
+    font-weight: 500;
+}
+
+.access-badge i {
+    font-size: 0.7rem;
+}
+
+.acceptance-actions-info {
+    display: flex;
+    gap: 1rem;
+    padding-top: 1.5rem;
+    border-top: 1px solid #dcfce7;
+}
+
+/* Стили для подписанного договора */
+.contract-signed {
+    border-color: #bbf7d0;
+    background: #f0fdf4;
+}
+
+.contract-signed .document-icon {
+    background: linear-gradient(135deg, #16a34a, #22c55e);
+}
+
+.signed-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    padding: 0.4rem 0.8rem;
+    background: #16a34a;
+    color: white;
+    border-radius: 20px;
+    font-size: 0.8rem;
+    font-weight: 500;
+}
+
+/* Блок информации о статусе для принятой заявки */
+.status-info-section .status-info-success {
+    padding: 1.5rem;
+}
+
+.status-success-alert {
+    display: flex;
+    align-items: flex-start;
+    gap: 1rem;
+    padding: 1rem;
+    border-radius: var(--border-radius);
+    margin-bottom: 1rem;
+    background: #f0fdf4;
+    border: 1px solid #bbf7d0;
+}
+
+.status-success-alert i {
+    color: #16a34a;
+    font-size: 1.2rem;
+    margin-top: 0.1rem;
+}
+
+.status-success-content h4 {
+    margin: 0 0 0.25rem 0;
+    font-size: 0.95rem;
+    font-weight: 600;
+    color: var(--text-color);
+}
+
+.status-success-content p {
+    margin: 0;
+    font-size: 0.8rem;
+    color: var(--text-light);
+}
+
+.success-features {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 1rem;
+    margin-bottom: 1.5rem;
+}
+
+.success-feature {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    padding: 0.75rem;
+    background: white;
+    border: 1px solid #dcfce7;
+    border-radius: var(--border-radius-sm);
+    font-size: 0.8rem;
+    color: #065f46;
+}
+
+.success-feature i {
+    color: #16a34a;
+}
+
+.user-active-since {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    padding: 0.75rem;
+    background: #fffbeb;
+    border: 1px solid #fed7aa;
+    border-radius: var(--border-radius-sm);
+    margin-bottom: 1rem;
+    font-size: 0.85rem;
+    color: #92400e;
+    font-weight: 500;
+}
+
+.user-active-since i {
+    color: #d97706;
+}
+
+/* Информационные блоки для разных статусов */
+.rejected-info-section, .accepted-info-section {
+    background: var(--bg-color);
+    border-radius: var(--border-radius-lg);
+    box-shadow: var(--shadow);
+    border: 1px solid var(--border-light);
+    overflow: hidden;
+    margin-bottom: 2rem;
+    clear: both;
+}
+
+.rejected-info-header, .accepted-info-header {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    padding: 1.5rem;
+    background: var(--bg-light);
+    border-bottom: 1px solid var(--border-light);
+}
+
+.rejected-info-header {
+    background: #fef2f2;
+    border-bottom: 1px solid #fecaca;
+}
+
+.rejected-info-header i {
+    color: #dc2626;
+    font-size: 1.2rem;
+}
+
+.accepted-info-header {
+    background: #f0fdf4;
+    border-bottom: 1px solid #dcfce7;
+}
+
+.accepted-info-header i {
+    color: #16a34a;
+    font-size: 1.2rem;
+}
+
+.rejected-info-header h3, .accepted-info-header h3 {
+    margin: 0;
+    font-size: 1.1rem;
+    font-weight: 600;
+    color: var(--text-color);
+}
+
+.rejected-info-content, .accepted-info-content {
+    padding: 1.5rem;
+}
+
+.rejection-details, .acceptance-details {
+    display: flex;
+    flex-direction: column;
+    clear: both;
+}
+
+.rejection-detail-item, .acceptance-detail-item {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    gap: 1rem;
+}
+
+.rejection-detail-item.full-width, .acceptance-detail-item.full-width {
+    flex-direction: column;
+}
+
+.rejection-detail-label, .acceptance-detail-label {
+    font-weight: 500;
+    color: var(--text-light);
+    min-width: 140px;
+    font-size: 0.9rem;
+}
+
+.rejection-detail-value, .acceptance-detail-value {
+    color: var(--text-color);
+    font-weight: 500;
+    text-align: right;
+    flex: 1;
+}
+
+.rejection-detail-item.full-width .rejection-detail-value {
+    text-align: left;
+    line-height: 1.5;
+}
+
+.rejection-fields-list {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.5rem;
+    margin-top: 0.5rem;
+}
+
+.rejection-field-tag {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    padding: 0.5rem 0.75rem;
+    background: #fee2e2;
+    border: 1px solid #fecaca;
+    border-radius: var(--border-radius-sm);
+    font-size: 0.8rem;
+    color: #991b1b;
+    font-weight: 500;
+}
+
+.rejection-field-tag i {
+    color: #dc2626;
+}
+
+.rejection-actions-info {
+    display: flex;
+    gap: 1rem;
+    margin-top: 1.5rem;
+    padding-top: 1.5rem;
+    border-top: 1px solid var(--border-light);
+}

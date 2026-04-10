@@ -1,0 +1,378 @@
+{% extends 'main/base.html' %}
+{% load static %}
+
+{% block title %}Лот — АГРОГАТОР{% endblock %}
+
+{% block extra_css %}
+<link rel="stylesheet" href="{% static 'main/assets/css/quality.css' %}">
+<link rel="stylesheet" href="{% static 'order/css/deal_detail.css' %}">
+<style>
+    .lot-detail-subtitle {
+        color: var(--text-light);
+        font-weight: 700;
+        margin-top: 0.25rem;
+    }
+    .lot-kv {
+        padding: 1.25rem 2rem;
+        display: grid;
+        gap: 0.75rem;
+    }
+    .lot-kv-row {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 0.75rem;
+    }
+    .lot-kv-item {
+        background: var(--white);
+        border: 1px solid var(--border-light);
+        border-radius: 14px;
+        padding: 0.9rem 1rem;
+        min-width: 0;
+    }
+    .lot-kv-label { display:block; font-size: 0.8rem; font-weight: 900; color: var(--text-light); margin-bottom: 0.25rem; }
+    .lot-kv-value { font-size: 0.95rem; font-weight: 900; color: var(--text-color); word-break: break-word; }
+    .lot-kv-value.emph { color: #16a34a; }
+    .lot-actions-block .action-card { cursor: default; }
+    .lot-action-buttons {
+        display: grid;
+        gap: 0.75rem;
+    }
+    .lot-action-buttons .btn {
+        width: 100%;
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        gap: 0.5rem;
+        font-weight: 900;
+    }
+    .lot-inline-btn {
+        display: inline-flex;
+        align-items: center;
+        gap: 0.45rem;
+        padding: 0.6rem 0.9rem;
+        border-radius: 999px;
+        border: 2px solid var(--border-light);
+        background: var(--white);
+        cursor: pointer;
+        font-weight: 800;
+    }
+    .lot-inline-btn:hover {
+        border-color: rgba(37, 105, 70, 0.35);
+        transform: translateY(-1px);
+    }
+    .lot-switch {
+        display: inline-flex;
+        border: 2px solid var(--border-light);
+        border-radius: 999px;
+        padding: 0.25rem;
+        background: var(--white);
+        gap: 0.25rem;
+    }
+    .lot-switch-btn {
+        border: none;
+        background: transparent;
+        padding: 0.55rem 0.9rem;
+        border-radius: 999px;
+        cursor: pointer;
+        font-weight: 900;
+        color: var(--text-color);
+        display: inline-flex;
+        align-items: center;
+        gap: 0.5rem;
+    }
+    .lot-switch-btn.is-active {
+        background: rgba(37, 105, 70, 0.10);
+        color: var(--primary-color);
+    }
+    .lot-modal-grid {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 1rem;
+        align-items: start;
+    }
+    .lot-modal-grid .deal-modal-section {
+        margin: 0;
+    }
+    .lot-modal-bottom {
+        margin-top: 1rem;
+    }
+    .lot-sidebar-info {
+        margin-top: 0.85rem;
+        padding-top: 0.85rem;
+        border-top: 1px solid var(--border-light);
+    }
+    .lot-sidebar-subheader {
+        display: flex;
+        align-items: center;
+        gap: 0.6rem;
+        font-weight: 950;
+        color: var(--text-color);
+        margin: 0;
+    }
+    .lot-sidebar-subheader i {
+        color: var(--primary-color);
+        opacity: 0.95;
+    }
+    .lot-sidebar-list {
+        display: grid;
+        gap: 0.55rem;
+        margin: 0.75rem 0 0.85rem 0;
+    }
+    .lot-sidebar-li {
+        display: grid;
+        grid-template-columns: 1fr auto;
+        align-items: center;
+        gap: 0.75rem;
+        padding: 0.6rem 0.75rem;
+        border-radius: 14px;
+        border: 1px solid rgba(226, 232, 240, 0.9);
+        background: rgba(248, 250, 252, 0.8);
+    }
+    .lot-sidebar-li .label {
+        color: var(--text-light);
+        font-weight: 850;
+        letter-spacing: 0.01em;
+    }
+    .lot-sidebar-li .value {
+        font-weight: 950;
+        color: var(--text-color);
+    }
+    .lot-volume-card {
+        background: rgba(37, 89, 70, 0.04);
+        border: 1px solid rgba(37, 89, 70, 0.12);
+        border-radius: 16px;
+        padding: 0.9rem 1rem;
+    }
+    .lot-volume-meta {
+        display: flex;
+        align-items: flex-start;
+        justify-content: space-between;
+        gap: 1rem;
+    }
+    .lot-volume-meta strong {
+        display: block;
+        font-size: 1rem;
+        font-weight: 950;
+        color: var(--text-color);
+        margin-top: 0.15rem;
+    }
+    .lot-volume-meta .sub {
+        display: block;
+        font-size: 0.85rem;
+        color: var(--text-light);
+        margin-top: 0.1rem;
+        font-weight: 800;
+    }
+    .lot-volume-percent {
+        text-align: right;
+        font-weight: 950;
+        color: var(--primary-color);
+    }
+    .lot-actions-bottom {
+        margin-top: 1rem;
+        padding-top: 1rem;
+        border-top: 1px solid var(--border-light);
+    }
+    /* Выровнять сайдбар при скролле (не липнет к самому верху) */
+    .detail-sidebar {
+        top: 4.5rem;
+        max-height: calc(100vh - 170px);
+    }
+    /* Контент правой плашки: одинаковые горизонтальные отступы */
+    .lot-actions-body {
+        padding: 1.1rem 1.35rem 1.35rem;
+    }
+    .lot-actions-body .lot-sidebar-info {
+        margin-top: 0;
+        padding-top: 0;
+        border-top: none;
+    }
+    @media (max-width: 900px) {
+        .lot-kv-row { grid-template-columns: 1fr; }
+        .quality-detail-content { grid-template-columns: 1fr; }
+        .lot-modal-grid { grid-template-columns: 1fr; }
+    }
+</style>
+{% endblock %}
+
+{% block content %}
+<div id="lot_id" style="display:none;">{{ lot_id }}</div>
+
+<div class="container deal-detail-page" id="lotDetailPage">
+    <section class="deal-detail-header">
+        <button type="button" class="btn-back" onclick="window.location.href='{% url 'order:my_lots' %}'">
+            <i class="fas fa-arrow-left"></i> Назад
+        </button>
+        <div class="deal-detail-title">
+            <h1><i class="fas fa-truck"></i> Лот № <span id="lotTitle">—</span></h1>
+            <p class="deal-detail-subtitle" id="lotSubtitle">Загрузка...</p>
+        </div>
+    </section>
+
+    <div class="quality-detail-content">
+        <div class="detail-main-column">
+            <section class="detail-section farmer-data">
+                <div class="section-header">
+                    <h2><i class="fas fa-users"></i> Участники и точки</h2>
+                    <div style="display:flex; align-items:center; gap:0.75rem; flex-wrap:wrap;">
+                        <div class="lot-switch" role="tablist" aria-label="Переключатель участника">
+                            <button type="button" class="lot-switch-btn is-active" id="partySwitchFarmer" aria-selected="true">
+                                <i class="fas fa-tractor"></i> Фермер
+                            </button>
+                            <button type="button" class="lot-switch-btn" id="partySwitchExporter" aria-selected="false">
+                                <i class="fas fa-building"></i> Экспортер
+                            </button>
+                        </div>
+                        <button type="button" class="lot-inline-btn" id="openPartyPointBtn">
+                            <i class="fas fa-map-marker-alt"></i> Подробнее о точке
+                        </button>
+                    </div>
+                </div>
+                <div class="lot-kv" id="partyBlock"></div>
+            </section>
+
+            <section class="detail-section culture-description">
+                <div class="section-header">
+                    <h2><i class="fas fa-route"></i> Грузоперевозка</h2>
+                    <button type="button" class="lot-inline-btn" id="openCropBtn">
+                        <i class="fas fa-seedling"></i> Подробнее о культуре
+                    </button>
+                </div>
+                <div class="lot-kv" id="logisticsBlock"></div>
+            </section>
+        </div>
+
+        <div class="detail-sidebar">
+            <section class="sidebar-section actions-section lot-actions-block">
+                <div class="actions-section-header">
+                    <h3>Действия</h3>
+                    <span class="actions-section-status" id="lotStatusBadge">—</span>
+                </div>
+                <div class="lot-actions-body">
+                    <div class="lot-sidebar-info" id="lotRequestsInfo">
+                        <h4 class="lot-sidebar-subheader">
+                            <i class="fas fa-layer-group" aria-hidden="true"></i>
+                            <span>Информация о заявках</span>
+                        </h4>
+                        <div class="lot-sidebar-list">
+                            <div class="lot-sidebar-li"><span class="label">Новые заявки</span> <span class="value" id="lotReqNew">—</span></div>
+                            <div class="lot-sidebar-li"><span class="label">Заявки в обработке</span> <span class="value" id="lotReqInWork">—</span></div>
+                            <div class="lot-sidebar-li"><span class="label">Созданные сделки</span> <span class="value" id="lotReqDeals">—</span></div>
+                        </div>
+
+                        <div class="lot-volume-card">
+                            <div class="deal-logistics-volume-progress" aria-hidden="true">
+                                <div class="deal-logistics-volume-progress-fill" id="lotVolumeProgressFill" style="width: 0%;"></div>
+                            </div>
+                            <div class="lot-volume-meta">
+                                <div>
+                                    Заполнено
+                                    <strong><span id="lotVolumeFilledText">—</span> т</strong>
+                                    <span class="sub">Объем: <span id="lotVolumeTotalText">—</span> т</span>
+                                </div>
+                                <div class="lot-volume-percent">
+                                    Процент
+                                    <strong><span id="lotVolumePercentText">0</span>%</strong>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="lot-actions-bottom">
+                        <div class="lot-action-buttons">
+                            <button type="button" class="btn btn-outline" id="lotEditBtn" style="display:none;">
+                                <i class="fas fa-edit"></i> Редактировать
+                            </button>
+                            <button type="button" class="btn btn-primary" id="lotPublishBtn" style="display:none;">
+                                <i class="fas fa-check-circle"></i> Опубликовать
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </section>
+        </div>
+    </div>
+</div>
+
+<!-- Модалки "Подробнее" -->
+<div class="deal-modal-overlay" id="lotInfoModalOverlay" aria-hidden="true">
+    <div class="deal-modal deal-modal-wide" id="lotInfoModal">
+        <div class="deal-modal-header">
+            <h3 class="deal-modal-title" id="lotInfoModalTitle">—</h3>
+            <button type="button" class="deal-modal-close" id="lotInfoModalClose" aria-label="Закрыть"><i class="fas fa-times"></i></button>
+        </div>
+        <div class="deal-modal-body" id="lotInfoModalBody"></div>
+    </div>
+</div>
+
+<!-- Модалка редактирования/публикации (переиспользуем из списка/сделки) -->
+<div class="accept-confirmation-modal" id="dealLotPublishOverlay" aria-hidden="true">
+    <div class="accept-modal-content" role="dialog" aria-modal="true" aria-labelledby="dealLotPublishTitle">
+        <div class="accept-modal-icon" style="background: #1d4ed8;">
+            <i class="fas fa-truck" aria-hidden="true"></i>
+        </div>
+        <h3 id="dealLotPublishTitle">Публикация лота</h3>
+
+        <div id="dealLotPublishPanel">
+            <p id="dealLotPublishText">
+                Проверьте информацию о лоте и опубликуйте его. При необходимости отредактируйте часть полей.
+            </p>
+            <p id="dealLotPublishError" style="display: none;"></p>
+            <div class="accept-modal-actions deal-lot-publish-actions">
+                <button type="button" class="deal-btn-warning" id="dealLotPublishEditBtn">Редактировать</button>
+                <button type="button" class="deal-btn-primary" id="dealLotPublishConfirmBtn">Опубликовать</button>
+            </div>
+        </div>
+
+        <div id="dealLotEditPanel" style="display: none;">
+            <p class="deal-lot-edit-info">
+                Укажите расстояние в километрах и коэффициент — цена за тонну посчитается автоматически (до сотых). Если хотите изменить цену напрямую, то нажмите «Изменить цену вручную», тогда коэффициент будет считаться от цены и километража. После изменения необходимо опубликовать лот. На сервер расстояние уходит в метрах (км × 1000), не менее 1 км.
+            </p>
+            <div class="deal-lot-edit-form">
+                <div class="deal-lot-edit-row">
+                    <label for="dealLotEditDistanceInput">Расстояние, км</label>
+                    <input id="dealLotEditDistanceInput" type="text" placeholder="не менее 1" inputmode="decimal" autocomplete="off" />
+                </div>
+                <div class="deal-lot-edit-row" id="dealLotEditCoeffRow">
+                    <label for="dealLotEditTransportCoeffInput">Коэффициент перевозки</label>
+                    <div class="deal-lot-edit-input-wrap" id="dealLotEditCoeffInputWrap">
+                        <input id="dealLotEditTransportCoeffInput" type="text" placeholder="" inputmode="decimal" autocomplete="off" />
+                        <span class="deal-lot-edit-lock-icon" id="dealLotEditCoeffLockIcon" aria-hidden="true" title="Поле заблокировано">
+                            <i class="fas fa-ban"></i>
+                        </span>
+                    </div>
+                </div>
+                <div class="deal-lot-edit-row" id="dealLotEditPriceRow">
+                    <label for="dealLotEditPricePerTonInput">Цена за тонну, ₽</label>
+                    <div class="deal-lot-edit-input-wrap" id="dealLotEditPriceInputWrap">
+                        <input id="dealLotEditPricePerTonInput" type="text" placeholder="" inputmode="decimal" autocomplete="off" />
+                        <span class="deal-lot-edit-lock-icon" id="dealLotEditPriceLockIcon" aria-hidden="true" title="Поле заблокировано">
+                            <i class="fas fa-ban"></i>
+                        </span>
+                    </div>
+                </div>
+                <div class="deal-lot-edit-checkbox-row">
+                    <label class="deal-lot-edit-checkbox-label">
+                        <input type="checkbox" id="dealLotEditManualPriceCheckbox" />
+                        <span>Изменить цену вручную</span>
+                    </label>
+                </div>
+            </div>
+            <p id="dealLotEditError" style="display: none;"></p>
+            <div class="accept-modal-actions deal-lot-edit-actions">
+                <button type="button" class="deal-btn-primary" id="dealLotEditSubmitBtn">Обновить</button>
+                <button type="button" class="btn btn-secondary" id="dealLotEditCancelBtn">Отмена</button>
+            </div>
+        </div>
+        <button type="button" class="modal-close" id="dealLotPublishCloseBtn" aria-label="Закрыть">
+            <i class="fas fa-times" aria-hidden="true"></i>
+        </button>
+    </div>
+</div>
+{% endblock %}
+
+{% block extra_js %}
+<script src="{% static 'main/assets/js/main_auth.js' %}"></script>
+<script src="{% static 'order/js/lot_detail.js' %}"></script>
+{% endblock %}
+

@@ -1,0 +1,648 @@
+{% extends 'main/base.html' %}
+{% load static %}
+
+{% block title %}Сделка — АГРОГАТОР{% endblock %}
+
+{% block extra_css %}
+<link rel="stylesheet" href="{% static 'order/css/deal_detail.css' %}">
+{% endblock %}
+
+{% block content %}
+<div class="container deal-detail-page" id="dealDetailPage">
+    <input type="hidden" id="dealId" value="{{ deal_id }}">
+
+    <!-- Заголовок -->
+    <section class="deal-detail-header">
+        <button type="button" class="btn-back" id="dealDetailBackBtn">
+            <i class="fas fa-arrow-left"></i> Назад
+        </button>
+        <div class="deal-detail-title">
+            <h1><i class="fas fa-handshake"></i> Сделка № <span id="dealUniqueCode">—</span></h1>
+            <p class="deal-detail-subtitle" id="dealDetailSubtitle">Загрузка...</p>
+        </div>
+    </section>
+
+    <!-- Состояние загрузки / ошибки -->
+    <div class="deal-detail-loading" id="dealDetailLoading">
+        <div class="loading-spinner"><i class="fas fa-spinner fa-spin"></i></div>
+        <p>Загрузка данных сделки...</p>
+    </div>
+    <div class="deal-detail-error" id="dealDetailError" style="display: none;">
+        <i class="fas fa-exclamation-triangle"></i>
+        <p id="dealDetailErrorMessage">Не удалось загрузить сделку.</p>
+    </div>
+
+    <!-- Информационная плашка по статусу (показывается при «На согласовании») -->
+    <section class="deal-detail-status-info" id="dealDetailStatusInfo" style="display: none;">
+        <div class="deal-detail-status-info-inner">
+            <h3 class="deal-detail-status-info-title"><i class="fas fa-info-circle"></i> Информация для менеджера</h3>
+            <p id="dealDetailStatusInfoText" class="deal-detail-status-info-text"></p>
+        </div>
+    </section>
+
+    <!-- Общая информация о сделке — один общий блок -->
+    <section class="deal-overview" id="dealInfoSection" style="display: none;">
+        <div class="deal-general-info">
+            <!-- Три колонки: Фермер | Центр | Экспортер (фермер и экспортер — равные по ширине и высоте, новый образ без стопки карточек) -->
+            <div class="deal-general-cols">
+                <!-- 1. Фермер: шапка с согласием/подписью → герой (клик → модалка за т/км) → точка + хранение → декларации и особые условия → оплата -->
+                <div class="deal-col deal-col-party deal-col-farmer">
+                    <div class="deal-party-header">
+                        <div class="deal-party-avatar"><i class="fas fa-tractor"></i></div>
+                        <span class="deal-party-role">Поставщик</span>
+                        <div class="deal-party-consent-plaque" title="Согласие и подпись">
+                            <div class="deal-consent-cell" id="dealFarmerAcceptWrap" title="Согласился работать по сделке">
+                                <i class="deal-consent-status fas" id="dealFarmerAcceptIcon" aria-hidden="true"></i>
+                                <i class="deal-consent-symbol fas fa-handshake" aria-hidden="true"></i>
+                            </div>
+                            <div class="deal-consent-cell" id="dealFarmerSignedWrap" title="Подписал документы">
+                                <i class="deal-consent-status fas" id="dealFarmerSignedIcon" aria-hidden="true"></i>
+                                <i class="deal-consent-symbol fas fa-file-signature" aria-hidden="true"></i>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="deal-party-inner">
+                        <button type="button" class="deal-party-hero-plaque deal-party-hero-clickable" id="dealTilePriceFarmer">
+                            <span class="deal-party-hero-icon"><i class="fas fa-ruble-sign"></i></span>
+                            <span class="deal-party-hero-value" id="dealTotalFarmer">—</span>
+                            <span class="deal-party-hero-caption">Общая сумма <i class="fas fa-chevron-right deal-hero-hint"></i></span>
+                        </button>
+                        <div class="deal-party-row-two">
+                            <button type="button" class="deal-party-plaque deal-party-plaque-link" id="dealTileLoading">
+                                <span class="deal-party-plaque-icon"><i class="fas fa-map-marker-alt"></i></span>
+                                <span class="deal-party-plaque-label">Точка погрузки</span>
+                                <span class="deal-party-plaque-value" id="dealLoadingAddress">—</span>
+                                <i class="fas fa-chevron-right"></i>
+                            </button>
+                            <div class="deal-party-plaque deal-party-plaque-info" id="dealTileStorage">
+                                <span class="deal-party-plaque-icon"><i class="fas fa-warehouse"></i></span>
+                                <span class="deal-party-plaque-label">Хранение</span>
+                                <span class="deal-party-plaque-value"><span id="dealStorageText">—</span><span class="deal-party-plaque-accent" id="dealStoragePriceWrap" style="display: none;"> · <strong id="dealStoragePrice">—</strong></span></span>
+                            </div>
+                        </div>
+                        <button type="button" class="deal-party-plaque deal-party-plaque-declarations" id="dealTileDeclarations">
+                            <span class="deal-party-decl-icon"><i class="fas fa-file-alt"></i></span>
+                            <span>Декларации и особые условия</span>
+                            <span class="deal-party-decl-count" id="dealDeclarationsCount">0</span>
+                        </button>
+                        <div class="deal-party-footer-row">
+                            <div class="deal-party-payment-block" id="dealPaymentTermsRow">
+                                <span class="deal-party-payment-icon"><i class="fas fa-credit-card"></i></span>
+                                <div class="deal-party-payment-text">
+                                    <span class="deal-party-payment-label">Оплата</span>
+                                    <span class="deal-party-payment-value" id="dealPaymentTerms">—</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Центр: сделка (даты, номер, дата начала, статус), пшеница, логистика по центру -->
+                <div class="deal-col deal-col-center">
+                    <div class="deal-center-top">
+                        <span class="deal-center-number" id="dealTopNumber">Сделка #—</span>
+                        <span class="deal-center-period" id="dealTopPeriod">—</span>
+                        <span class="deal-status-badge deal-center-status" id="dealTopStatus">—</span>
+                    </div>
+                    <button type="button" class="deal-center-crop" id="dealCropLink">
+                        <i class="fas fa-seedling"></i>
+                        <span id="dealCropName">—</span>
+                        <i class="fas fa-chevron-right"></i>
+                    </button>
+                    <div class="deal-carrier-plaque">
+                        <div class="deal-carrier-wrap deal-carrier-in-center">
+                            <div class="deal-carrier-head">
+                                <span class="deal-carrier-icon" aria-hidden="true"><i class="fas fa-truck"></i></span>
+                                <span class="deal-carrier-type">Перевозка</span>
+                            </div>
+                            <div class="deal-carrier-tiles">
+                                <div class="deal-carrier-tile">
+                                    <i class="fas fa-road deal-carrier-tile-icon" aria-hidden="true"></i>
+                                    <span class="deal-carrier-tile-value" id="dealDistance">—</span>
+                                    <span class="deal-carrier-tile-unit">км</span>
+                                </div>
+                                <div class="deal-carrier-tile">
+                                    <i class="fas fa-weight-hanging deal-carrier-tile-icon" aria-hidden="true"></i>
+                                    <span class="deal-carrier-tile-value" id="dealVolume">—</span>
+                                    <span class="deal-carrier-tile-unit">т</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="deal-center-total">
+                        <span class="deal-center-total-label">Общая стоимость</span>
+                        <span class="deal-center-total-value" id="dealTotalCenter">—</span>
+                    </div>
+                </div>
+
+                <!-- 3. Экспортер: шапка с согласием/подписью → герой (клик) → точка + приём качества → особые условия -->
+                <div class="deal-col deal-col-party deal-col-exporter">
+                    <div class="deal-party-header">
+                        <div class="deal-party-avatar"><i class="fas fa-building"></i></div>
+                        <span class="deal-party-role">Покупатель</span>
+                        <div class="deal-party-consent-plaque" title="Согласие и подпись">
+                            <div class="deal-consent-cell" id="dealExporterAcceptWrap" title="Согласился работать по сделке">
+                                <i class="deal-consent-status fas" id="dealExporterAcceptIcon" aria-hidden="true"></i>
+                                <i class="deal-consent-symbol fas fa-handshake" aria-hidden="true"></i>
+                            </div>
+                            <div class="deal-consent-cell" id="dealExporterSignedWrap" title="Подписал документы">
+                                <i class="deal-consent-status fas" id="dealExporterSignedIcon" aria-hidden="true"></i>
+                                <i class="deal-consent-symbol fas fa-file-signature" aria-hidden="true"></i>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="deal-party-inner deal-party-inner-exporter">
+                        <button type="button" class="deal-party-hero-plaque deal-party-hero-clickable" id="dealTilePriceExporter">
+                            <span class="deal-party-hero-icon"><i class="fas fa-ruble-sign"></i></span>
+                            <span class="deal-party-hero-value" id="dealTotalExporter">—</span>
+                            <span class="deal-party-hero-caption">Общая сумма <i class="fas fa-chevron-right deal-hero-hint"></i></span>
+                        </button>
+                        <button type="button" class="deal-party-plaque deal-party-plaque-link deal-party-plaque-full" id="dealTileUnloading">
+                            <span class="deal-party-plaque-icon"><i class="fas fa-map-pin"></i></span>
+                            <span class="deal-party-plaque-label">Точка выгрузки</span>
+                            <span class="deal-party-plaque-value" id="dealUnloadingAddress">—</span>
+                            <i class="fas fa-chevron-right"></i>
+                        </button>
+                        <div class="deal-party-plaque deal-party-plaque-info deal-party-plaque-full">
+                            <span class="deal-party-plaque-icon"><i class="fas fa-flask"></i></span>
+                            <span class="deal-party-plaque-label">Приём качества</span>
+                            <span class="deal-party-plaque-value" id="dealQualityTest">—</span>
+                        </div>
+                        <button type="button" class="deal-party-plaque deal-party-plaque-link deal-exporter-last-plaque" id="dealTileExporterProduct">
+                            <span class="deal-party-plaque-icon"><i class="fas fa-box-open"></i></span>
+                            <span class="deal-party-plaque-label">Посмотреть продукцию экспортера</span>
+                            <i class="fas fa-chevron-right"></i>
+                        </button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Нижняя полоса: слева комиссия и стоимость перевозки | по центру кнопки | справа НДС и договоры -->
+            <div class="deal-general-bottom">
+                <div class="deal-bottom-left">
+                    <div class="deal-bottom-card">
+                        <span class="deal-bottom-card-icon"><i class="fas fa-percent"></i></span>
+                        <div class="deal-bottom-card-text">
+                            <span class="deal-bottom-label">Комиссия Агрогатора</span>
+                            <span class="deal-bottom-value" id="dealCommission">—</span>
+                        </div>
+                    </div>
+                    <div class="deal-bottom-card">
+                        <span class="deal-bottom-card-icon"><i class="fas fa-ruble-sign"></i></span>
+                        <div class="deal-bottom-card-text">
+                            <span class="deal-bottom-label">Стоимость перевозки</span>
+                            <span class="deal-bottom-value" id="dealTransportCost">—</span>
+                        </div>
+                    </div>
+                </div>
+                <div class="deal-bottom-center deal-bottom-actions">
+                    <button type="button" class="deal-bottom-action-btn deal-bottom-action-btn-cancel" id="dealActionCancel" title="Пока без функционала">
+                        <i class="fas fa-times-circle"></i>
+                        <span>Отменить сделку</span>
+                    </button>
+                    <button type="button" class="deal-bottom-action-btn" id="dealActionFreeze" title="Пока без функционала">
+                        <i class="fas fa-snowflake"></i>
+                        <span>Заморозить сделку</span>
+                    </button>
+                    <button type="button" class="deal-bottom-action-btn" id="dealActionAccept" title="Отправить на подписание" style="display: none;">
+                        <i class="fas fa-check-circle"></i>
+                        <span>Принять сделку</span>
+                    </button>
+                    <button type="button" class="deal-bottom-action-btn" id="dealActionEdit" title="Пока без функционала" style="display: none;">
+                        <i class="fas fa-edit"></i>
+                        <span>Изменить данные</span>
+                    </button>
+                    <button type="button" class="deal-bottom-action-btn" id="dealActionDocs" title="Управление документооборотом">
+                        <i class="fas fa-folder-open"></i>
+                        <span>Управление документооборотом</span>
+                    </button>
+                    <button type="button" class="deal-bottom-action-btn" id="dealActionFinish" title="Пока без функционала" style="display: none;">
+                        <i class="fas fa-flag-checkered"></i>
+                        <span>Завершить сделку</span>
+                    </button>
+                    <button type="button" class="deal-bottom-action-btn" id="dealActionCallFarmer" style="display: none;">
+                        <i class="fas fa-phone"></i>
+                        <span>Связаться с фермером</span>
+                    </button>
+                    <button type="button" class="deal-bottom-action-btn" id="dealActionArchive" style="display: none;">
+                        <i class="fas fa-archive"></i>
+                        <span>Добавить в архив</span>
+                    </button>
+                    <button type="button" class="deal-bottom-action-btn" id="dealActionCallExporter" style="display: none;">
+                        <i class="fas fa-phone"></i>
+                        <span>Связаться с экспортером</span>
+                    </button>
+                </div>
+                <div class="deal-bottom-right">
+                    <div class="deal-bottom-card">
+                        <span class="deal-bottom-card-icon"><i class="fas fa-receipt"></i></span>
+                        <div class="deal-bottom-card-text">
+                            <span class="deal-bottom-label">НДС</span>
+                            <span class="deal-bottom-value" id="dealVat">—</span>
+                        </div>
+                    </div>
+                    <button type="button" class="deal-bottom-card deal-bottom-card-click" id="dealTileContracts">
+                        <span class="deal-bottom-card-icon"><i class="fas fa-file-contract"></i></span>
+                        <div class="deal-bottom-card-text">
+                            <span class="deal-bottom-label">Документооборот</span>
+                            <span class="deal-bottom-value">Подробнее</span>
+                        </div>
+                        <i class="fas fa-chevron-right deal-bottom-card-arrow"></i>
+                    </button>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Универсальная модалка (точки, декларации, культура, договоры) -->
+    <div class="deal-modal-overlay" id="dealModalOverlay" aria-hidden="true">
+        <div class="deal-modal" id="dealModal">
+            <div class="deal-modal-header">
+                <h3 class="deal-modal-title" id="dealModalTitle">—</h3>
+                <button type="button" class="deal-modal-close" id="dealModalClose" aria-label="Закрыть"><i class="fas fa-times"></i></button>
+            </div>
+            <div class="deal-modal-body" id="dealModalBody"></div>
+        </div>
+    </div>
+
+    <!-- Модалка публикации лота (когда статус лота «Создана») -->
+    <div class="accept-confirmation-modal" id="dealLotPublishOverlay" aria-hidden="true">
+        <div class="accept-modal-content" role="dialog" aria-modal="true" aria-labelledby="dealLotPublishTitle">
+            <div class="accept-modal-icon" style="background: #1d4ed8;">
+                <i class="fas fa-truck" aria-hidden="true"></i>
+            </div>
+            <h3 id="dealLotPublishTitle">Публикация лота</h3>
+
+            <div id="dealLotPublishPanel">
+                <p id="dealLotPublishText">
+                    На данный момент лот был создан на основе сделки, но он еще не виден перевозчиками. Проверьте информацию о лоте и опубликуйте его. При необходимости отредактируйте часть полей.
+                </p>
+                <p id="dealLotPublishError" style="display: none;"></p>
+                <div class="accept-modal-actions deal-lot-publish-actions">
+                    <button type="button" class="deal-btn-warning" id="dealLotPublishEditBtn">Редактировать</button>
+                    <button type="button" class="deal-btn-primary" id="dealLotPublishConfirmBtn">Согласовать</button>
+                </div>
+            </div>
+
+            <div id="dealLotEditPanel" style="display: none;">
+                <p class="deal-lot-edit-info">
+                    Укажите расстояние в километрах и коэффициент — цена за тонну посчитается автоматически (до сотых). Если хотите изменить цену напрямую, то нажмите «Изменить цену вручную», тогда коэффициент будет считаться от цены и километража. После изменения необходимо опубликовать лот. На сервер расстояние уходит в метрах (км × 1000), не менее 1 км.
+                </p>
+                <div class="deal-lot-edit-form">
+                    <div class="deal-lot-edit-row">
+                        <label for="dealLotEditDistanceInput">Расстояние, км</label>
+                        <input id="dealLotEditDistanceInput" type="text" placeholder="не менее 1" inputmode="decimal" autocomplete="off" />
+                    </div>
+                    <div class="deal-lot-edit-row" id="dealLotEditCoeffRow">
+                        <label for="dealLotEditTransportCoeffInput">Коэффициент перевозки</label>
+                        <div class="deal-lot-edit-input-wrap" id="dealLotEditCoeffInputWrap">
+                            <input id="dealLotEditTransportCoeffInput" type="text" placeholder="" inputmode="decimal" autocomplete="off" />
+                            <span class="deal-lot-edit-lock-icon" id="dealLotEditCoeffLockIcon" aria-hidden="true" title="Поле заблокировано">
+                                <i class="fas fa-ban"></i>
+                            </span>
+                        </div>
+                    </div>
+                    <div class="deal-lot-edit-row" id="dealLotEditPriceRow">
+                        <label for="dealLotEditPricePerTonInput">Цена за тонну, ₽</label>
+                        <div class="deal-lot-edit-input-wrap" id="dealLotEditPriceInputWrap">
+                            <input id="dealLotEditPricePerTonInput" type="text" placeholder="" inputmode="decimal" autocomplete="off" />
+                            <span class="deal-lot-edit-lock-icon" id="dealLotEditPriceLockIcon" aria-hidden="true" title="Поле заблокировано">
+                                <i class="fas fa-ban"></i>
+                            </span>
+                        </div>
+                    </div>
+                    <div class="deal-lot-edit-checkbox-row">
+                        <label class="deal-lot-edit-checkbox-label">
+                            <input type="checkbox" id="dealLotEditManualPriceCheckbox" />
+                            <span>Изменить цену вручную</span>
+                        </label>
+                    </div>
+                </div>
+                <p id="dealLotEditError" style="display: none;"></p>
+                <div class="accept-modal-actions deal-lot-edit-actions">
+                    <button type="button" class="deal-btn-primary" id="dealLotEditSubmitBtn">Обновить</button>
+                    <button type="button" class="btn btn-secondary" id="dealLotEditCancelBtn">Отмена</button>
+                </div>
+            </div>
+            <button type="button" class="modal-close" id="dealLotPublishCloseBtn" aria-label="Закрыть">
+                <i class="fas fa-times" aria-hidden="true"></i>
+            </button>
+        </div>
+    </div>
+
+    <!-- Модалка успеха «Принять сделку» (договор отправлен на подписание) -->
+    <div class="deal-modal-overlay" id="dealAcceptSuccessOverlay" aria-hidden="true">
+        <div class="deal-modal" id="dealAcceptSuccessModal">
+            <div class="deal-modal-header">
+                <h3 class="deal-modal-title">Договор отправлен на подписание</h3>
+                <button type="button" class="deal-modal-close" id="dealAcceptSuccessClose" aria-label="Закрыть"><i class="fas fa-times"></i></button>
+            </div>
+            <div class="deal-modal-body">
+                <p class="deal-accept-success-main">Мы отправили договор фермера и экспортера на подписание. После подписания изменится статус сделки и платформа отправит договоры фермеру и экспортеру на подписание.</p>
+                <div class="deal-accept-success-notice">
+                    <p><strong>Внимание!</strong> Если вы не увидели документы в Контур.Диадок, то можете нажать на кнопку «Принять сделку» повторно. Если вы передумали и не подписали документы, то можете нажать на «Отменить сделку».</p>
+                </div>
+                <div class="deal-accept-success-actions">
+                    <button type="button" class="deal-btn-primary" id="dealAcceptSuccessOk">Понятно</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Модалка подтверждения «Отменить сделку» (в стиле качества культур) -->
+    <div class="accept-confirmation-modal" id="dealRejectConfirmOverlay" aria-hidden="true">
+        <div class="accept-modal-content" role="dialog" aria-modal="true" aria-labelledby="dealRejectConfirmTitle">
+            <div class="accept-modal-icon accept-modal-icon-danger">
+                <i class="fas fa-ban" aria-hidden="true"></i>
+            </div>
+            <h3 id="dealRejectConfirmTitle">Отмена сделки</h3>
+            <p>Вы точно хотите отменить сделку?</p>
+            <p class="accept-modal-description accept-modal-description-danger">
+                После отмены фермер и экспортер получат уведомление о том, что сделка не состоялась. Система предложит фермеру похожие варианты с лучшей ценой.
+            </p>
+            <div class="accept-modal-actions">
+                <button type="button" class="btn btn-secondary" id="dealRejectCancelBtn">Отмена</button>
+                <button type="button" class="btn btn-secondary" id="dealRejectWithCommentBtn" disabled title="Скоро">С комментарием</button>
+                <button type="button" class="btn btn-danger" id="dealRejectBtn">Отклонить</button>
+            </div>
+            <button type="button" class="modal-close" id="dealRejectConfirmClose" aria-label="Закрыть">
+                <i class="fas fa-times" aria-hidden="true"></i>
+            </button>
+        </div>
+    </div>
+
+    <!-- Модалка успеха «Сделка отклонена» (в стиле качества культур) -->
+    <div class="success-modal" id="dealRejectSuccessOverlay" aria-hidden="true">
+        <div class="success-modal-content" role="dialog" aria-modal="true" aria-labelledby="dealRejectSuccessTitle">
+            <div class="success-modal-icon success-modal-icon-danger">
+                <i class="fas fa-check-circle" aria-hidden="true"></i>
+            </div>
+            <h3 id="dealRejectSuccessTitle">Сделка отклонена</h3>
+            <p>Фермеру и экспортеру отправлено уведомление. Система предложит фермеру альтернативные варианты с лучшей ценой.</p>
+            <div class="success-modal-actions">
+                <button type="button" class="btn btn-secondary" id="dealRejectGoListBtn">Перейти на список</button>
+                <button type="button" class="btn btn-primary" id="dealRejectStayBtn">Остаться</button>
+            </div>
+            <button type="button" class="modal-close" id="dealRejectSuccessClose" aria-label="Закрыть">
+                <i class="fas fa-times" aria-hidden="true"></i>
+            </button>
+        </div>
+    </div>
+
+    <!-- Модалка «Управление документооборотом» (контент в #dealDocflowRoot задаётся из JS) -->
+    <div class="deal-modal-overlay" id="dealPaymentsOverlay" aria-hidden="true">
+        <div class="deal-modal deal-modal-wide" id="dealPaymentsModal" role="dialog" aria-modal="true" aria-labelledby="dealPaymentsTitle">
+            <div class="deal-modal-header">
+                <h3 class="deal-modal-title" id="dealPaymentsTitle">Управление документооборотом</h3>
+                <button type="button" class="deal-modal-close" id="dealPaymentsClose" aria-label="Закрыть"><i class="fas fa-times"></i></button>
+            </div>
+            <div class="deal-modal-body deal-docflow-modal-body">
+                <div id="dealDocflowRoot"></div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Модалка успеха «Документы прикреплены» -->
+    <div class="deal-modal-overlay" id="dealPaymentsSuccessOverlay" aria-hidden="true">
+        <div class="deal-modal deal-modal-success" id="dealPaymentsSuccessModal" role="dialog" aria-modal="true" aria-labelledby="dealPaymentsSuccessTitle">
+            <div class="deal-modal-header deal-modal-success-header">
+                <div class="deal-modal-success-heading">
+                    <div class="deal-modal-success-icon"><i class="fas fa-check-circle"></i></div>
+                    <h3 class="deal-modal-title" id="dealPaymentsSuccessTitle">Документы загружены</h3>
+                </div>
+                <button type="button" class="deal-modal-close" id="dealPaymentsSuccessClose" aria-label="Закрыть"><i class="fas fa-times"></i></button>
+            </div>
+            <div class="deal-modal-body deal-modal-success-body">
+                <p class="deal-payments-success-main" id="dealPaymentsSuccessText">—</p>
+                <ul class="deal-payments-success-list" id="dealPaymentsSuccessList"></ul>
+                <div class="deal-accept-success-actions">
+                    <button type="button" class="deal-btn-primary" id="dealPaymentsSuccessOk">Понятно</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Модалка «Завершение недоступно» (нет закрывающих документов) -->
+    <div class="deal-modal-overlay" id="dealFinishNoDocsOverlay" aria-hidden="true">
+        <div class="deal-modal" id="dealFinishNoDocsModal" role="dialog" aria-modal="true" aria-labelledby="dealFinishNoDocsTitle">
+            <div class="deal-modal-header">
+                <h3 class="deal-modal-title" id="dealFinishNoDocsTitle">Завершение сделки недоступно</h3>
+                <button type="button" class="deal-modal-close" id="dealFinishNoDocsClose" aria-label="Закрыть"><i class="fas fa-times"></i></button>
+            </div>
+            <div class="deal-modal-body">
+                <p class="deal-finish-nodocs-main">При закрытии сделки платформа отправляет завершающие документы на подписание в Контур.Диадок. Чтобы система отправила корректно завершающие документы, их необходимо загрузить.</p>
+                <div class="deal-accept-success-actions deal-modal-actions-two">
+                    <button type="button" class="btn btn-secondary" id="dealFinishNoDocsOk">Понятно</button>
+                    <button type="button" class="deal-btn-primary" id="dealFinishNoDocsUpload">Загрузить документы</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Модалка: документы только для одной стороны -->
+    <div class="deal-modal-overlay" id="dealFinishImbalanceOverlay" aria-hidden="true">
+        <div class="deal-modal" id="dealFinishImbalanceModal" role="dialog" aria-modal="true" aria-labelledby="dealFinishImbalanceTitle">
+            <div class="deal-modal-header">
+                <h3 class="deal-modal-title" id="dealFinishImbalanceTitle">Подтвердите завершение сделки</h3>
+                <button type="button" class="deal-modal-close" id="dealFinishImbalanceClose" aria-label="Закрыть"><i class="fas fa-times"></i></button>
+            </div>
+            <div class="deal-modal-body">
+                <p class="deal-finish-imbalance-main" id="dealFinishImbalanceText"></p>
+                <div class="deal-accept-success-actions deal-modal-actions-two deal-modal-actions-end">
+                    <button type="button" class="btn btn-secondary" id="dealFinishImbalanceCancel">Отмена</button>
+                    <button type="button" class="deal-btn-primary" id="dealFinishImbalanceContinue">Всё равно продолжить</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Модалка ошибки 409 (ошибка отправки на Контур.Диадок) -->
+    <div class="deal-modal-overlay" id="dealFinish409Overlay" aria-hidden="true">
+        <div class="deal-modal" id="dealFinish409Modal" role="dialog" aria-modal="true" aria-labelledby="dealFinish409Title">
+            <div class="deal-modal-header">
+                <h3 class="deal-modal-title" id="dealFinish409Title">Ошибка отправки</h3>
+                <button type="button" class="deal-modal-close" id="dealFinish409Close" aria-label="Закрыть"><i class="fas fa-times"></i></button>
+            </div>
+            <div class="deal-modal-body">
+                <p class="deal-finish-409-main">Возникла ошибка с отправкой завершающих документов на Контур.Диадок. Проверьте каждый завершающий документ и попробуйте их перезагрузить. Если не помогло, обратитесь к администратору системы.</p>
+                <div class="deal-accept-success-actions">
+                    <button type="button" class="deal-btn-primary" id="dealFinish409Ok">Понятно</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Модалка успеха «Документы отправили на Контур.Диадок» -->
+    <div class="deal-modal-overlay" id="dealFinishSuccessOverlay" aria-hidden="true">
+        <div class="deal-modal" id="dealFinishSuccessModal" role="dialog" aria-modal="true" aria-labelledby="dealFinishSuccessTitle">
+            <div class="deal-modal-header">
+                <h3 class="deal-modal-title" id="dealFinishSuccessTitle">Документы отправили на Контур.Диадок</h3>
+                <button type="button" class="deal-modal-close" id="dealFinishSuccessClose" aria-label="Закрыть"><i class="fas fa-times"></i></button>
+            </div>
+            <div class="deal-modal-body">
+                <p class="deal-finish-success-main">Закрывающие документы успешно сформировались и отправились на подписание в Контур.Диадок. После подписания с вашей стороны мы направим завершающие документы на подписание фермеру и экспортеру.</p>
+                <div class="deal-accept-success-notice">
+                    <p><strong>Внимание!</strong> Если вы передумали или обнаружили ошибки в завершающих документов, и при этом не подписали их, то можете изменить их в разделе «Управление документооборотом» и снова нажать на «Завершить сделку» — система повторно отправит документы на подписание в Контур.Диадок.</p>
+                </div>
+                <div class="deal-accept-success-actions">
+                    <button type="button" class="deal-btn-primary" id="dealFinishSuccessOk">Понятно</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Участники сделки: фермер (первая), перевозчик (центр), экспортер (последняя, зеркальная) -->
+    <section class="deal-roles-section" id="dealRolesSection" style="display: none;">
+        <h3 class="deal-section-title">Участники сделки</h3>
+        <div class="deal-roles-grid">
+            <button type="button" class="participant-card" id="dealRoleFarmer" data-role="farmer" aria-pressed="false">
+                <span class="participant-card-main">
+                    <span class="participant-card-avatar" id="dealRoleFarmerAvatar" aria-hidden="true"></span>
+                    <span class="participant-card-meta">
+                        <span class="participant-card-fio" id="dealRoleFarmerFio">—</span>
+                        <span class="participant-card-company" id="dealRoleFarmerCompany">—</span>
+                        <span class="participant-card-inn" id="dealRoleFarmerInn">—</span>
+                    </span>
+                </span>
+                <span class="participant-card-icon-wrap" aria-hidden="true">
+                    <i class="fas fa-tractor" aria-hidden="true"></i>
+                </span>
+            </button>
+            <button type="button" class="participant-card participant-card-carrier" id="dealRoleCarrier" data-role="carrier" aria-pressed="false">
+                <span class="participant-card-main participant-card-carrier-main">
+                    <span class="participant-card-carrier-stats">
+                        <span class="participant-card-carrier-row">
+                            <span class="participant-card-carrier-label">Кол-во перевозчиков</span>
+                            <span class="participant-card-carrier-value" id="dealRoleCarrierCount">—</span>
+                        </span>
+                        <span class="participant-card-carrier-row">
+                            <span class="participant-card-carrier-label">Кол-во машин</span>
+                            <span class="participant-card-carrier-value" id="dealRoleCarrierTrucks">—</span>
+                        </span>
+                    </span>
+                </span>
+                <span class="participant-card-icon-wrap" aria-hidden="true">
+                    <i class="fas fa-truck" aria-hidden="true"></i>
+                </span>
+            </button>
+            <button type="button" class="participant-card participant-card-mirror" id="dealRoleExporter" data-role="exporter" aria-pressed="false">
+                <span class="participant-card-main">
+                    <span class="participant-card-avatar" id="dealRoleExporterAvatar" aria-hidden="true"></span>
+                    <span class="participant-card-meta">
+                        <span class="participant-card-fio" id="dealRoleExporterFio">—</span>
+                        <span class="participant-card-company" id="dealRoleExporterCompany">—</span>
+                        <span class="participant-card-inn" id="dealRoleExporterInn">—</span>
+                    </span>
+                </span>
+                <span class="participant-card-icon-wrap" aria-hidden="true">
+                    <i class="fas fa-building" aria-hidden="true"></i>
+                </span>
+            </button>
+        </div>
+
+        <!-- Карта партнёра: показывается при активной плашке фермера или экспортера -->
+        <div class="deal-partner-map" id="dealPartnerMap" style="display: none;">
+            <h3 class="deal-partner-map-title" id="dealPartnerMapTitle">Карта партнёра</h3>
+            <div class="deal-partner-map-inner">
+                <section class="deal-detail-section personal-data">
+                    <h4 class="deal-detail-section-title"><i class="fas fa-user"></i> Личные данные</h4>
+                    <div class="deal-partner-personal-grid">
+                        <div class="deal-partner-avatar-block">
+                            <div class="deal-partner-avatar-wrap" id="dealPartnerAvatar">
+                                <span class="deal-partner-avatar-placeholder"><i class="fas fa-user"></i><span>Нет фото</span></span>
+                            </div>
+                            <div class="deal-partner-meta-plaque">
+                                <div class="deal-partner-meta-item"><i class="fas fa-calendar-plus"></i><span>Зарегистрирован: <span id="dealPartnerCreatedAt">—</span></span></div>
+                                <div class="deal-partner-meta-item"><i class="fas fa-phone"></i><span id="dealPartnerPhone">—</span></div>
+                                <div class="deal-partner-meta-item"><i class="fas fa-star"></i><span>Рейтинг: <span id="dealPartnerRating">—</span></span></div>
+                                <div class="deal-partner-verification" id="dealPartnerVerificationWrap">
+                                    <span class="deal-partner-verification-badge" id="dealPartnerVerification">—</span>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="deal-partner-fields">
+                            <div class="deal-partner-form-group">
+                                <span class="deal-partner-label">Фамилия</span>
+                                <span class="deal-partner-value" id="dealPartnerLastName">—</span>
+                            </div>
+                            <div class="deal-partner-form-group">
+                                <span class="deal-partner-label">Имя</span>
+                                <span class="deal-partner-value" id="dealPartnerFirstName">—</span>
+                            </div>
+                            <div class="deal-partner-form-group">
+                                <span class="deal-partner-label">Отчество</span>
+                                <span class="deal-partner-value" id="dealPartnerPatronymic">—</span>
+                            </div>
+                            <div class="deal-partner-form-group">
+                                <span class="deal-partner-label">Дата рождения</span>
+                                <span class="deal-partner-value" id="dealPartnerDateOfBirth">—</span>
+                            </div>
+                            <div class="deal-partner-form-group deal-partner-form-group-full">
+                                <span class="deal-partner-label">Email</span>
+                                <span class="deal-partner-value" id="dealPartnerEmail">—</span>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+                <section class="deal-detail-section organization-data">
+                    <h4 class="deal-detail-section-title"><i class="fas fa-building"></i> Данные организации</h4>
+                    <div class="deal-partner-org-fields">
+                        <div class="deal-partner-form-row">
+                            <div class="deal-partner-form-group">
+                                <span class="deal-partner-label">ИНН</span>
+                                <span class="deal-partner-value" id="dealPartnerInn">—</span>
+                            </div>
+                            <div class="deal-partner-form-group">
+                                <span class="deal-partner-label">ОГРНИП</span>
+                                <span class="deal-partner-value" id="dealPartnerOgrnip">—</span>
+                            </div>
+                        </div>
+                        <div class="deal-partner-form-group deal-partner-form-group-full">
+                            <span class="deal-partner-label">Название организации</span>
+                            <span class="deal-partner-value" id="dealPartnerOrgName">—</span>
+                        </div>
+                        <div class="deal-partner-form-group deal-partner-form-group-full">
+                            <span class="deal-partner-label">Юридический адрес</span>
+                            <span class="deal-partner-value" id="dealPartnerLegalAddress">—</span>
+                        </div>
+                        <div class="deal-partner-form-group deal-partner-form-group-full">
+                            <span class="deal-partner-label">Наименование банка</span>
+                            <span class="deal-partner-value" id="dealPartnerBankName">—</span>
+                        </div>
+                        <div class="deal-partner-form-row">
+                            <div class="deal-partner-form-group">
+                                <span class="deal-partner-label">БИК</span>
+                                <span class="deal-partner-value" id="dealPartnerBik">—</span>
+                            </div>
+                            <div class="deal-partner-form-group">
+                                <span class="deal-partner-label">Корреспондентский счёт</span>
+                                <span class="deal-partner-value" id="dealPartnerCorrAccount">—</span>
+                            </div>
+                        </div>
+                        <div class="deal-partner-form-group deal-partner-form-group-full">
+                            <span class="deal-partner-label">Расчётный счёт</span>
+                            <span class="deal-partner-value" id="dealPartnerCheckingAccount">—</span>
+                        </div>
+                    </div>
+                </section>
+                <!-- Качество культуры — одна плашка (показатели + документы), только для фермера -->
+                <section class="deal-partner-quality-section deal-partner-quality-plaque" id="dealPartnerQualitySection" style="display: none;">
+                    <div id="dealPartnerQualityContent"></div>
+                </section>
+            </div>
+        </div>
+
+        <!-- Детальная информация логистики: показывается при активной плашке перевозчика -->
+        <div class="deal-partner-map" id="dealLogisticsDetail" style="display: none;">
+            <h3 class="deal-partner-map-title" id="dealLogisticsDetailTitle">Детальная информация логистики</h3>
+            <div class="deal-partner-map-inner">
+                <div id="dealLogisticsDetailBody"></div>
+            </div>
+        </div>
+    </section>
+</div>
+{% endblock %}
+
+{% block extra_js %}
+<script src="{% static 'order/js/deal_detail.js' %}"></script>
+{% endblock %}

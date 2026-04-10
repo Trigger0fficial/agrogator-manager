@@ -1,0 +1,195 @@
+{% extends 'main/base.html' %}
+{% load static %}
+
+{% block title %}Тарификационная сетка{% endblock %}
+
+{% block extra_css %}
+<link rel="stylesheet" href="{% static 'logistics/css/tariff_grid.css' %}">
+{% endblock %}
+
+{% block content %}
+<div class="container">
+    <!-- Заголовок страницы -->
+    <div class="page-header">
+        <div class="page-title">
+            <h1><i class="fas fa-route"></i> Тарификационная сетка</h1>
+            <p>Управление коэффициентами транспортных расходов</p>
+        </div>
+        <div class="page-actions">
+            <button class="btn btn-outline" id="quickEditBtn">
+                <i class="fas fa-edit"></i>
+                <span class="btn-text">Быстрое редактирование</span>
+            </button>
+            <button class="btn btn-primary" id="editBtn">
+                <i class="fas fa-cog"></i>
+                <span class="btn-text">Редактировать</span>
+            </button>
+        </div>
+    </div>
+
+    <!-- Основной контент -->
+    <div class="tariff-grid-container">
+        <!-- Маржинальность сделок "С места" -->
+        <div class="commission-card" id="commissionCard">
+            <div class="commission-card-main">
+                <div class="commission-card-title">
+                    <i class="fas fa-coins"></i>
+                    <span>Маржинальность сделок «С места»</span>
+                </div>
+                <div class="commission-card-value">
+                    <span id="commissionValueText">—</span>
+                    <span class="commission-card-currency">₽/т</span>
+                </div>
+                <p class="commission-card-note">
+                    Значение маржинальности учитывается при формирование цены у сделки «С места». Настраивая значение вы управляете рисками грузоперевозки.
+                </p>
+            </div>
+            <div class="commission-card-actions">
+                <button type="button" class="btn btn-outline" id="commissionEditBtn">
+                    <i class="fas fa-edit"></i>
+                    Редактировать
+                </button>
+            </div>
+        </div>
+
+        <!-- Таблица тарификационной сетки -->
+        <div class="table-container">
+            <div class="table-header">
+                <h2><i class="fas fa-table"></i> Коэффициенты транспортных расходов</h2>
+                <div class="table-info">
+                    <span class="records-count" id="recordsCount">Загрузка...</span>
+                </div>
+            </div>
+            
+            <div class="table-wrapper">
+                <table class="tariff-table" id="tariffTable">
+                    <thead>
+                        <tr>
+                            <th class="col-from">Километраж от</th>
+                            <th class="col-to">Километраж до</th>
+                            <th class="col-coefficient">Коэффициент</th>
+                        </tr>
+                    </thead>
+                    <tbody id="tariffTableBody">
+                        <!-- Данные будут загружены через JavaScript -->
+                        <tr class="loading-row">
+                            <td colspan="3" class="loading-cell">
+                                <div class="loading-spinner">
+                                    <i class="fas fa-spinner fa-spin"></i>
+                                    <span>Загрузка данных...</span>
+                                </div>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+
+    <!-- Пустое состояние (если данных нет) -->
+    <div class="empty-state" id="emptyState" style="display: none;">
+        <div class="empty-icon">
+            <i class="fas fa-route"></i>
+        </div>
+        <h3>Нет данных о тарификационной сетке</h3>
+        <p>На данный момент отсутствуют коэффициенты транспортных расходов</p>
+    </div>
+<!-- Модалка редактирования маржинальности -->
+<div class="tariff-commission-overlay" id="commissionModal" aria-hidden="true">
+    <div class="tariff-commission-modal" role="dialog" aria-modal="true" aria-labelledby="commissionModalTitle">
+        <div class="tariff-commission-header">
+            <h2 id="commissionModalTitle">Маржинальность сделок «С места»</h2>
+            <button type="button" class="modal-close" id="commissionModalClose" aria-label="Закрыть">
+                <i class="fas fa-times" aria-hidden="true"></i>
+            </button>
+        </div>
+        <div class="tariff-commission-body">
+            <div class="commission-info-box">
+                <i class="fas fa-info-circle"></i>
+                <div>
+                    <div class="commission-info-title">Внимание</div>
+                    <div class="commission-info-text">
+                        Изменённое значение применится только к новым сделкам, существующие сделки не поменяют свою стоимость.
+                    </div>
+                </div>
+            </div>
+
+            <div class="commission-form">
+                <label for="commissionValueInput">Значение маржинальности (₽/т)</label>
+                <input id="commissionValueInput" type="text" inputmode="decimal" placeholder="например, 700">
+            </div>
+        </div>
+        <div class="tariff-commission-footer">
+            <button type="button" class="btn btn-outline" id="commissionModalCancelBtn">Отмена</button>
+            <button type="button" class="btn btn-primary" id="commissionModalSaveBtn">
+                <span class="btn-text">Сохранить</span>
+            </button>
+        </div>
+    </div>
+</div>
+
+</div>
+
+<!-- Модальное окно быстрого редактирования (проценты) -->
+<div class="tariff-quick-edit-overlay" id="tariffQuickEditModal" aria-hidden="true">
+    <div class="tariff-quick-edit-modal">
+        <div class="tariff-quick-edit-header">
+            <h2>Быстрое редактирование</h2>
+            <p class="tariff-quick-edit-desc">Укажите процент изменения по каждой строке. Общие кнопки применяются только к активным строкам.</p>
+            <div class="tariff-quick-edit-global-actions">
+                <button type="button" class="btn btn-outline btn-sm" id="quickEditPlusBtn" title="Добавить 1% ко всем активным">
+                    <i class="fas fa-plus"></i> +1%
+                </button>
+                <button type="button" class="btn btn-outline btn-sm" id="quickEditMinusBtn" title="Вычесть 1% у всех активных">
+                    <i class="fas fa-minus"></i> −1%
+                </button>
+            </div>
+        </div>
+        <div class="tariff-quick-edit-body">
+            <div class="tariff-quick-edit-table-wrap">
+                <table class="tariff-quick-edit-table" id="tariffQuickEditTable">
+                    <thead>
+                        <tr>
+                            <th class="col-from">От (км)</th>
+                            <th class="col-to">До (км)</th>
+                            <th class="col-coef">Коэффициент</th>
+                            <th class="col-pct">% изменения</th>
+                            <th class="col-active">Активна</th>
+                        </tr>
+                    </thead>
+                    <tbody id="tariffQuickEditTableBody"></tbody>
+                </table>
+            </div>
+        </div>
+        <div class="tariff-quick-edit-footer">
+            <button type="button" class="btn btn-outline" id="quickEditCancelBtn">Отменить</button>
+            <button type="button" class="btn btn-primary" id="quickEditApplyBtn">
+                <span class="btn-text">Применить</span>
+            </button>
+        </div>
+    </div>
+</div>
+
+<!-- Модальное окно подтверждения изменений коэффициентов -->
+<div class="tariff-confirm-modal-overlay" id="tariffConfirmModal" aria-hidden="true">
+    <div class="tariff-confirm-modal">
+        <div class="tariff-confirm-modal-header">
+            Подтверждение изменений
+        </div>
+        <div class="tariff-confirm-modal-body">
+            <p class="tariff-confirm-intro" id="tariffConfirmIntro">Изменённые коэффициенты:</p>
+            <ul class="tariff-confirm-list" id="tariffConfirmList"></ul>
+        </div>
+        <div class="tariff-confirm-modal-footer">
+            <button type="button" class="btn btn-outline" id="tariffConfirmCancelBtn">Отмена</button>
+            <button type="button" class="btn btn-primary" id="tariffConfirmSubmitBtn">
+                <span class="btn-text">Подтвердить</span>
+            </button>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block extra_js %}
+<script src="{% static 'logistics/js/tariff_grid.js' %}"></script>
+{% endblock %}

@@ -1,0 +1,727 @@
+/* Стили для тарификационной сетки (переменные из main/style.css) */
+.tariff-grid-container {
+    margin-top: 2rem;
+}
+
+/* ----- Маржинальность (commission) ----- */
+.commission-card {
+    display: flex;
+    justify-content: space-between;
+    gap: 1.25rem;
+    align-items: flex-start;
+    padding: 1.25rem 1.5rem;
+    background: var(--bg-color, #fff);
+    border-radius: var(--border-radius);
+    box-shadow: var(--shadow);
+    border: 1px solid var(--border-light);
+    margin-bottom: 1.5rem;
+}
+.commission-card-title {
+    display: flex;
+    align-items: center;
+    gap: 0.6rem;
+    font-weight: 800;
+    color: var(--text-color);
+    margin-bottom: 0.4rem;
+}
+.commission-card-title i { color: var(--primary-color); }
+.commission-card-value {
+    display: flex;
+    align-items: baseline;
+    gap: 0.35rem;
+    font-size: 1.6rem;
+    font-weight: 900;
+    color: #16a34a;
+    margin: 0.25rem 0 0.4rem 0;
+}
+.commission-card-currency { font-size: 1rem; font-weight: 800; color: #15803d; }
+.commission-card-note {
+    margin: 0;
+    color: var(--text-light);
+    line-height: 1.5;
+    max-width: 760px;
+}
+.commission-card-actions { flex-shrink: 0; }
+
+/* ----- Модалка commission ----- */
+.tariff-commission-overlay {
+    position: fixed;
+    inset: 0;
+    background: rgba(0,0,0,0.55);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 10050;
+    opacity: 0;
+    visibility: hidden;
+    transition: opacity 0.2s ease, visibility 0.2s ease;
+    padding: 1.5rem;
+}
+.tariff-commission-overlay.is-open { opacity: 1; visibility: visible; }
+.tariff-commission-modal {
+    background: #fff;
+    width: 100%;
+    max-width: 560px;
+    border-radius: 16px;
+    box-shadow: 0 20px 60px rgba(0,0,0,0.25);
+    overflow: hidden;
+}
+.tariff-commission-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 1rem;
+    padding: 1.25rem 1.5rem;
+    border-bottom: 1px solid var(--border-light);
+}
+.tariff-commission-header h2 {
+    margin: 0;
+    font-size: 1.15rem;
+    font-weight: 900;
+    color: var(--text-color);
+}
+.tariff-commission-body { padding: 1.25rem 1.5rem; }
+.commission-info-box {
+    display: flex;
+    gap: 0.75rem;
+    align-items: flex-start;
+    padding: 0.9rem 1rem;
+    background: rgba(29, 78, 216, 0.06);
+    border: 1px solid rgba(29, 78, 216, 0.18);
+    border-left: 3px solid #1d4ed8;
+    border-radius: 14px;
+    margin-bottom: 1rem;
+}
+.commission-info-box i { color: #1d4ed8; margin-top: 0.1rem; }
+.commission-info-title { font-weight: 900; margin-bottom: 0.15rem; color: var(--text-color); }
+.commission-info-text { color: var(--text-light); line-height: 1.45; }
+.commission-form label {
+    display: block;
+    font-weight: 800;
+    color: var(--text-light);
+    font-size: 0.85rem;
+    margin-bottom: 0.35rem;
+}
+.commission-form input {
+    width: 100%;
+    padding: 0.7rem 0.85rem;
+    border-radius: 12px;
+    border: 1px solid var(--border-light);
+    background: var(--bg-light, #f8f9fa);
+    outline: none;
+    font-size: 1rem;
+    font-weight: 800;
+    color: var(--text-color);
+}
+.commission-form input:focus {
+    border-color: rgba(37, 105, 70, 0.45);
+    box-shadow: 0 0 0 3px rgba(37, 105, 70, 0.12);
+}
+.tariff-commission-footer {
+    display: flex;
+    gap: 0.75rem;
+    justify-content: flex-end;
+    padding: 1.1rem 1.5rem;
+    border-top: 1px solid var(--border-light);
+    background: var(--background);
+}
+
+/* Заголовок страницы */
+.page-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    margin-bottom: 2rem;
+    padding-bottom: 1.5rem;
+    border-bottom: 1px solid var(--border-light);
+}
+
+.page-title h1 {
+    font-size: 2rem;
+    font-weight: 600;
+    color: var(--text-color);
+    margin: 0 0 0.5rem 0;
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+}
+
+.page-title h1 i {
+    color: var(--primary-color);
+    font-size: 1.75rem;
+}
+
+.page-title p {
+    color: var(--text-light);
+    margin: 0;
+    font-size: 1rem;
+}
+
+.page-actions {
+    display: flex;
+    gap: 1rem;
+    align-items: center;
+}
+
+/* Контейнер таблицы */
+.table-container {
+    background: var(--bg-color, #fff);
+    border-radius: var(--border-radius);
+    box-shadow: var(--shadow);
+    overflow: hidden;
+}
+
+.table-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 1.5rem 2rem;
+    background: var(--background);
+    border-bottom: 1px solid var(--border-light);
+}
+
+.table-header h2 {
+    font-size: 1.25rem;
+    font-weight: 600;
+    color: var(--text-color);
+    margin: 0;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+}
+
+.table-header h2 i {
+    color: var(--primary-color);
+}
+
+.table-info .records-count {
+    font-size: 0.875rem;
+    color: var(--text-light);
+    font-weight: 500;
+}
+
+/* Обертка таблицы */
+.table-wrapper {
+    overflow-x: auto;
+}
+
+/* Таблица тарификационной сетки */
+.tariff-table {
+    width: 100%;
+    border-collapse: separate;
+    border-spacing: 0;
+    background: var(--bg-color, #fff);
+}
+
+.tariff-table th {
+    background: linear-gradient(180deg, #f8faf9 0%, #eef2f0 100%);
+    padding: 1rem 1.5rem;
+    text-align: left;
+    font-weight: 600;
+    color: var(--text-color);
+    font-size: 0.8rem;
+    text-transform: uppercase;
+    letter-spacing: 0.04em;
+    border-bottom: 2px solid var(--border-color);
+    white-space: nowrap;
+}
+
+.tariff-table th:first-child {
+    border-radius: 0;
+}
+
+.tariff-table td {
+    padding: 1rem 1.5rem;
+    border-bottom: 1px solid var(--border-light);
+    color: var(--text-color);
+    font-size: 0.95rem;
+    vertical-align: middle;
+}
+
+/* Чередование строк для удобства чтения */
+.tariff-table tbody tr {
+    transition: background-color 0.15s ease;
+}
+
+.tariff-table tbody tr:nth-child(even) {
+    background: #fafbfc;
+}
+
+.tariff-table tbody tr:nth-child(odd) {
+    background: var(--bg-color, #fff);
+}
+
+.tariff-table tbody tr:hover {
+    background: #e8f0ed !important;
+}
+
+.tariff-table tbody tr.tariff-row {
+    border-left: 3px solid transparent;
+}
+
+.tariff-table tbody tr.tariff-row:hover {
+    border-left-color: var(--primary-color);
+}
+
+/* Стили для колонок */
+.col-from {
+    width: 200px;
+    font-weight: 500;
+}
+
+.col-to {
+    width: 200px;
+    font-weight: 500;
+}
+
+.col-coefficient {
+    width: 180px;
+    font-weight: 600;
+    color: var(--primary-color);
+}
+
+/* Поле ввода коэффициента в режиме редактирования */
+.tariff-table .coefficient-input {
+    width: 100%;
+    max-width: 120px;
+    padding: 0.5rem 0.75rem;
+    font-size: 0.95rem;
+    font-weight: 600;
+    color: var(--primary-color);
+    border: 1px solid var(--border-color);
+    border-radius: var(--border-radius-sm);
+    background: var(--bg-color, #fff);
+    text-align: center;
+}
+
+.tariff-table .coefficient-input:focus {
+    outline: none;
+    border-color: var(--primary-color);
+    box-shadow: 0 0 0 2px rgba(37, 89, 70, 0.15);
+}
+
+.tariff-table .coefficient-input::placeholder {
+    color: var(--text-lighter);
+}
+
+/* Индикатор загрузки */
+.loading-row {
+    background: var(--background);
+}
+
+.loading-cell {
+    text-align: center;
+    padding: 3rem 1rem !important;
+}
+
+.loading-spinner {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 1rem;
+    color: var(--text-light);
+}
+
+.loading-spinner i {
+    font-size: 2rem;
+    color: var(--primary-color);
+}
+
+.loading-spinner span {
+    font-size: 0.95rem;
+}
+
+/* Пустое состояние */
+.empty-state {
+    text-align: center;
+    padding: 4rem 2rem;
+    background: var(--bg-color, #fff);
+    border-radius: var(--border-radius);
+    box-shadow: var(--shadow);
+}
+
+.empty-icon {
+    width: 4rem;
+    height: 4rem;
+    margin: 0 auto 1.5rem auto;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: var(--background);
+    border-radius: 50%;
+    color: var(--text-light);
+}
+
+.empty-icon i {
+    font-size: 2rem;
+}
+
+.empty-state h3 {
+    font-size: 1.25rem;
+    font-weight: 600;
+    color: var(--text-color);
+    margin: 0 0 0.5rem 0;
+}
+
+.empty-state p {
+    color: var(--text-light);
+    margin: 0;
+    font-size: 0.95rem;
+}
+
+/* Кнопка «Сохранить» вместо «Редактировать» */
+.page-actions .btn.btn-save {
+    background: var(--success-color);
+    color: #fff;
+    border: none;
+}
+
+.page-actions .btn.btn-save:hover {
+    background: #218838;
+}
+
+/* Состояние загрузки на кнопке */
+.btn.is-loading {
+    pointer-events: none;
+    position: relative;
+}
+
+.btn.is-loading .btn-text,
+.btn.is-loading i:first-child {
+    visibility: hidden;
+}
+
+.btn.is-loading::after {
+    content: '';
+    position: absolute;
+    width: 1em;
+    height: 1em;
+    top: 50%;
+    left: 50%;
+    margin: -0.5em 0 0 -0.5em;
+    border: 2px solid rgba(255, 255, 255, 0.9);
+    border-right-color: transparent;
+    border-radius: 50%;
+    animation: btn-spin 0.6s linear infinite;
+}
+
+.btn-outline.is-loading::after {
+    border-color: var(--primary-color);
+    border-right-color: transparent;
+}
+
+@keyframes btn-spin {
+    to { transform: rotate(360deg); }
+}
+
+/* Модальное окно быстрого редактирования */
+.tariff-quick-edit-overlay {
+    position: fixed;
+    inset: 0;
+    background: rgba(0, 0, 0, 0.45);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 1990;
+    padding: 1.5rem;
+    opacity: 0;
+    visibility: hidden;
+    transition: opacity 0.2s ease, visibility 0.2s ease;
+}
+
+.tariff-quick-edit-overlay.is-open {
+    opacity: 1;
+    visibility: visible;
+}
+
+.tariff-quick-edit-modal {
+    background: var(--bg-color, #fff);
+    border-radius: var(--border-radius);
+    box-shadow: var(--shadow-lg);
+    max-width: 720px;
+    width: 100%;
+    max-height: 90vh;
+    overflow: hidden;
+    display: flex;
+    flex-direction: column;
+    transform: scale(0.96);
+    transition: transform 0.2s ease;
+}
+
+.tariff-quick-edit-overlay.is-open .tariff-quick-edit-modal {
+    transform: scale(1);
+}
+
+.tariff-quick-edit-header {
+    padding: 1.25rem 1.5rem;
+    border-bottom: 1px solid var(--border-light);
+}
+
+.tariff-quick-edit-header h2 {
+    font-size: 1.25rem;
+    font-weight: 600;
+    color: var(--text-color);
+    margin: 0 0 0.5rem 0;
+}
+
+.tariff-quick-edit-desc {
+    font-size: 0.9rem;
+    color: var(--text-light);
+    margin: 0 0 1rem 0;
+}
+
+.tariff-quick-edit-global-actions {
+    display: flex;
+    gap: 0.75rem;
+}
+
+.tariff-quick-edit-global-actions .btn-sm {
+    padding: 0.4rem 0.75rem;
+    font-size: 0.875rem;
+}
+
+.tariff-quick-edit-body {
+    padding: 1rem 1.5rem;
+    overflow-y: auto;
+    flex: 1;
+}
+
+.tariff-quick-edit-table-wrap {
+    overflow-x: auto;
+}
+
+.tariff-quick-edit-table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 0.9rem;
+}
+
+.tariff-quick-edit-table th {
+    background: linear-gradient(180deg, #f8faf9 0%, #eef2f0 100%);
+    padding: 0.75rem 1rem;
+    text-align: left;
+    font-weight: 600;
+    color: var(--text-color);
+    border-bottom: 2px solid var(--border-color);
+}
+
+.tariff-quick-edit-table td {
+    padding: 0.75rem 1rem;
+    border-bottom: 1px solid var(--border-light);
+    vertical-align: middle;
+}
+
+.tariff-quick-edit-table tbody tr.quick-edit-row-inactive {
+    background: #f5f5f5;
+    opacity: 0.85;
+}
+
+.tariff-quick-edit-table tbody tr.quick-edit-row-inactive .quick-edit-pct-input {
+    background: var(--border-light);
+    cursor: not-allowed;
+    color: var(--text-lighter);
+}
+
+.tariff-quick-edit-table .col-from,
+.tariff-quick-edit-table .col-to {
+    white-space: nowrap;
+}
+
+.tariff-quick-edit-table .col-coef {
+    font-weight: 600;
+    color: var(--primary-color);
+}
+
+.quick-edit-pct-input {
+    width: 100%;
+    max-width: 90px;
+    padding: 0.4rem 0.5rem;
+    font-size: 0.9rem;
+    text-align: center;
+    border: 1px solid var(--border-color);
+    border-radius: var(--border-radius-sm);
+}
+
+.quick-edit-pct-input:focus {
+    outline: none;
+    border-color: var(--primary-color);
+}
+
+.quick-edit-row-active-check {
+    cursor: pointer;
+    accent-color: var(--primary-color);
+}
+
+.tariff-quick-edit-footer {
+    padding: 1rem 1.5rem;
+    border-top: 1px solid var(--border-light);
+    display: flex;
+    gap: 0.75rem;
+    justify-content: flex-end;
+}
+
+/* Модальное окно подтверждения изменений */
+.tariff-confirm-modal-overlay {
+    position: fixed;
+    inset: 0;
+    background: rgba(0, 0, 0, 0.4);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 2000;
+    padding: 1rem;
+    opacity: 0;
+    visibility: hidden;
+    transition: opacity 0.2s ease, visibility 0.2s ease;
+}
+
+.tariff-confirm-modal-overlay.is-open {
+    opacity: 1;
+    visibility: visible;
+}
+
+.tariff-confirm-modal {
+    background: var(--bg-color, #fff);
+    border-radius: var(--border-radius);
+    box-shadow: var(--shadow-lg);
+    max-width: 480px;
+    width: 100%;
+    max-height: 90vh;
+    overflow: hidden;
+    display: flex;
+    flex-direction: column;
+    transform: scale(0.95);
+    transition: transform 0.2s ease;
+}
+
+.tariff-confirm-modal-overlay.is-open .tariff-confirm-modal {
+    transform: scale(1);
+}
+
+.tariff-confirm-modal-header {
+    padding: 1.25rem 1.5rem;
+    border-bottom: 1px solid var(--border-light);
+    font-weight: 600;
+    font-size: 1.1rem;
+    color: var(--text-color);
+}
+
+.tariff-confirm-modal-body {
+    padding: 1.5rem;
+    overflow-y: auto;
+}
+
+.tariff-confirm-intro {
+    margin: 0 0 1rem 0;
+    font-size: 0.9rem;
+    color: var(--text-light);
+}
+
+.tariff-confirm-list {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+}
+
+.tariff-confirm-list li {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 1rem;
+    padding: 0.75rem 0;
+    border-bottom: 1px solid var(--border-light);
+    font-size: 0.95rem;
+}
+
+.tariff-confirm-list li:last-child {
+    border-bottom: none;
+}
+
+.tariff-confirm-list .range {
+    color: var(--text-light);
+    font-weight: 500;
+}
+
+.tariff-confirm-list .old-value {
+    color: var(--text-light);
+    text-decoration: line-through;
+}
+
+.tariff-confirm-list .new-value {
+    color: var(--primary-color);
+    font-weight: 600;
+}
+
+.tariff-confirm-modal-footer {
+    padding: 1rem 1.5rem;
+    border-top: 1px solid var(--border-light);
+    display: flex;
+    gap: 0.75rem;
+    justify-content: flex-end;
+}
+
+.tariff-confirm-modal-footer .btn {
+    min-width: 120px;
+}
+
+/* Мобильная адаптация */
+@media (max-width: 768px) {
+    .page-header {
+        flex-direction: column;
+        gap: 1rem;
+        align-items: flex-start;
+    }
+    
+    .page-actions {
+        width: 100%;
+        justify-content: flex-start;
+        flex-wrap: wrap;
+    }
+    
+    .table-header {
+        flex-direction: column;
+        gap: 1rem;
+        align-items: flex-start;
+        padding: 1rem;
+    }
+    
+    .tariff-table th,
+    .tariff-table td {
+        padding: 0.75rem 1rem;
+        font-size: 0.875rem;
+    }
+    
+    .col-from,
+    .col-to,
+    .col-coefficient {
+        width: auto;
+        min-width: 120px;
+    }
+}
+
+@media (max-width: 480px) {
+    .page-title h1 {
+        font-size: 1.5rem;
+    }
+    
+    .page-actions {
+        flex-direction: column;
+        width: 100%;
+    }
+    
+    .page-actions .btn {
+        width: 100%;
+        justify-content: center;
+    }
+    
+    .table-wrapper {
+        margin: 0 -1rem;
+        padding: 0 1rem;
+    }
+    
+    .tariff-table th,
+    .tariff-table td {
+        padding: 0.5rem 0.75rem;
+        font-size: 0.8rem;
+    }
+}

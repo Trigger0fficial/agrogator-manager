@@ -1,0 +1,1105 @@
+/* CSS переменные для страницы качества */
+:root {
+    --primary-color: #256946;
+    --primary-light: #4CAF50;
+    --white: #ffffff;
+    --background: #f8fafc;
+    --border-light: #e2e8f0;
+    --text-light: #64748b;
+    --text-color: #1e293b;
+    --border-radius: 12px;
+    --border-radius-lg: 20px;
+    --shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+    --shadow-lg: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
+    --danger-color: #dc2626;
+    --success-color: #16a34a;
+    --warning-color: #d97706;
+    --info-color: #2563eb;
+}
+
+/* Заголовок страницы качества */
+.quality-detail-header {
+    margin-bottom: 2rem;
+    background: var(--white);
+    border-radius: var(--border-radius-lg);
+    box-shadow: var(--shadow);
+    border: 1px solid var(--border-light);
+    padding: 2rem;
+}
+
+.quality-detail-header .header-content {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 2rem;
+}
+
+.header-main {
+    display: flex;
+    align-items: center;
+    gap: 2rem;
+    flex: 1;
+}
+
+.btn-back {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    padding: 0.75rem 1.5rem;
+    background: var(--background);
+    border: 1px solid var(--border-light);
+    border-radius: var(--border-radius);
+    color: var(--text-color);
+    text-decoration: none;
+    font-weight: 500;
+    transition: all 0.2s ease;
+    cursor: pointer;
+    font-family: inherit;
+}
+
+.btn-back:hover {
+    background: var(--border-light);
+    border-color: var(--primary-color);
+    color: var(--primary-color);
+    transform: translateX(-2px);
+}
+
+.quality-title {
+    display: flex;
+    align-items: center;
+    gap: 1.5rem;
+}
+
+.title-icon {
+    width: 60px;
+    height: 60px;
+    border-radius: 50%;
+    background: linear-gradient(135deg, var(--primary-color), var(--primary-light));
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: white;
+    font-size: 1.5rem;
+}
+
+.title-text h1 {
+    font-size: 1.8rem;
+    font-weight: 700;
+    color: var(--text-color);
+    margin-bottom: 0.25rem;
+}
+
+.title-text p {
+    color: var(--text-light);
+    font-size: 1rem;
+    margin: 0;
+}
+
+.header-actions {
+    display: flex;
+    align-items: center;
+}
+
+.quality-status-badge {
+    display: flex;
+    align-items: center;
+}
+
+.status-indicator {
+    padding: 1rem 1.5rem;
+    border-radius: var(--border-radius-lg);
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    font-weight: 600;
+}
+
+.status-indicator.waiting {
+    background: #fffbeb;
+    color: #d97706;
+    border: 1px solid #fed7aa;
+}
+
+.status-indicator.success {
+    background: #f0fdf4;
+    color: #16a34a;
+    border: 1px solid #bbf7d0;
+}
+
+.status-indicator.danger {
+    background: #fef2f2;
+    color: #dc2626;
+    border: 1px solid #fecaca;
+}
+
+.status-icon {
+    font-size: 1.2rem;
+}
+
+/* Основной контент */
+.quality-detail-content {
+    display: grid;
+    grid-template-columns: 1fr 400px;
+    gap: 2rem;
+    align-items: start;
+}
+
+/* Секции */
+.detail-section {
+    background: var(--white);
+    border-radius: var(--border-radius-lg);
+    box-shadow: var(--shadow);
+    border: 1px solid var(--border-light);
+    margin-bottom: 2rem;
+    overflow: hidden;
+    transition: all 0.3s ease;
+}
+
+.detail-section:hover {
+    box-shadow: var(--shadow-lg);
+}
+
+.detail-section .section-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 1.5rem 2rem;
+    background: var(--background);
+    border-bottom: 1px solid var(--border-light);
+    margin-bottom: 0;
+}
+
+.detail-section .section-header h2 {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    font-size: 1.3rem;
+    font-weight: 600;
+    color: var(--text-color);
+    margin: 0;
+}
+
+.detail-section .section-header h2 i {
+    color: var(--primary-color);
+}
+
+/* Бейджи качества */
+.quality-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    padding: 0.5rem 1rem;
+    border-radius: 20px;
+    font-size: 0.8rem;
+    font-weight: 600;
+}
+
+.quality-badge.pending {
+    background: #fff3cd;
+    color: #856404;
+    border: 1px solid #ffeaa7;
+}
+
+.quality-badge.verified {
+    background: #d4f4e1;
+    color: #166534;
+    border: 1px solid #a7f3d0;
+}
+
+/* Информационные плашки */
+.rejected-info-section,
+.accepted-info-section {
+    margin-bottom: 2rem;
+    border-radius: var(--border-radius-lg);
+    overflow: hidden;
+    border: 1px solid var(--border-light);
+}
+
+.rejected-info-header,
+.accepted-info-header {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    padding: 1.5rem 2rem;
+    border-bottom: 1px solid var(--border-light);
+}
+
+.rejected-info-header {
+    background: linear-gradient(135deg, #fef2f2, #fee2e2);
+}
+
+.accepted-info-header {
+    background: linear-gradient(135deg, #f0fdf4, #dcfce7);
+}
+
+.rejected-info-header i,
+.accepted-info-header i {
+    font-size: 1.5rem;
+    width: 2.5rem;
+    height: 2.5rem;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+}
+
+.rejected-info-header i {
+    background: rgba(220, 38, 38, 0.1);
+    color: var(--danger-color);
+}
+
+.accepted-info-header i {
+    background: rgba(22, 163, 74, 0.1);
+    color: var(--success-color);
+}
+
+.rejected-info-header h3,
+.accepted-info-header h3 {
+    font-size: 1.25rem;
+    font-weight: 600;
+    color: var(--text-color);
+    margin: 0;
+}
+
+.rejected-info-content,
+.accepted-info-content {
+    padding: 2rem;
+}
+
+.rejection-details,
+.acceptance-details {
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+}
+
+.rejection-detail-item,
+.acceptance-detail-item {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 1rem;
+    background: var(--background);
+    border-radius: var(--border-radius);
+}
+
+.rejection-detail-item.full-width {
+    flex-direction: column;
+    align-items: flex-start;
+}
+
+.rejection-detail-label,
+.acceptance-detail-label {
+    font-weight: 600;
+    color: var(--text-color);
+}
+
+.rejection-detail-value,
+.acceptance-detail-value {
+    color: var(--text-light);
+}
+
+.rejection-actions-info {
+    display: flex;
+    gap: 1rem;
+    margin-top: 1.5rem;
+}
+
+/* Фермерская информация */
+.farmer-info-grid {
+    display: grid;
+    grid-template-columns: auto 1fr;
+    gap: 2rem;
+}
+
+.farmer-avatar-section {
+    display: flex;
+    flex-direction: column;
+    gap: 1.5rem;
+}
+
+.farmer-avatar-large {
+    position: relative;
+    width: 150px;
+    height: 150px;
+}
+
+.farmer-avatar-large img {
+    width: 100%;
+    height: 100%;
+    border-radius: var(--border-radius-lg);
+    object-fit: cover;
+    border: 4px solid var(--background);
+    box-shadow: var(--shadow);
+}
+
+.farmer-meta-info {
+    display: flex;
+    flex-direction: column;
+    gap: 0.75rem;
+}
+
+.meta-item {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    padding: 0.75rem;
+    background: var(--background);
+    border-radius: var(--border-radius);
+    transition: all 0.2s ease;
+}
+
+.meta-item:hover {
+    background: var(--border-light);
+    transform: translateX(5px);
+}
+
+.meta-item i {
+    color: var(--primary-color);
+    width: 16px;
+    text-align: center;
+}
+
+.meta-item span {
+    font-size: 0.9rem;
+    color: var(--text-color);
+    font-weight: 500;
+}
+
+.farmer-fields {
+    display: grid;
+    gap: 1.5rem;
+}
+
+/* Формы */
+.form-group {
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+}
+
+.form-group.full-width {
+    grid-column: 1 / -1;
+}
+
+.form-row {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 1.5rem;
+}
+
+.form-label {
+    font-weight: 600;
+    color: var(--text-color);
+    font-size: 0.9rem;
+}
+
+.form-value {
+    padding: 0.75rem 1rem;
+    background: var(--background);
+    border-radius: var(--border-radius);
+    border: 1px solid var(--border-light);
+    font-weight: 500;
+    min-height: 44px;
+    display: flex;
+    align-items: center;
+}
+
+.form-value.verified {
+    background: #f0fdf4;
+    border-color: #bbf7d0;
+    color: #065f46;
+}
+
+.form-value.verified i {
+    color: #16a34a;
+    margin-right: 0.5rem;
+}
+
+.form-textarea {
+    padding: 0.75rem 1rem;
+    background: var(--background);
+    border-radius: var(--border-radius);
+    border: 1px solid var(--border-light);
+    font-family: inherit;
+    font-size: 0.9rem;
+    resize: vertical;
+    transition: all 0.2s ease;
+}
+
+.form-textarea:focus {
+    outline: none;
+    border-color: var(--primary-color);
+    box-shadow: 0 0 0 3px rgba(37, 89, 70, 0.1);
+}
+
+.form-hint {
+    font-size: 0.8rem;
+    color: var(--text-light);
+    margin-top: 0.25rem;
+}
+
+/* Поля культуры и качества */
+.culture-fields,
+.quality-fields {
+    padding: 0 2rem 2rem;
+    display: flex;
+    flex-direction: column;
+    gap: 1.5rem;
+}
+
+/* Документы */
+.quality-documents {
+    padding: 0 2rem 2rem;
+}
+
+.documents-grid {
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+}
+
+.document-card {
+    display: flex;
+    align-items: center;
+    gap: 1.5rem;
+    padding: 1.5rem;
+    background: var(--background);
+    border-radius: var(--border-radius);
+    border: 1px solid var(--border-light);
+    transition: all 0.3s ease;
+}
+
+.document-card:hover {
+    transform: translateY(-2px);
+    box-shadow: var(--shadow);
+    border-color: var(--primary-color);
+}
+
+.document-icon {
+    width: 60px;
+    height: 60px;
+    border-radius: 12px;
+    background: linear-gradient(135deg, var(--primary-color), var(--primary-light));
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: white;
+    font-size: 1.5rem;
+    flex-shrink: 0;
+}
+
+.document-info {
+    flex: 1;
+}
+
+.document-info h4 {
+    margin: 0 0 0.5rem 0;
+    color: var(--text-color);
+    font-weight: 600;
+}
+
+.document-info p {
+    margin: 0 0 0.75rem 0;
+    color: var(--text-light);
+    font-size: 0.9rem;
+}
+
+.document-meta {
+    display: flex;
+    gap: 1.5rem;
+}
+
+.document-meta span {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    font-size: 0.8rem;
+    color: var(--text-light);
+}
+
+.document-actions {
+    display: flex;
+    gap: 0.75rem;
+}
+
+/* Кнопки */
+.btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    padding: 0.75rem 1.5rem;
+    border-radius: var(--border-radius);
+    font-weight: 600;
+    text-decoration: none;
+    border: none;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    font-family: inherit;
+}
+
+.btn-primary {
+    background: var(--primary-color);
+    color: white;
+}
+
+.btn-primary:hover {
+    background: var(--primary-light);
+    transform: translateY(-1px);
+}
+
+.btn-outline {
+    background: transparent;
+    color: var(--text-color);
+    border: 1px solid var(--border-light);
+}
+
+.btn-outline:hover {
+    background: var(--background);
+    border-color: var(--primary-color);
+    color: var(--primary-color);
+}
+
+.btn-danger {
+    background: var(--danger-color);
+    color: white;
+}
+
+.btn-danger:hover {
+    background: #b91c1c;
+    transform: translateY(-1px);
+}
+
+.btn-sm {
+    padding: 0.5rem 1rem;
+    font-size: 0.8rem;
+}
+
+/* Боковая колонка */
+.detail-sidebar {
+    display: flex;
+    flex-direction: column;
+    gap: 2rem;
+}
+
+.sidebar-section {
+    background: var(--white);
+    border-radius: var(--border-radius-lg);
+    box-shadow: var(--shadow);
+    border: 1px solid var(--border-light);
+    overflow: hidden;
+}
+
+.sidebar-section h3 {
+    margin: 0;
+    padding: 1.5rem 2rem;
+    background: var(--background);
+    border-bottom: 1px solid var(--border-light);
+    font-size: 1.1rem;
+    font-weight: 600;
+    color: var(--text-color);
+}
+
+/* Карточки действий */
+.action-cards {
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+    padding: 1.5rem;
+}
+
+.action-card {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    padding: 1.5rem;
+    background: var(--background);
+    border-radius: var(--border-radius);
+    border: 1px solid var(--border-light);
+    transition: all 0.3s ease;
+    cursor: pointer;
+}
+
+.action-card:hover {
+    transform: translateY(-2px);
+    box-shadow: var(--shadow);
+}
+
+.action-card.primary:hover {
+    border-color: var(--primary-color);
+}
+
+.action-card.danger:hover {
+    border-color: var(--danger-color);
+}
+
+.action-card.success:hover {
+    border-color: var(--success-color);
+}
+
+.action-icon {
+    width: 50px;
+    height: 50px;
+    border-radius: 12px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.2rem;
+    flex-shrink: 0;
+}
+
+.action-card.primary .action-icon {
+    background: rgba(37, 89, 70, 0.1);
+    color: var(--primary-color);
+}
+
+.action-card.danger .action-icon {
+    background: rgba(220, 53, 69, 0.1);
+    color: var(--danger-color);
+}
+
+.action-card.success .action-icon {
+    background: rgba(40, 167, 69, 0.1);
+    color: var(--success-color);
+}
+
+.action-content {
+    flex: 1;
+}
+
+.action-content h4 {
+    margin: 0 0 0.25rem 0;
+    font-size: 0.95rem;
+    font-weight: 600;
+    color: var(--text-color);
+}
+
+.action-content p {
+    margin: 0;
+    font-size: 0.8rem;
+    color: var(--text-light);
+}
+
+.btn-action {
+    width: 36px;
+    height: 36px;
+    border: none;
+    border-radius: 50%;
+    background: var(--background);
+    color: var(--text-light);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    flex-shrink: 0;
+}
+
+.action-card:hover .btn-action {
+    background: var(--primary-color);
+    color: white;
+}
+
+.action-card.danger:hover .btn-action {
+    background: var(--danger-color);
+}
+
+.action-card.success:hover .btn-action {
+    background: var(--success-color);
+}
+
+/* История проверок */
+.history-section {
+    max-height: 400px;
+    display: flex;
+    flex-direction: column;
+}
+
+.history-section .timeline-compact {
+    padding: 1.5rem;
+    display: flex;
+    flex-direction: column;
+    gap: 1.5rem;
+}
+
+.timeline-item {
+    display: flex;
+    gap: 1rem;
+    align-items: flex-start;
+}
+
+.timeline-marker {
+    width: 12px;
+    height: 12px;
+    border-radius: 50%;
+    flex-shrink: 0;
+    margin-top: 4px;
+}
+
+.timeline-marker.success {
+    background: var(--success-color);
+}
+
+.timeline-marker.danger {
+    background: var(--danger-color);
+}
+
+.timeline-marker.warning {
+    background: var(--warning-color);
+}
+
+.timeline-marker.info {
+    background: var(--info-color);
+}
+
+.timeline-content h4 {
+    margin: 0 0 0.25rem 0;
+    font-size: 0.9rem;
+    font-weight: 600;
+    color: var(--text-color);
+}
+
+.timeline-date {
+    font-size: 0.8rem;
+    color: var(--text-light);
+}
+
+/* Секция отказа */
+.rejection-section {
+    background: var(--white);
+    border-radius: var(--border-radius-lg);
+    box-shadow: var(--shadow);
+    border: 1px solid var(--border-light);
+    margin-top: 2rem;
+}
+
+.rejection-section.hidden {
+    display: none;
+}
+
+.rejection-header {
+    padding: 2rem;
+    background: #fef2f2;
+    border-bottom: 1px solid #fee2e2;
+}
+
+.rejection-header h2 {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    font-size: 1.5rem;
+    font-weight: 600;
+    color: var(--text-color);
+    margin: 0 0 0.5rem 0;
+}
+
+.rejection-header p {
+    margin: 0;
+    color: var(--text-light);
+}
+
+.rejection-content {
+    padding: 2rem;
+}
+
+.rejection-block {
+    margin-bottom: 2rem;
+}
+
+.rejection-block h3 {
+    margin: 0 0 1.5rem 0;
+    font-size: 1.2rem;
+    font-weight: 600;
+    color: var(--text-color);
+}
+
+/* Чекбоксы */
+.fields-checklist-compact {
+    display: flex;
+    flex-direction: column;
+    gap: 1.5rem;
+}
+
+.checklist-group {
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+}
+
+.checklist-group h4 {
+    margin: 0 0 1rem 0;
+    font-size: 1rem;
+    font-weight: 600;
+    color: var(--text-color);
+}
+
+.checklist-row {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+    gap: 1rem;
+}
+
+.checklist-item {
+    display: flex;
+    align-items: center;
+}
+
+.checkbox-label {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    cursor: pointer;
+    font-size: 0.9rem;
+    color: var(--text-color);
+    transition: color 0.2s ease;
+}
+
+.checkbox-label:hover {
+    color: var(--primary-color);
+}
+
+.checkbox-label input[type="checkbox"] {
+    display: none;
+}
+
+.checkbox-custom {
+    width: 20px;
+    height: 20px;
+    border: 2px solid var(--border-light);
+    border-radius: 4px;
+    background: var(--white);
+    position: relative;
+    transition: all 0.2s ease;
+}
+
+.checkbox-label input[type="checkbox"]:checked + .checkbox-custom {
+    background: var(--primary-color);
+    border-color: var(--primary-color);
+}
+
+.checkbox-label input[type="checkbox"]:checked + .checkbox-custom::after {
+    content: '✓';
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    color: white;
+    font-size: 12px;
+    font-weight: bold;
+}
+
+.checkbox-label.disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+}
+
+.checkbox-label.disabled:hover {
+    color: var(--text-color);
+}
+
+.rejection-actions {
+    display: flex;
+    gap: 1rem;
+    justify-content: flex-end;
+    padding-top: 2rem;
+    border-top: 1px solid var(--border-light);
+}
+
+/* Модальные окна */
+.modal {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.5);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 1000;
+    opacity: 0;
+    visibility: hidden;
+    transition: all 0.3s ease;
+}
+
+.modal.show {
+    opacity: 1;
+    visibility: visible;
+}
+
+.modal-content {
+    background: var(--white);
+    border-radius: var(--border-radius-lg);
+    box-shadow: var(--shadow-lg);
+    max-width: 500px;
+    width: 90%;
+    max-height: 90vh;
+    overflow-y: auto;
+    transform: scale(0.9);
+    transition: transform 0.3s ease;
+}
+
+.modal.show .modal-content {
+    transform: scale(1);
+}
+
+.modal-header {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    padding: 2rem;
+    border-bottom: 1px solid var(--border-light);
+}
+
+.modal-icon {
+    width: 48px;
+    height: 48px;
+    border-radius: 50%;
+    background: rgba(220, 38, 38, 0.1);
+    color: var(--danger-color);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.5rem;
+    flex-shrink: 0;
+}
+
+.modal-title {
+    flex: 1;
+}
+
+.modal-title h3 {
+    margin: 0 0 0.5rem 0;
+    font-size: 1.25rem;
+    font-weight: 600;
+    color: var(--text-color);
+}
+
+.modal-title p {
+    margin: 0;
+    color: var(--text-light);
+    font-size: 0.9rem;
+}
+
+.modal-close {
+    background: none;
+    border: none;
+    font-size: 1.5rem;
+    color: var(--text-light);
+    cursor: pointer;
+    padding: 0.5rem;
+    border-radius: 4px;
+    transition: all 0.2s ease;
+}
+
+.modal-close:hover {
+    background: var(--background);
+    color: var(--text-color);
+}
+
+.modal-body {
+    padding: 2rem;
+}
+
+.rejection-warning {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    padding: 1rem;
+    background: #fef2f2;
+    border: 1px solid #fee2e2;
+    border-radius: var(--border-radius);
+    margin-bottom: 1.5rem;
+}
+
+.rejection-warning i {
+    color: var(--danger-color);
+    font-size: 1.2rem;
+}
+
+.rejection-warning p {
+    margin: 0;
+    color: var(--text-color);
+    font-size: 0.9rem;
+}
+
+.rejection-actions-modal {
+    display: flex;
+    gap: 1rem;
+    justify-content: flex-end;
+}
+
+/* Адаптивность */
+@media (max-width: 1200px) {
+    .quality-detail-content {
+        grid-template-columns: 1fr;
+    }
+    
+    .detail-sidebar {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 2rem;
+    }
+}
+
+@media (max-width: 768px) {
+    .quality-detail-header .header-content {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 1rem;
+    }
+    
+    .header-main {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 1rem;
+        width: 100%;
+    }
+    
+    .quality-title {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 1rem;
+    }
+    
+    .title-icon {
+        width: 50px;
+        height: 50px;
+        font-size: 1.2rem;
+    }
+    
+    .title-text h1 {
+        font-size: 1.5rem;
+    }
+    
+    .farmer-info-grid {
+        grid-template-columns: 1fr;
+        gap: 1.5rem;
+    }
+    
+    .form-row {
+        grid-template-columns: 1fr;
+    }
+    
+    .checklist-row {
+        grid-template-columns: 1fr;
+    }
+    
+    .detail-sidebar {
+        grid-template-columns: 1fr;
+    }
+    
+    .rejection-actions {
+        flex-direction: column;
+    }
+    
+    .rejection-actions-modal {
+        flex-direction: column;
+    }
+    
+    .modal-content {
+        margin: 1rem;
+        width: calc(100% - 2rem);
+    }
+}
