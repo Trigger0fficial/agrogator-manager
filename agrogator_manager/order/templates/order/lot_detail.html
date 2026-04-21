@@ -192,6 +192,1501 @@
         .quality-detail-content { grid-template-columns: 1fr; }
         .lot-modal-grid { grid-template-columns: 1fr; }
     }
+
+    .lot-related-section {
+        margin-top: 1.4rem;
+        background: var(--white);
+        border: 1px solid var(--border-light);
+        border-radius: 18px;
+        box-shadow: var(--shadow);
+        padding: 1.1rem 1.2rem 1.2rem;
+    }
+    .lot-related-switch {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 0.75rem;
+        margin-bottom: 1rem;
+    }
+    .lot-related-filters {
+        border: 1px solid #dbe7f3;
+        border-radius: 16px;
+        background: linear-gradient(135deg, #ffffff 0%, #f6fbff 100%);
+        box-shadow: 0 10px 24px rgba(15, 23, 42, 0.08);
+        padding: 0.95rem;
+        margin-bottom: 0.95rem;
+    }
+    .lot-related-filters-grid {
+        display: grid;
+        grid-template-columns: 1.2fr 1fr 1fr 1.4fr auto;
+        gap: 0.55rem;
+        align-items: end;
+    }
+    .lot-filter-field label {
+        display: block;
+        font-size: 0.7rem;
+        text-transform: uppercase;
+        letter-spacing: 0.04em;
+        color: #64748b;
+        margin-bottom: 0.25rem;
+        font-weight: 900;
+    }
+    .lot-filter-field input,
+    .lot-filter-field select {
+        width: 100%;
+        min-height: 42px;
+        border: 1px solid #cfe0ef;
+        border-radius: 12px;
+        background: linear-gradient(180deg, #ffffff 0%, #f8fbff 100%);
+        padding: 0.55rem 0.7rem;
+        font-weight: 800;
+        color: #0f172a;
+        transition: all 0.18s ease;
+    }
+    .lot-filter-field input:hover,
+    .lot-filter-field select:hover {
+        border-color: #b8d1e8;
+        background: #fff;
+    }
+    .lot-filter-field input:focus,
+    .lot-filter-field select:focus {
+        outline: none;
+        border-color: rgba(37, 105, 70, 0.45);
+        box-shadow: 0 0 0 3px rgba(37, 105, 70, 0.12);
+        background: #fff;
+    }
+    .lot-status-select {
+        position: relative;
+    }
+    .lot-status-select-btn {
+        width: 100%;
+        min-height: 42px;
+        border: 1px solid #cfe0ef;
+        border-radius: 12px;
+        background: linear-gradient(180deg, #ffffff 0%, #f8fbff 100%);
+        padding: 0.55rem 0.7rem;
+        font-weight: 800;
+        color: #0f172a;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: 0.6rem;
+        cursor: pointer;
+        transition: all 0.18s ease;
+    }
+    .lot-status-select-btn:hover {
+        border-color: #b8d1e8;
+        background: #fff;
+    }
+    .lot-status-select-btn.is-open {
+        border-color: rgba(37, 105, 70, 0.45);
+        box-shadow: 0 0 0 3px rgba(37, 105, 70, 0.12);
+        background: #fff;
+    }
+    .lot-status-select-btn .value {
+        overflow: hidden;
+        text-overflow: ellipsis;
+        white-space: nowrap;
+    }
+    .lot-status-select-list {
+        position: absolute;
+        top: calc(100% + 6px);
+        left: 0;
+        right: 0;
+        z-index: 20;
+        border: 1px solid #d5e3f1;
+        border-radius: 12px;
+        background: #fff;
+        box-shadow: 0 14px 28px rgba(15, 23, 42, 0.13);
+        padding: 0.35rem;
+        max-height: 240px;
+        overflow-y: auto;
+        display: none;
+    }
+    .lot-status-select-list.is-open {
+        display: block;
+    }
+    .lot-status-option {
+        width: 100%;
+        border: none;
+        background: transparent;
+        padding: 0.52rem 0.58rem;
+        border-radius: 10px;
+        display: flex;
+        align-items: center;
+        gap: 0.5rem;
+        text-align: left;
+        cursor: pointer;
+        color: #0f172a;
+        font-size: 0.88rem;
+        font-weight: 800;
+    }
+    .lot-status-option:hover {
+        background: rgba(37, 105, 70, 0.08);
+    }
+    .lot-status-option-dot {
+        width: 15px;
+        height: 15px;
+        border-radius: 999px;
+        border: 2px solid #94a3b8;
+        background: #fff;
+        position: relative;
+        flex-shrink: 0;
+    }
+    .lot-status-option.is-selected .lot-status-option-dot {
+        border-color: #256946;
+    }
+    .lot-status-option.is-selected .lot-status-option-dot::after {
+        content: '';
+        width: 7px;
+        height: 7px;
+        border-radius: 999px;
+        background: #256946;
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+    }
+    .lot-filter-range {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 0.4rem;
+    }
+    .lot-filter-meta {
+        margin-top: 0.6rem;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: 0.6rem;
+        flex-wrap: wrap;
+    }
+    .lot-filter-selected {
+        display: inline-flex;
+        align-items: center;
+        gap: 0.35rem;
+        padding: 0.4rem 0.65rem;
+        border-radius: 999px;
+        border: 1px solid rgba(37, 105, 70, 0.25);
+        background: linear-gradient(135deg, rgba(37, 105, 70, 0.14), rgba(76, 175, 80, 0.09));
+        color: #1f4e35;
+        font-size: 0.82rem;
+        font-weight: 900;
+    }
+    .lot-filter-reset-btn {
+        min-height: 42px;
+        border-radius: 12px;
+        font-weight: 900;
+        border: 1px solid #cbdced;
+        background: #f8fbff;
+        color: #1f4e35;
+    }
+    .lot-related-switch-btn {
+        border: 1px solid #d7e3ee;
+        background: linear-gradient(180deg, #ffffff 0%, #f8fbff 100%);
+        border-radius: 14px;
+        min-height: 56px;
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        gap: 0.5rem;
+        font-size: 1rem;
+        font-weight: 900;
+        color: #1f2937;
+        cursor: pointer;
+        transition: all 0.2s ease;
+    }
+    .lot-related-switch-btn:hover {
+        transform: translateY(-1px);
+        box-shadow: 0 8px 20px rgba(15, 23, 42, 0.10);
+    }
+    .lot-related-switch-btn.is-active {
+        border-color: rgba(37, 105, 70, 0.35);
+        color: #1f4e35;
+        background: linear-gradient(135deg, rgba(37, 105, 70, 0.15), rgba(76, 175, 80, 0.08));
+        box-shadow: 0 10px 24px rgba(37, 105, 70, 0.16);
+    }
+    .lot-related-grid {
+        display: grid;
+        grid-template-columns: repeat(3, minmax(0, 1fr));
+        gap: 0.9rem;
+    }
+    .lot-related-empty {
+        grid-column: 1 / -1;
+        border: 1px dashed #c8d8e8;
+        border-radius: 18px;
+        padding: 2rem 1.3rem;
+        text-align: center;
+        color: #64748b;
+        font-weight: 800;
+        background: linear-gradient(180deg, #fbfdff 0%, #f5faff 100%);
+    }
+    .lot-related-empty-icon {
+        width: 72px;
+        height: 72px;
+        margin: 0 auto 0.8rem;
+        border-radius: 999px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        background: rgba(37, 105, 70, 0.12);
+        color: #256946;
+        font-size: 1.9rem;
+        box-shadow: 0 8px 20px rgba(37, 105, 70, 0.14);
+    }
+    .lot-related-empty h4 {
+        margin: 0;
+        color: #0f172a;
+        font-size: 1.08rem;
+        font-weight: 950;
+    }
+    .lot-related-empty p {
+        margin: 0.45rem auto 0;
+        max-width: 560px;
+        color: #64748b;
+        font-weight: 700;
+    }
+    .lot-related-card {
+        background: linear-gradient(180deg, #ffffff 0%, #fbfdff 100%);
+        border: 1px solid #dbe7f3;
+        border-radius: 16px;
+        padding: 0.88rem;
+        box-shadow: 0 10px 24px rgba(15, 23, 42, 0.08);
+        display: grid;
+        gap: 0.55rem;
+    }
+    .lot-related-card--request {
+        border-left: 4px solid #f59e0b;
+        background: linear-gradient(180deg, #ffffff 0%, #fffcf7 100%);
+    }
+    .lot-related-card--deal {
+        border-left: 4px solid #256946;
+        background: linear-gradient(180deg, #ffffff 0%, #f6fbf8 100%);
+    }
+    .lot-request-layout {
+        display: grid;
+        gap: 0.5rem;
+    }
+    .lot-request-head {
+        display: grid;
+        grid-template-columns: 1fr 1fr 1fr;
+        align-items: center;
+        gap: 0.45rem;
+    }
+    .lot-request-idline {
+        display: inline-flex;
+        align-items: center;
+        gap: 0.45rem;
+        color: #334155;
+        font-weight: 900;
+        font-size: 0.83rem;
+    }
+    .lot-request-route {
+        border: 1px solid #f1e3c8;
+        border-radius: 11px;
+        background: #fffdf8;
+        padding: 0.45rem 0.55rem;
+        display: grid;
+        grid-template-columns: 1fr auto 1fr;
+        align-items: center;
+        gap: 0.45rem;
+    }
+    .lot-request-route .point {
+        font-size: 0.8rem;
+        font-weight: 850;
+        color: #475569;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        white-space: nowrap;
+    }
+    .lot-request-route .arrow {
+        color: #f59e0b;
+        font-size: 0.8rem;
+    }
+    .lot-request-metrics {
+        display: grid;
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+        gap: 0.5rem;
+    }
+    .lot-request-metric {
+        border: 1px solid #f2e6d0;
+        border-radius: 10px;
+        background: #fff;
+        padding: 0.42rem 0.5rem;
+    }
+    .lot-request-metric .k {
+        display: block;
+        font-size: 0.72rem;
+        text-transform: uppercase;
+        letter-spacing: 0.03em;
+        color: #64748b;
+        font-weight: 900;
+        margin-bottom: 0.15rem;
+    }
+    .lot-request-metric .v {
+        display: block;
+        color: #0f172a;
+        font-size: 0.9rem;
+        font-weight: 950;
+    }
+    .lot-deal-layout {
+        display: grid;
+        gap: 0.5rem;
+    }
+    .lot-deal-head {
+        display: grid;
+        grid-template-columns: 1fr 1fr 1fr;
+        align-items: center;
+        gap: 0.45rem;
+    }
+    .lot-deal-idline {
+        color: #334155;
+        font-size: 0.83rem;
+        font-weight: 950;
+    }
+    .lot-deal-progress {
+        height: 8px;
+        border-radius: 999px;
+        background: #e8f1eb;
+        position: relative;
+        overflow: hidden;
+    }
+    .lot-deal-progress-fill {
+        position: absolute;
+        left: 0;
+        top: 0;
+        bottom: 0;
+        border-radius: 999px;
+        background: linear-gradient(90deg, #256946, #43a16b);
+    }
+    .lot-deal-stages {
+        display: grid;
+        grid-template-columns: repeat(4, minmax(0, 1fr));
+        gap: 0.3rem;
+    }
+    .lot-deal-rejected-line {
+        border: 1px solid rgba(239, 68, 68, 0.3);
+        background: rgba(239, 68, 68, 0.12);
+        color: #b91c1c;
+        border-radius: 10px;
+        min-height: 34px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 0.86rem;
+        font-weight: 900;
+        letter-spacing: 0.01em;
+    }
+    .lot-deal-stage {
+        text-align: center;
+        border-radius: 8px;
+        padding: 0.28rem 0.2rem;
+        font-size: 0.68rem;
+        font-weight: 900;
+        text-transform: uppercase;
+        letter-spacing: 0.02em;
+        color: #64748b;
+        background: #f3f7f4;
+        border: 1px solid #dfebe2;
+    }
+    .lot-deal-stage.is-active {
+        color: #1f4e35;
+        background: #e8f4ed;
+        border-color: #b8dac7;
+    }
+    .lot-deal-metrics {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 0.5rem;
+    }
+    .lot-deal-metric {
+        border: 1px solid #dbece3;
+        border-radius: 10px;
+        background: #fff;
+        padding: 0.5rem 0.55rem;
+    }
+    .lot-deal-metric .k {
+        display: block;
+        font-size: 0.72rem;
+        text-transform: uppercase;
+        letter-spacing: 0.03em;
+        color: #64748b;
+        font-weight: 900;
+        margin-bottom: 0.15rem;
+    }
+    .lot-deal-metric .v {
+        display: block;
+        color: #0f172a;
+        font-size: 0.9rem;
+        font-weight: 950;
+    }
+    .lot-related-topline {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: 0.6rem;
+        margin-bottom: 0.2rem;
+        flex-wrap: wrap;
+    }
+    .lot-object-kind {
+        display: inline-flex;
+        align-items: center;
+        gap: 0.35rem;
+        padding: 0.16rem 0.5rem;
+        border-radius: 999px;
+        font-size: 0.73rem;
+        font-weight: 900;
+        border: 1px solid transparent;
+    }
+    .lot-object-kind--request {
+        color: #9a6700;
+        background: rgba(245, 158, 11, 0.14);
+        border-color: rgba(245, 158, 11, 0.28);
+    }
+    .lot-object-kind--deal {
+        color: #1f4e35;
+        background: rgba(37, 105, 70, 0.13);
+        border-color: rgba(37, 105, 70, 0.27);
+    }
+    .lot-top-meta {
+        font-size: 0.78rem;
+        color: #64748b;
+        font-weight: 850;
+        display: inline-flex;
+        align-items: center;
+        gap: 0.38rem;
+    }
+    .lot-status-chip {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        min-height: 26px;
+        border-radius: 999px;
+        padding: 0.2rem 0.65rem;
+        font-size: 0.78rem;
+        font-weight: 900;
+        border: 1px solid transparent;
+        white-space: nowrap;
+    }
+    .lot-status-chip.tone-attention { background: rgba(245, 158, 11, 0.16); color: #9a6700; border-color: rgba(245, 158, 11, 0.30); }
+    .lot-status-chip.tone-rework { background: rgba(59, 130, 246, 0.15); color: #1d4ed8; border-color: rgba(59, 130, 246, 0.25); }
+    .lot-status-chip.tone-rejected { background: rgba(239, 68, 68, 0.15); color: #b91c1c; border-color: rgba(239, 68, 68, 0.28); }
+    .lot-status-chip.tone-process { background: rgba(16, 185, 129, 0.16); color: #047857; border-color: rgba(16, 185, 129, 0.30); }
+    .lot-status-chip.tone-wait { background: rgba(139, 92, 246, 0.16); color: #6d28d9; border-color: rgba(139, 92, 246, 0.28); }
+    .lot-status-chip.tone-finish { background: rgba(34, 197, 94, 0.16); color: #166534; border-color: rgba(34, 197, 94, 0.28); }
+    .lot-status-chip.tone-neutral { background: rgba(100, 116, 139, 0.12); color: #334155; border-color: rgba(100, 116, 139, 0.25); }
+    .lot-related-code {
+        font-size: 0.79rem;
+        color: #334155;
+        font-weight: 950;
+    }
+    .lot-related-meta-grid {
+        display: grid;
+        gap: 0.48rem;
+    }
+    .lot-related-row {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: 0.55rem;
+        padding: 0.5rem 0.55rem;
+        border: 1px solid #e7eef7;
+        border-radius: 10px;
+        background: #fff;
+    }
+    .lot-related-card--request .lot-related-row {
+        border-color: #f2e6d0;
+        background: #fffdf9;
+    }
+    .lot-related-card--deal .lot-related-row {
+        border-color: #dbece3;
+        background: #f9fdfa;
+    }
+    .lot-related-label {
+        color: #475569;
+        font-size: 0.76rem;
+        font-weight: 900;
+        text-transform: uppercase;
+        letter-spacing: 0.03em;
+        display: inline-flex;
+        align-items: center;
+        gap: 0.4rem;
+    }
+    .lot-related-value {
+        color: #0f172a;
+        font-weight: 900;
+        text-align: right;
+    }
+    .lot-related-value-accent {
+        color: #1f4e35;
+        font-size: 1rem;
+        font-weight: 950;
+    }
+    .lot-related-actions {
+        margin-top: 0.35rem;
+        padding-top: 0.65rem;
+        border-top: 1px solid #ebf1f7;
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 0.55rem;
+    }
+    .lot-related-actions .btn {
+        width: 100%;
+        min-height: 40px;
+        padding: 0.68rem 0.9rem;
+        font-size: 0.82rem;
+        font-weight: 850;
+        border-radius: 11px;
+        border: none;
+        cursor: pointer;
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        gap: 0.45rem;
+        transition: all 0.22s ease;
+    }
+
+    /* REQUEST BUTTONS (янтарная тема) */
+    .lot-related-card--request .lot-related-actions .btn.btn-outline {
+        background: #fff;
+        color: #9a6700;
+        border: 2px solid #f4d59a;
+        box-shadow: 0 2px 8px rgba(245, 158, 11, 0.10);
+    }
+    .lot-related-card--request .lot-related-actions .btn.btn-primary {
+        background: linear-gradient(135deg, #f59e0b, #fbbf24);
+        color: #fff;
+        border: none;
+        box-shadow: 0 4px 14px rgba(245, 158, 11, 0.24);
+    }
+    .lot-related-card--request .lot-related-actions .btn.btn-outline:hover {
+        background: linear-gradient(135deg, #f59e0b, #fbbf24);
+        color: #fff;
+        border-color: #f59e0b;
+        transform: translateY(-2px);
+        box-shadow: 0 6px 18px rgba(245, 158, 11, 0.28);
+    }
+    .lot-related-card--request .lot-related-actions .btn.btn-primary:hover {
+        background: linear-gradient(135deg, #d97706, #f59e0b);
+        transform: translateY(-2px);
+        box-shadow: 0 8px 20px rgba(245, 158, 11, 0.32);
+    }
+
+    /* DEAL BUTTONS (зеленая тема) */
+    .lot-related-card--deal .lot-related-actions .btn.btn-outline {
+        background: #fff;
+        color: #1f4e35;
+        border: 2px solid #b9d7c6;
+        box-shadow: 0 2px 8px rgba(37, 105, 70, 0.10);
+    }
+    .lot-related-card--deal .lot-related-actions .btn.btn-primary {
+        background: linear-gradient(135deg, #256946, #4caf50);
+        color: #fff;
+        border: none;
+        box-shadow: 0 4px 14px rgba(37, 105, 70, 0.24);
+    }
+    .lot-related-card--deal .lot-related-actions .btn.btn-outline:hover {
+        background: linear-gradient(135deg, #256946, #4caf50);
+        color: #fff;
+        border-color: #256946;
+        transform: translateY(-2px);
+        box-shadow: 0 6px 18px rgba(37, 105, 70, 0.28);
+    }
+    .lot-related-card--deal .lot-related-actions .btn.btn-primary:hover {
+        background: linear-gradient(135deg, #1b5e38, #256946);
+        transform: translateY(-2px);
+        box-shadow: 0 8px 20px rgba(37, 105, 70, 0.32);
+    }
+    .lot-related-card--request .lot-related-actions .btn.btn-primary {
+        background: #f59e0b;
+        border-color: #f59e0b;
+        box-shadow: 0 8px 18px rgba(245, 158, 11, 0.20);
+    }
+    .lot-related-card--deal .lot-related-actions .btn.btn-primary {
+        background: #256946;
+        border-color: #256946;
+    }
+    .lot-created-at { color: #64748b; font-size: 0.78rem; font-weight: 800; display: inline-flex; align-items: center; gap: 0.4rem; }
+    .lot-related-grid {}
+    .lot-autotrain-list {
+        display: grid;
+        gap: 0.85rem;
+    }
+    .lot-related-summary {
+        position: sticky;
+        top: 0;
+        z-index: 4;
+        background: linear-gradient(180deg, #f6fbff 0%, #ffffff 100%);
+        border: 1px solid #d7e6f4;
+        border-radius: 14px;
+        padding: 0.75rem;
+        margin-bottom: 0.9rem;
+        box-shadow: 0 8px 18px rgba(15, 23, 42, 0.10);
+    }
+    .lot-related-summary-grid {
+        display: grid;
+        grid-template-columns: repeat(3, minmax(0, 1fr));
+        gap: 0.6rem;
+    }
+    .lot-partner-card {
+        border: 1px solid #d5e4f2;
+        border-radius: 14px;
+        background: linear-gradient(135deg, #ffffff 0%, #f6fbff 100%);
+        padding: 0.85rem;
+        margin-bottom: 0.85rem;
+        box-shadow: 0 10px 22px rgba(15, 23, 42, 0.08);
+    }
+    .lot-partner-head {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: 0.6rem;
+        margin-bottom: 0.55rem;
+    }
+    .lot-partner-title {
+        margin: 0;
+        font-size: 0.95rem;
+        font-weight: 950;
+        color: #1f4e35;
+        display: inline-flex;
+        align-items: center;
+        gap: 0.4rem;
+    }
+    .lot-partner-grid {
+        display: grid;
+        grid-template-columns: 1.2fr 1fr;
+        gap: 0.5rem;
+    }
+    .lot-partner-item {
+        border: 1px solid #e2ecf6;
+        border-radius: 10px;
+        background: #fff;
+        padding: 0.45rem 0.55rem;
+    }
+    .lot-partner-item .k {
+        display: block;
+        font-size: 0.72rem;
+        text-transform: uppercase;
+        letter-spacing: 0.03em;
+        color: #64748b;
+        font-weight: 900;
+        margin-bottom: 0.16rem;
+    }
+    .lot-partner-item .v {
+        display: block;
+        font-size: 0.88rem;
+        font-weight: 900;
+        color: #0f172a;
+        word-break: break-word;
+    }
+    .lot-related-loading {
+        min-height: 220px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: 0.6rem;
+        color: #334155;
+        font-weight: 850;
+    }
+    .lot-request-modal .lot-partner-card {
+        border-color: #f1e3c8;
+        background: linear-gradient(135deg, #fffdf8 0%, #fffaf1 100%);
+    }
+    .lot-deal-modal .lot-partner-card {
+        border-color: #d5e7dc;
+        background: linear-gradient(135deg, #f7fcf9 0%, #f3faf6 100%);
+    }
+    .lot-modal-hero {
+        border-radius: 14px;
+        padding: 0.8rem;
+        margin-bottom: 0.8rem;
+        border: 1px solid transparent;
+    }
+    .lot-request-modal .lot-modal-hero {
+        background: linear-gradient(135deg, rgba(245, 158, 11, 0.12), rgba(251, 191, 36, 0.07));
+        border-color: rgba(245, 158, 11, 0.22);
+    }
+    .lot-deal-modal .lot-modal-hero {
+        background: linear-gradient(135deg, rgba(37, 105, 70, 0.12), rgba(76, 175, 80, 0.07));
+        border-color: rgba(37, 105, 70, 0.22);
+    }
+    .lot-modal-hero-title {
+        margin: 0 0 0.35rem;
+        font-size: 0.92rem;
+        font-weight: 950;
+        color: #0f172a;
+        display: inline-flex;
+        align-items: center;
+        gap: 0.45rem;
+    }
+    .lot-modal-hero-sub {
+        color: #475569;
+        font-size: 0.82rem;
+        font-weight: 800;
+    }
+    .lot-request-modal .lot-autotrain-card {
+        border-color: #f1e3c8;
+        background: #fffdf9;
+    }
+    .lot-deal-modal .lot-autotrain-card {
+        border-color: #d5e7dc;
+        background: #f8fcf9;
+    }
+    .lot-related-loading .fa-spinner {
+        color: #256946;
+    }
+    .lot-rich-modal .deal-modal-body {
+        background: linear-gradient(180deg, #f8fbff 0%, #ffffff 100%);
+    }
+    .lot-rich-profile {
+        border: 1px solid #d8e6f4;
+        border-radius: 16px;
+        background: #fff;
+        padding: 0.9rem;
+        box-shadow: 0 10px 24px rgba(15, 23, 42, 0.08);
+        margin-bottom: 0.9rem;
+    }
+    .lot-rich-meta-line {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: 0.6rem;
+        flex-wrap: wrap;
+        margin-bottom: 0.7rem;
+    }
+    .lot-rich-meta-created {
+        color: #64748b;
+        font-size: 0.82rem;
+        font-weight: 800;
+        display: inline-flex;
+        align-items: center;
+        gap: 0.35rem;
+    }
+    .lot-dossier-card {
+        border: 1px solid #d8e6f4;
+        border-radius: 18px;
+        background: linear-gradient(135deg, #ffffff 0%, #f8fbff 100%);
+        box-shadow: 0 12px 26px rgba(15, 23, 42, 0.09);
+        padding: 0.95rem;
+        margin-bottom: 0.9rem;
+    }
+    .lot-dossier-shell {
+        display: grid;
+        gap: 0.42rem;
+    }
+    .lot-dossier-primary {
+        border: 1px solid #dbe8f5;
+        border-radius: 16px;
+        background: #fff;
+        padding: 0.8rem;
+    }
+    .lot-dossier-titleline {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: 0.65rem;
+        flex-wrap: wrap;
+        margin-bottom: 0.35rem;
+    }
+    .lot-dossier-titleline .title {
+        font-size: 0.78rem;
+        text-transform: uppercase;
+        letter-spacing: 0.04em;
+        color: #64748b;
+        font-weight: 900;
+    }
+    .lot-dossier-titleline .id {
+        font-size: 0.8rem;
+        color: #334155;
+        font-weight: 900;
+    }
+    .lot-request-modal .lot-dossier-card {
+        border-color: #f1e3c8;
+        background: linear-gradient(135deg, #fffdf8 0%, #fffaf1 100%);
+    }
+    .lot-deal-modal .lot-dossier-card {
+        border-color: #d5e7dc;
+        background: linear-gradient(135deg, #f7fcf9 0%, #f3faf6 100%);
+    }
+    .lot-dossier-head {
+        display: grid;
+        grid-template-columns: auto 1fr auto;
+        gap: 0.8rem;
+        align-items: start;
+        margin-bottom: 0.35rem;
+    }
+    .lot-dossier-avatar {
+        width: 56px;
+        height: 56px;
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 1.2rem;
+        color: #fff;
+        box-shadow: 0 8px 16px rgba(15, 23, 42, 0.16);
+    }
+    .lot-request-modal .lot-dossier-avatar { background: linear-gradient(135deg, #f59e0b, #fbbf24); }
+    .lot-deal-modal .lot-dossier-avatar { background: linear-gradient(135deg, #256946, #4caf50); }
+    .lot-dossier-fio {
+        margin: 0;
+        color: #0f172a;
+        font-size: 1.02rem;
+        font-weight: 950;
+    }
+    .lot-dossier-org {
+        margin-top: 0.18rem;
+        color: #475569;
+        font-size: 0.84rem;
+        font-weight: 800;
+    }
+    .lot-dossier-role-line {
+        margin-top: 0.35rem;
+        display: flex;
+        align-items: center;
+        gap: 0.4rem;
+        flex-wrap: wrap;
+    }
+    .lot-dossier-tag {
+        display: inline-flex;
+        align-items: center;
+        gap: 0.35rem;
+        min-height: 24px;
+        padding: 0.15rem 0.5rem;
+        border-radius: 999px;
+        font-size: 0.72rem;
+        font-weight: 900;
+        border: 1px solid transparent;
+    }
+    .lot-dossier-tag.role {
+        color: #1d4ed8;
+        background: rgba(59, 130, 246, 0.11);
+        border-color: rgba(59, 130, 246, 0.24);
+    }
+    .lot-dossier-tag.verify {
+        color: #166534;
+        background: rgba(34, 197, 94, 0.12);
+        border-color: rgba(34, 197, 94, 0.24);
+    }
+    .lot-dossier-head-volume {
+        border: none;
+        background: transparent;
+        padding: 0;
+        min-width: 170px;
+        text-align: right;
+        align-self: start;
+    }
+    .lot-dossier-head-volume .k {
+        display: block;
+        font-size: 0.7rem;
+        text-transform: uppercase;
+        letter-spacing: 0.03em;
+        color: #475569;
+        font-weight: 900;
+        margin-bottom: 0.14rem;
+    }
+    .lot-dossier-head-volume .v {
+        display: inline-flex;
+        align-items: center;
+        gap: 0.4rem;
+        font-size: 1.42rem;
+        line-height: 1;
+        font-weight: 980;
+        color: #15803d;
+        text-shadow: 0 1px 0 rgba(255,255,255,0.7);
+    }
+    .lot-dossier-head-volume .v i {
+        width: 30px;
+        height: 30px;
+        border-radius: 10px;
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 0.95rem;
+        color: #fff;
+        background: linear-gradient(135deg, #16a34a, #22c55e);
+        box-shadow: 0 8px 16px rgba(22, 163, 74, 0.3);
+    }
+    .lot-dossier-hero {
+        border: 1px solid #dce8f4;
+        border-radius: 14px;
+        background: linear-gradient(135deg, #ffffff 0%, #f2f8ff 100%);
+        padding: 0.7rem 0.8rem;
+        margin-bottom: 0.75rem;
+        display: grid;
+        grid-template-columns: auto 1fr auto;
+        align-items: center;
+        gap: 0.75rem;
+    }
+    .lot-request-modal .lot-dossier-hero {
+        background: linear-gradient(135deg, #fffef9 0%, #fff7e6 100%);
+        border-color: #f3ddb3;
+    }
+    .lot-deal-modal .lot-dossier-hero {
+        background: linear-gradient(135deg, #f9fffb 0%, #ecf9f1 100%);
+        border-color: #cfe7d9;
+    }
+    .lot-dossier-hero-icon {
+        width: 42px;
+        height: 42px;
+        border-radius: 12px;
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 1rem;
+        color: #fff;
+        box-shadow: 0 8px 16px rgba(15, 23, 42, 0.15);
+    }
+    .lot-request-modal .lot-dossier-hero-icon { background: linear-gradient(135deg, #f59e0b, #fbbf24); }
+    .lot-deal-modal .lot-dossier-hero-icon { background: linear-gradient(135deg, #256946, #4caf50); }
+    .lot-dossier-hero-label {
+        display: block;
+        font-size: 0.74rem;
+        text-transform: uppercase;
+        letter-spacing: 0.03em;
+        color: #64748b;
+        font-weight: 900;
+    }
+    .lot-dossier-hero-value {
+        display: block;
+        margin-top: 0.1rem;
+        font-size: 1.3rem;
+        line-height: 1.1;
+        font-weight: 980;
+        color: #0f172a;
+    }
+    .lot-dossier-hero-sub {
+        color: #64748b;
+        font-size: 0.78rem;
+        font-weight: 800;
+    }
+    .lot-dossier-hero-side {
+        text-align: right;
+    }
+    .lot-dossier-hero-side .k {
+        display: block;
+        font-size: 0.72rem;
+        text-transform: uppercase;
+        letter-spacing: 0.03em;
+        color: #64748b;
+        font-weight: 900;
+    }
+    .lot-dossier-hero-side .v {
+        display: block;
+        margin-top: 0.1rem;
+        font-size: 0.85rem;
+        font-weight: 900;
+        color: #0f172a;
+    }
+    .lot-dossier-grid {
+        display: grid;
+        grid-template-columns: 1fr 1fr 1fr;
+        gap: 0.5rem;
+    }
+    .lot-dossier-item {
+        border: 1px solid #e2ecf6;
+        border-radius: 11px;
+        background: #fff;
+        padding: 0.48rem 0.55rem;
+        position: relative;
+        overflow: hidden;
+    }
+    .lot-dossier-item::before {
+        content: '';
+        position: absolute;
+        left: 0;
+        top: 0;
+        bottom: 0;
+        width: 3px;
+        background: #dbe7f3;
+    }
+    .lot-request-modal .lot-dossier-item::before { background: #f59e0b; opacity: 0.6; }
+    .lot-deal-modal .lot-dossier-item::before { background: #256946; opacity: 0.6; }
+    .lot-dossier-item .k {
+        display: block;
+        font-size: 0.7rem;
+        text-transform: uppercase;
+        letter-spacing: 0.03em;
+        color: #64748b;
+        font-weight: 900;
+        margin-bottom: 0.14rem;
+    }
+    .lot-dossier-item .v {
+        display: block;
+        font-size: 0.84rem;
+        color: #0f172a;
+        font-weight: 900;
+        word-break: break-word;
+    }
+    .lot-dossier-kpi-strip {
+        display: grid;
+        grid-template-columns: 1fr 1fr 1fr;
+        gap: 0.5rem;
+    }
+    .lot-dossier-kpi {
+        border-radius: 12px;
+        padding: 0.55rem 0.6rem;
+        border: 1px solid #dbe8f5;
+        background: #fff;
+    }
+    .lot-dossier-kpi .k {
+        display: block;
+        font-size: 0.7rem;
+        text-transform: uppercase;
+        letter-spacing: 0.03em;
+        color: #64748b;
+        font-weight: 900;
+        margin-bottom: 0.14rem;
+    }
+    .lot-dossier-kpi .v {
+        display: block;
+        font-size: 0.92rem;
+        font-weight: 950;
+        color: #0f172a;
+        word-break: break-word;
+    }
+    .lot-request-modal .lot-dossier-kpi.focus .v { color: #b45309; }
+    .lot-deal-modal .lot-dossier-kpi.focus .v { color: #166534; }
+    .lot-dossier-contact-bar {
+        border: 1px solid #dbe8f5;
+        border-radius: 12px;
+        background: #fff;
+        padding: 0.6rem;
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 0.45rem;
+    }
+    .lot-dossier-contact-pill {
+        border: 1px solid #e3edf7;
+        border-radius: 10px;
+        background: #fbfdff;
+        padding: 0.4rem 0.5rem;
+        display: grid;
+        gap: 0.08rem;
+    }
+    .lot-dossier-contact-pill .k {
+        font-size: 0.68rem;
+        text-transform: uppercase;
+        letter-spacing: 0.03em;
+        color: #64748b;
+        font-weight: 900;
+    }
+    .lot-dossier-contact-pill .v {
+        font-size: 0.84rem;
+        color: #0f172a;
+        font-weight: 900;
+        word-break: break-word;
+    }
+    .lot-dossier-legal {
+        border: 1px solid #dbe8f5;
+        border-radius: 12px;
+        background: #fff;
+        padding: 0.65rem;
+    }
+    .lot-dossier-legal-title {
+        margin: 0 0 0.45rem;
+        font-size: 0.8rem;
+        font-weight: 900;
+        color: #334155;
+        display: inline-flex;
+        align-items: center;
+        gap: 0.35rem;
+    }
+    .lot-dossier-legal-grid {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 0.45rem;
+    }
+    .lot-dossier-legal-item {
+        border: 1px dashed #d9e5f2;
+        border-radius: 10px;
+        padding: 0.4rem 0.5rem;
+        background: #fcfeff;
+    }
+    .lot-dossier-legal-item .k {
+        display: block;
+        font-size: 0.68rem;
+        text-transform: uppercase;
+        letter-spacing: 0.03em;
+        color: #64748b;
+        font-weight: 900;
+    }
+    .lot-dossier-legal-item .v {
+        display: block;
+        margin-top: 0.1rem;
+        font-size: 0.82rem;
+        color: #0f172a;
+        font-weight: 900;
+        word-break: break-word;
+    }
+    .lot-dossier-finance {
+        margin-top: 0.7rem;
+        border: 1px solid #dce8f4;
+        border-radius: 12px;
+        background: #fff;
+        overflow: hidden;
+    }
+    .lot-dossier-finance-toggle {
+        width: 100%;
+        border: none;
+        background: #f8fbff;
+        min-height: 40px;
+        padding: 0.5rem 0.65rem;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: 0.6rem;
+        cursor: pointer;
+        color: #1f4e35;
+        font-weight: 900;
+        font-size: 0.82rem;
+    }
+    .lot-dossier-finance-toggle i {
+        transition: transform 0.2s ease;
+    }
+    .lot-dossier-finance-toggle.is-open i {
+        transform: rotate(180deg);
+    }
+    .lot-dossier-finance-body {
+        display: none;
+        padding: 0.6rem;
+        border-top: 1px solid #e2ecf6;
+        background: #fff;
+    }
+    .lot-dossier-finance-body.is-open {
+        display: block;
+    }
+    .lot-dossier-finance-grid {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 0.45rem;
+    }
+    .lot-rich-profile-head {
+        display: flex;
+        align-items: center;
+        gap: 0.75rem;
+        margin-bottom: 0.8rem;
+    }
+    .lot-rich-avatar {
+        width: 52px;
+        height: 52px;
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 1.1rem;
+        color: #fff;
+        flex-shrink: 0;
+    }
+    .lot-request-modal .lot-rich-avatar { background: linear-gradient(135deg, #f59e0b, #fbbf24); }
+    .lot-deal-modal .lot-rich-avatar { background: linear-gradient(135deg, #256946, #4caf50); }
+    .lot-rich-profile-title {
+        margin: 0;
+        font-size: 1rem;
+        font-weight: 950;
+        color: #0f172a;
+    }
+    .lot-rich-profile-sub {
+        margin-top: 0.12rem;
+        color: #64748b;
+        font-size: 0.82rem;
+        font-weight: 700;
+    }
+    .lot-rich-stats {
+        display: grid;
+        grid-template-columns: repeat(3, minmax(0, 1fr));
+        gap: 0.55rem;
+    }
+    .lot-rich-stat {
+        border: 1px solid #e2ecf6;
+        border-radius: 12px;
+        background: #fbfdff;
+        padding: 0.55rem 0.6rem;
+    }
+    .lot-rich-stat .k {
+        display: block;
+        font-size: 0.72rem;
+        text-transform: uppercase;
+        letter-spacing: 0.03em;
+        color: #64748b;
+        font-weight: 900;
+        margin-bottom: 0.16rem;
+    }
+    .lot-rich-stat .v {
+        display: block;
+        font-size: 0.9rem;
+        font-weight: 950;
+        color: #0f172a;
+    }
+    .lot-rich-section {
+        border: 1px solid #dce8f4;
+        border-radius: 14px;
+        background: #fff;
+        padding: 0.75rem;
+        margin-bottom: 0.8rem;
+    }
+    .lot-rich-section-title {
+        margin: 0 0 0.6rem;
+        font-size: 0.9rem;
+        font-weight: 950;
+        color: #1f4e35;
+        display: inline-flex;
+        align-items: center;
+        gap: 0.4rem;
+    }
+    .lot-autotrain-toolbar {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: 0.6rem;
+        margin-bottom: 0.65rem;
+        flex-wrap: wrap;
+    }
+    .lot-autotrain-count {
+        display: inline-flex;
+        align-items: center;
+        gap: 0.35rem;
+        padding: 0.25rem 0.5rem;
+        border-radius: 999px;
+        background: rgba(37, 105, 70, 0.1);
+        border: 1px solid rgba(37, 105, 70, 0.22);
+        color: #1f4e35;
+        font-size: 0.75rem;
+        font-weight: 900;
+    }
+    .lot-autotrain-view-switch {
+        display: inline-flex;
+        align-items: center;
+        gap: 0.35rem;
+        padding: 0.2rem;
+        border-radius: 999px;
+        border: 1px solid #d7e5f2;
+        background: #fff;
+    }
+    .lot-autotrain-view-btn {
+        border: none;
+        background: transparent;
+        min-height: 30px;
+        padding: 0.25rem 0.65rem;
+        border-radius: 999px;
+        font-size: 0.76rem;
+        font-weight: 900;
+        color: #475569;
+        cursor: pointer;
+        display: inline-flex;
+        align-items: center;
+        gap: 0.35rem;
+    }
+    .lot-autotrain-view-btn.is-active {
+        background: rgba(37, 105, 70, 0.12);
+        color: #1f4e35;
+    }
+    .lot-autotrain-view {
+        display: none;
+    }
+    .lot-autotrain-view.is-active {
+        display: block;
+    }
+    .lot-autotrain-cards-grid {
+        display: grid;
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+        gap: 0.6rem;
+    }
+    .lot-autotrain-compact-card {
+        border: 1px solid #dce8f4;
+        border-radius: 12px;
+        background: linear-gradient(180deg, #ffffff 0%, #f9fcff 100%);
+        padding: 0.65rem;
+    }
+    .lot-autotrain-compact-head {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: 0.45rem;
+        margin-bottom: 0.45rem;
+    }
+    .lot-autotrain-compact-title {
+        font-size: 0.84rem;
+        font-weight: 950;
+        color: #0f172a;
+        display: inline-flex;
+        align-items: center;
+        gap: 0.35rem;
+    }
+    .lot-autotrain-compact-grid {
+        display: grid;
+        gap: 0.36rem;
+    }
+    .lot-autotrain-compact-row {
+        display: grid;
+        grid-template-columns: auto 1fr;
+        gap: 0.4rem;
+        align-items: center;
+        border: 1px solid #e4edf6;
+        border-radius: 9px;
+        padding: 0.35rem 0.42rem;
+        background: #fff;
+    }
+    .lot-autotrain-compact-row .k {
+        font-size: 0.68rem;
+        text-transform: uppercase;
+        letter-spacing: 0.03em;
+        color: #64748b;
+        font-weight: 900;
+    }
+    .lot-autotrain-compact-row .v {
+        font-size: 0.78rem;
+        color: #0f172a;
+        font-weight: 850;
+        text-align: right;
+        word-break: break-word;
+    }
+    .lot-rich-grid {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 0.5rem;
+    }
+    .lot-rich-item {
+        border: 1px solid #e3edf7;
+        border-radius: 10px;
+        background: #fbfdff;
+        padding: 0.45rem 0.5rem;
+    }
+    .lot-rich-item .k {
+        display: block;
+        font-size: 0.71rem;
+        text-transform: uppercase;
+        letter-spacing: 0.03em;
+        color: #64748b;
+        font-weight: 900;
+        margin-bottom: 0.15rem;
+    }
+    .lot-rich-item .v {
+        display: block;
+        color: #0f172a;
+        font-size: 0.85rem;
+        font-weight: 900;
+        word-break: break-word;
+    }
+    .lot-related-summary-item {
+        border: 1px solid #dfebf7;
+        border-radius: 10px;
+        background: #fff;
+        padding: 0.5rem 0.6rem;
+    }
+    .lot-related-summary-item .k {
+        display: block;
+        font-size: 0.74rem;
+        text-transform: uppercase;
+        letter-spacing: 0.03em;
+        font-weight: 900;
+        color: #64748b;
+        margin-bottom: 0.2rem;
+    }
+    .lot-related-summary-item .v {
+        display: block;
+        font-size: 0.95rem;
+        font-weight: 950;
+        color: #0f172a;
+    }
+    .lot-autotrain-card {
+        border: 1px solid #dfe9f2;
+        border-radius: 14px;
+        padding: 0.85rem;
+        background: #fbfdff;
+    }
+    .lot-autotrain-card h4 {
+        margin: 0 0 0.55rem;
+        font-size: 0.95rem;
+        font-weight: 950;
+        color: #1f4e35;
+    }
+    .lot-autotrain-kv {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 0.5rem;
+    }
+    .lot-autotrain-kv .deal-modal-item {
+        margin: 0;
+    }
+    .lot-autotrain-block {
+        border: 1px solid #e4edf6;
+        border-radius: 12px;
+        background: #fff;
+        padding: 0.7rem;
+        margin-top: 0.55rem;
+    }
+    .lot-autotrain-block-title {
+        margin: 0 0 0.45rem;
+        color: #1f4e35;
+        font-size: 0.83rem;
+        font-weight: 950;
+        text-transform: uppercase;
+        letter-spacing: 0.03em;
+    }
+    .lot-doc-links {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 0.45rem;
+        margin-top: 0.5rem;
+    }
+    .lot-doc-link {
+        display: inline-flex;
+        align-items: center;
+        gap: 0.35rem;
+        padding: 0.35rem 0.55rem;
+        border-radius: 9px;
+        border: 1px solid #d4e3f1;
+        background: #f8fbff;
+        color: #1d4ed8;
+        text-decoration: none;
+        font-size: 0.78rem;
+        font-weight: 850;
+    }
+    .lot-doc-link:hover {
+        background: #eef6ff;
+        border-color: #b8d3ee;
+    }
+    .lot-doc-link.is-disabled {
+        background: #f8fafc;
+        color: #94a3b8;
+        border-color: #e2e8f0;
+        pointer-events: none;
+        cursor: default;
+    }
+    @media (max-width: 900px) {
+        .lot-related-summary-grid { grid-template-columns: 1fr; }
+        .lot-partner-grid { grid-template-columns: 1fr; }
+        .lot-rich-stats { grid-template-columns: 1fr; }
+        .lot-rich-grid { grid-template-columns: 1fr; }
+        .lot-autotrain-cards-grid { grid-template-columns: 1fr; }
+        .lot-dossier-head { grid-template-columns: 1fr; }
+        .lot-dossier-head-volume { text-align: left; min-width: 0; }
+        .lot-dossier-hero {
+            grid-template-columns: 1fr;
+            text-align: left;
+        }
+        .lot-dossier-hero-side {
+            text-align: left;
+        }
+        .lot-dossier-grid { grid-template-columns: 1fr; }
+        .lot-dossier-kpi-strip { grid-template-columns: 1fr; }
+        .lot-dossier-contact-bar { grid-template-columns: 1fr; }
+        .lot-dossier-legal-grid { grid-template-columns: 1fr; }
+        .lot-dossier-finance-grid { grid-template-columns: 1fr; }
+    }
+    @media (max-width: 1100px) {
+        .lot-related-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+        .lot-related-filters-grid { grid-template-columns: 1fr 1fr; }
+    }
+    @media (max-width: 900px) {
+        .lot-related-grid { grid-template-columns: 1fr; }
+        .lot-related-switch { grid-template-columns: 1fr; }
+        .lot-autotrain-kv { grid-template-columns: 1fr; }
+        .lot-related-filters-grid { grid-template-columns: 1fr; }
+        .lot-request-metrics { grid-template-columns: 1fr; }
+        .lot-deal-metrics { grid-template-columns: 1fr; }
+        .lot-deal-head { grid-template-columns: 1fr; }
+        .lot-deal-stages { grid-template-columns: 1fr 1fr; }
+    }
 </style>
 {% endblock %}
 
@@ -255,8 +1750,9 @@
                             <span>Информация о заявках</span>
                         </h4>
                         <div class="lot-sidebar-list">
-                            <div class="lot-sidebar-li"><span class="label">Новые заявки</span> <span class="value" id="lotReqNew">—</span></div>
-                            <div class="lot-sidebar-li"><span class="label">Заявки в обработке</span> <span class="value" id="lotReqInWork">—</span></div>
+                            <div class="lot-sidebar-li"><span class="label">Заявки требующие внимания</span> <span class="value" id="lotReqAttention">—</span></div>
+                            <div class="lot-sidebar-li"><span class="label">Заявки отправлены на доработку</span> <span class="value" id="lotReqRework">—</span></div>
+                            <div class="lot-sidebar-li"><span class="label">Отклоненные заявки</span> <span class="value" id="lotReqRejected">—</span></div>
                             <div class="lot-sidebar-li"><span class="label">Созданные сделки</span> <span class="value" id="lotReqDeals">—</span></div>
                         </div>
 
@@ -292,6 +1788,56 @@
             </section>
         </div>
     </div>
+
+    <section class="lot-related-section">
+        <div class="lot-related-switch" role="tablist" aria-label="Переключение заявок и сделок">
+            <button type="button" class="lot-related-switch-btn is-active" id="lotRequestsTabBtn" aria-selected="true">
+                <i class="fas fa-layer-group"></i> Заявки на лот
+            </button>
+            <button type="button" class="lot-related-switch-btn" id="lotDealsTabBtn" aria-selected="false">
+                <i class="fas fa-handshake"></i> Сделки на лот
+            </button>
+        </div>
+        <div class="lot-related-filters">
+            <div class="lot-related-filters-grid">
+                <div class="lot-filter-field">
+                    <label for="lotRelatedStatusFilter">Статус</label>
+                    <div class="lot-status-select" id="lotRelatedStatusSelectWrap">
+                        <button type="button" class="lot-status-select-btn" id="lotRelatedStatusSelectBtn" aria-expanded="false">
+                            <span class="value" id="lotRelatedStatusSelectValue">Все статусы</span>
+                            <i class="fas fa-chevron-down"></i>
+                        </button>
+                        <div class="lot-status-select-list" id="lotRelatedStatusSelectList"></div>
+                    </div>
+                </div>
+                <div class="lot-filter-field">
+                    <label>Готов перевезти (т)</label>
+                    <div class="lot-filter-range">
+                        <input type="text" id="lotRelatedVolumeStart" placeholder="От" inputmode="decimal">
+                        <input type="text" id="lotRelatedVolumeEnd" placeholder="До" inputmode="decimal">
+                    </div>
+                </div>
+                <div class="lot-filter-field">
+                    <label>Кол-во машин</label>
+                    <div class="lot-filter-range">
+                        <input type="text" id="lotRelatedVehiclesStart" placeholder="От" inputmode="numeric">
+                        <input type="text" id="lotRelatedVehiclesEnd" placeholder="До" inputmode="numeric">
+                    </div>
+                </div>
+                <div class="lot-filter-field">
+                    <label for="lotRelatedSearchInput">Поиск</label>
+                    <input type="text" id="lotRelatedSearchInput" placeholder="ID, машина, прицеп, марка, модель, ФИО">
+                </div>
+                <button type="button" class="btn btn-outline lot-filter-reset-btn" id="lotRelatedResetFiltersBtn">
+                    <i class="fas fa-undo"></i> Сбросить
+                </button>
+            </div>
+            <div class="lot-filter-meta">
+                <div class="lot-filter-selected" id="lotRelatedSelectedCount">Выбрано фильтров: 0</div>
+            </div>
+        </div>
+        <div class="lot-related-grid" id="lotRelatedGrid"></div>
+    </section>
 </div>
 
 <!-- Модалки "Подробнее" -->
@@ -302,6 +1848,16 @@
             <button type="button" class="deal-modal-close" id="lotInfoModalClose" aria-label="Закрыть"><i class="fas fa-times"></i></button>
         </div>
         <div class="deal-modal-body" id="lotInfoModalBody"></div>
+    </div>
+</div>
+
+<div class="deal-modal-overlay" id="lotRequestInfoModalOverlay" aria-hidden="true">
+    <div class="deal-modal deal-modal-wide" id="lotRequestInfoModal">
+        <div class="deal-modal-header">
+            <h3 class="deal-modal-title" id="lotRequestInfoModalTitle">Информация</h3>
+            <button type="button" class="deal-modal-close" id="lotRequestInfoModalClose" aria-label="Закрыть"><i class="fas fa-times"></i></button>
+        </div>
+        <div class="deal-modal-body" id="lotRequestInfoModalBody"></div>
     </div>
 </div>
 

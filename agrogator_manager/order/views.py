@@ -16,3 +16,8 @@ def my_lots(request):
 def lot_detail(request, lot_id):
     """Детальная страница лота по id (данные подгружаются по API на фронте)."""
     return render(request, 'order/lot_detail.html', {'lot_id': lot_id})
+
+
+def request_detail(request, request_id):
+    """Детальная страница заявки лота по id (данные подгружаются по API на фронте)."""
+    return render(request, 'order/request_detail.html', {'request_id': request_id})

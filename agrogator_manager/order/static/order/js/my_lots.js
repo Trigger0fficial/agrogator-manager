@@ -341,39 +341,21 @@ const MyLotsManager = {
         const rect = btn.getBoundingClientRect();
         const dd = document.createElement('div');
         dd.id = 'lotsSimpleDropdown';
-        dd.style.position = 'absolute';
-        dd.style.zIndex = '10050';
+        dd.className = 'lots-simple-dropdown';
         dd.style.minWidth = Math.min(360, Math.max(260, rect.width)) + 'px';
-        dd.style.maxWidth = '420px';
         dd.style.left = (rect.left + window.scrollX) + 'px';
         dd.style.top = (rect.bottom + window.scrollY + 8) + 'px';
-        dd.style.background = '#fff';
-        dd.style.border = '1px solid rgba(148, 163, 184, 0.35)';
-        dd.style.borderRadius = '14px';
-        dd.style.boxShadow = '0 10px 30px rgba(0,0,0,0.10)';
-        dd.style.padding = '0.4rem';
-        dd.style.maxHeight = '360px';
-        dd.style.overflowY = 'auto';
 
         const current = key === 'lotsStatus' ? this.filters.lotsStatus : this.filters.cargoType;
 
         const makeItem = (value, label) => {
             const b = document.createElement('button');
             b.type = 'button';
-            b.style.width = '100%';
-            b.style.textAlign = 'left';
-            b.style.padding = '0.65rem 0.75rem';
-            b.style.border = 'none';
-            b.style.borderRadius = '12px';
-            b.style.background = 'transparent';
-            b.style.cursor = 'pointer';
-            b.style.fontFamily = 'inherit';
-            b.style.fontSize = '0.95rem';
-            b.style.fontWeight = (String(current || '') === String(value || '')) ? '900' : '700';
-            b.style.color = (String(current || '') === String(value || '')) ? '#1d4ed8' : '#0f172a';
-            b.textContent = label;
-            b.onmouseenter = () => { b.style.background = 'rgba(15, 23, 42, 0.05)'; };
-            b.onmouseleave = () => { b.style.background = 'transparent'; };
+            const selected = String(current || '') === String(value || '');
+            b.className = 'lots-simple-option' + (selected ? ' is-selected' : '');
+            b.innerHTML =
+                '<span class="lots-simple-option-dot" aria-hidden="true"></span>' +
+                '<span class="lots-simple-option-label">' + this.escapeHtml(label) + '</span>';
             b.onclick = () => {
                 if (key === 'lotsStatus') this.filters.lotsStatus = value ? String(value) : null;
                 else this.filters.cargoType = value ? String(value) : null;
@@ -435,6 +417,30 @@ const MyLotsManager = {
         return '';
     },
 
+    renderSingleChoiceList(options, currentValue, listKey, emptyLabel) {
+        const current = String(currentValue || '');
+        const items = [{ value: '', label: emptyLabel || 'Не важно' }]
+            .concat((Array.isArray(options) ? options : []).map((it) => ({
+                value: it && it.value != null ? String(it.value) : '',
+                label: it && it.value != null ? String(it.value) : '—'
+            })));
+
+        return (
+            '<div class="lots-single-choice-list" data-region-list="' + this.escapeHtml(listKey) + '" data-selected-value="' + this.escapeHtml(current) + '">' +
+                items.map((item) => {
+                    const value = String(item.value || '');
+                    const selected = value === current;
+                    return (
+                        '<button type="button" class="lots-simple-option' + (selected ? ' is-selected' : '') + '" data-region-option="' + this.escapeHtml(value) + '">' +
+                            '<span class="lots-simple-option-dot" aria-hidden="true"></span>' +
+                            '<span class="lots-simple-option-label">' + this.escapeHtml(item.label) + '</span>' +
+                        '</button>'
+                    );
+                }).join('') +
+            '</div>'
+        );
+    },
+
     renderActivePanelHtml(key) {
         if (key === 'lotsStatus') {
             const opts = this.filtersMeta && Array.isArray(this.filtersMeta.lotsStatus) ? this.filtersMeta.lotsStatus : [];
@@ -479,22 +485,14 @@ const MyLotsManager = {
         if (key === 'regions') {
             const fromOpts = this.filtersMeta && Array.isArray(this.filtersMeta.fromRegion) ? this.filtersMeta.fromRegion : [];
             const toOpts = this.filtersMeta && Array.isArray(this.filtersMeta.toRegion) ? this.filtersMeta.toRegion : [];
-            const fromOptionsHtml = ['<option value="">Не важно</option>'].concat(fromOpts.map(o => (
-                '<option value="' + this.escapeHtml(String(o.value)) + '"' +
-                    (String(this.filters.fromRegion || '') === String(o.value) ? ' selected' : '') +
-                '>' + this.escapeHtml(String(o.value)) + '</option>'
-            ))).join('');
-            const toOptionsHtml = ['<option value="">Не важно</option>'].concat(toOpts.map(o => (
-                '<option value="' + this.escapeHtml(String(o.value)) + '"' +
-                    (String(this.filters.toRegion || '') === String(o.value) ? ' selected' : '') +
-                '>' + this.escapeHtml(String(o.value)) + '</option>'
-            ))).join('');
+            const fromListHtml = this.renderSingleChoiceList(fromOpts, this.filters.fromRegion, 'fromRegion', 'Не важно');
+            const toListHtml = this.renderSingleChoiceList(toOpts, this.filters.toRegion, 'toRegion', 'Не важно');
             return (
                 '<div class="lots-filter-panel" data-filter-panel="regions">' +
                     '<div class="lots-filter-panel-title">Регионы</div>' +
                     '<div class="lots-filter-row">' +
-                        '<div class="field"><label>Откуда (регион)</label><select id="fromRegionSelect">' + fromOptionsHtml + '</select></div>' +
-                        '<div class="field"><label>Куда (регион)</label><select id="toRegionSelect">' + toOptionsHtml + '</select></div>' +
+                        '<div class="field"><label>Откуда (регион)</label>' + fromListHtml + '</div>' +
+                        '<div class="field"><label>Куда (регион)</label>' + toListHtml + '</div>' +
                     '</div>' +
                     '<div class="lots-filter-actions">' +
                         '<button type="button" class="btn btn-outline" data-filter-reset>Сбросить</button>' +
@@ -536,6 +534,21 @@ const MyLotsManager = {
         const applyBtn = panel.querySelector('[data-filter-apply]');
         const resetBtn = panel.querySelector('[data-filter-reset]');
 
+        if (key === 'regions') {
+            panel.querySelectorAll('[data-region-list]').forEach((listEl) => {
+                listEl.querySelectorAll('[data-region-option]').forEach((optionBtn) => {
+                    optionBtn.addEventListener('click', () => {
+                        const nextValue = optionBtn.getAttribute('data-region-option') || '';
+                        listEl.setAttribute('data-selected-value', nextValue);
+                        listEl.querySelectorAll('[data-region-option]').forEach((btnEl) => {
+                            const selected = (btnEl.getAttribute('data-region-option') || '') === nextValue;
+                            btnEl.classList.toggle('is-selected', selected);
+                        });
+                    });
+                });
+            });
+        }
+
         if (resetBtn) {
             resetBtn.addEventListener('click', () => {
                 if (key === 'lotsStatus') this.filters.lotsStatus = null;
@@ -559,10 +572,12 @@ const MyLotsManager = {
                     const sel = panel.querySelector('#cargoTypeSelect');
                     this.filters.cargoType = sel && sel.value ? sel.value : null;
                 } else if (key === 'regions') {
-                    const a = panel.querySelector('#fromRegionSelect');
-                    const b = panel.querySelector('#toRegionSelect');
-                    this.filters.fromRegion = a && a.value ? String(a.value) : '';
-                    this.filters.toRegion = b && b.value ? String(b.value) : '';
+                    const fromList = panel.querySelector('[data-region-list="fromRegion"]');
+                    const toList = panel.querySelector('[data-region-list="toRegion"]');
+                    const fromValue = fromList ? (fromList.getAttribute('data-selected-value') || '') : '';
+                    const toValue = toList ? (toList.getAttribute('data-selected-value') || '') : '';
+                    this.filters.fromRegion = fromValue ? String(fromValue) : '';
+                    this.filters.toRegion = toValue ? String(toValue) : '';
                 } else if (key === 'distance') {
                     this.filters.distanceStart = parseMaybe(panel.querySelector('#distanceStart')?.value);
                     this.filters.distanceEnd = parseMaybe(panel.querySelector('#distanceEnd')?.value);

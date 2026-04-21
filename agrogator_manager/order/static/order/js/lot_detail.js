@@ -7,6 +7,11 @@ const LotDetailPage = {
     lot: null,
     isLoading: false,
     partyView: 'farmer', // farmer | exporter
+    relatedView: 'requests', // requests | deals
+    relatedFilters: {
+        requests: { status: '', volumeStart: null, volumeEnd: null, vehiclesStart: null, vehiclesEnd: null, search: '' },
+        deals: { status: '', volumeStart: null, volumeEnd: null, vehiclesStart: null, vehiclesEnd: null, search: '' }
+    },
 
     init() {
         this.lotId = this.getLotIdFromTemplate();
@@ -32,6 +37,13 @@ const LotDetailPage = {
                 if (e.target === overlay) this.closeInfoModal();
             });
         }
+        document.getElementById('lotRequestInfoModalClose')?.addEventListener('click', () => this.closeRequestInfoModal());
+        const requestOverlay = document.getElementById('lotRequestInfoModalOverlay');
+        if (requestOverlay) {
+            requestOverlay.addEventListener('click', (e) => {
+                if (e.target === requestOverlay) this.closeRequestInfoModal();
+            });
+        }
 
         document.getElementById('openCropBtn')?.addEventListener('click', () => this.openCropModal());
         document.getElementById('openPartyPointBtn')?.addEventListener('click', () => {
@@ -40,6 +52,49 @@ const LotDetailPage = {
         });
         document.getElementById('partySwitchFarmer')?.addEventListener('click', () => this.setPartyView('farmer'));
         document.getElementById('partySwitchExporter')?.addEventListener('click', () => this.setPartyView('exporter'));
+        document.getElementById('lotRequestsTabBtn')?.addEventListener('click', () => this.setRelatedView('requests'));
+        document.getElementById('lotDealsTabBtn')?.addEventListener('click', () => this.setRelatedView('deals'));
+        document.getElementById('lotRelatedStatusFilter')?.addEventListener('change', (e) => {
+            const f = this.getCurrentRelatedFilterState();
+            f.status = String(e.target.value || '');
+            this.renderRelatedCards();
+        });
+        document.getElementById('lotRelatedStatusSelectBtn')?.addEventListener('click', (e) => {
+            e.stopPropagation();
+            this.toggleStatusDropdown();
+        });
+        document.addEventListener('click', (e) => {
+            const wrap = document.getElementById('lotRelatedStatusSelectWrap');
+            if (!wrap) return;
+            if (!wrap.contains(e.target)) this.closeStatusDropdown();
+        });
+        const onRangeInput = (id, field, integerOnly) => {
+            document.getElementById(id)?.addEventListener('input', (e) => {
+                const raw = String(e.target.value || '');
+                const cleaned = integerOnly
+                    ? raw.replace(/[^\d]/g, '')
+                    : raw.replace(',', '.').replace(/[^\d.]/g, '').replace(/^(\d*\.?\d*).*$/, '$1');
+                if (cleaned !== raw) e.target.value = cleaned;
+                const n = this.parseNumericValue(cleaned);
+                const f = this.getCurrentRelatedFilterState();
+                f[field] = cleaned.trim() === '' ? null : n;
+                this.renderRelatedCards();
+            });
+        };
+        onRangeInput('lotRelatedVolumeStart', 'volumeStart', false);
+        onRangeInput('lotRelatedVolumeEnd', 'volumeEnd', false);
+        onRangeInput('lotRelatedVehiclesStart', 'vehiclesStart', true);
+        onRangeInput('lotRelatedVehiclesEnd', 'vehiclesEnd', true);
+        document.getElementById('lotRelatedSearchInput')?.addEventListener('input', (e) => {
+            const f = this.getCurrentRelatedFilterState();
+            f.search = String(e.target.value || '');
+            this.renderRelatedCards();
+        });
+        document.getElementById('lotRelatedResetFiltersBtn')?.addEventListener('click', () => {
+            this.relatedFilters[this.relatedView] = { status: '', volumeStart: null, volumeEnd: null, vehiclesStart: null, vehiclesEnd: null, search: '' };
+            this.syncRelatedFiltersControls();
+            this.renderRelatedCards();
+        });
 
         document.getElementById('lotEditBtn')?.addEventListener('click', () => {
             if (!this.lot) return;
@@ -174,6 +229,51 @@ const LotDetailPage = {
         this.renderPartyBlock();
     },
 
+    setRelatedView(next) {
+        this.relatedView = next === 'deals' ? 'deals' : 'requests';
+        const reqBtn = document.getElementById('lotRequestsTabBtn');
+        const dealBtn = document.getElementById('lotDealsTabBtn');
+        if (reqBtn) {
+            reqBtn.classList.toggle('is-active', this.relatedView === 'requests');
+            reqBtn.setAttribute('aria-selected', this.relatedView === 'requests' ? 'true' : 'false');
+        }
+        if (dealBtn) {
+            dealBtn.classList.toggle('is-active', this.relatedView === 'deals');
+            dealBtn.setAttribute('aria-selected', this.relatedView === 'deals' ? 'true' : 'false');
+        }
+        this.syncRelatedFiltersControls();
+        this.renderRelatedCards();
+    },
+
+    getCurrentRelatedFilterState() {
+        return this.relatedFilters[this.relatedView];
+    },
+
+    openStatusDropdown() {
+        const list = document.getElementById('lotRelatedStatusSelectList');
+        const btn = document.getElementById('lotRelatedStatusSelectBtn');
+        if (!list || !btn) return;
+        list.classList.add('is-open');
+        btn.classList.add('is-open');
+        btn.setAttribute('aria-expanded', 'true');
+    },
+
+    closeStatusDropdown() {
+        const list = document.getElementById('lotRelatedStatusSelectList');
+        const btn = document.getElementById('lotRelatedStatusSelectBtn');
+        if (!list || !btn) return;
+        list.classList.remove('is-open');
+        btn.classList.remove('is-open');
+        btn.setAttribute('aria-expanded', 'false');
+    },
+
+    toggleStatusDropdown() {
+        const list = document.getElementById('lotRelatedStatusSelectList');
+        if (!list) return;
+        if (list.classList.contains('is-open')) this.closeStatusDropdown();
+        else this.openStatusDropdown();
+    },
+
     escapeHtml(str) {
         if (str == null) return '';
         const div = document.createElement('div');
@@ -200,6 +300,71 @@ const LotDetailPage = {
         return Number(val).toLocaleString('ru-RU');
     },
 
+    parseNumericValue(v) {
+        const n = parseFloat(String(v != null ? v : '').replace(',', '.'));
+        return isNaN(n) ? null : n;
+    },
+
+    formatDateTime(iso) {
+        if (!iso) return '—';
+        try {
+            const d = new Date(iso);
+            if (isNaN(d.getTime())) return '—';
+            return d.toLocaleDateString('ru-RU', {
+                day: '2-digit',
+                month: '2-digit',
+                year: 'numeric'
+            }) + ' ' + d.toLocaleTimeString('ru-RU', {
+                hour: '2-digit',
+                minute: '2-digit'
+            });
+        } catch (_) {
+            return '—';
+        }
+    },
+
+    normalizeStatusName(v) {
+        return String(v || '').trim().toLowerCase();
+    },
+
+    getRequestStatusTone(statusName) {
+        const n = this.normalizeStatusName(statusName);
+        if (n.includes('отклон')) return 'rejected';
+        if (n.includes('правк') || n.includes('доработ')) return 'rework';
+        if (n.includes('обработ') || n.includes('вниман')) return 'attention';
+        return 'neutral';
+    },
+
+    getDealStatusTone(statusName) {
+        const n = this.normalizeStatusName(statusName);
+        if (n.includes('отклон')) return 'rejected';
+        if (n.includes('заверш')) return 'finish';
+        if (n.includes('рабоч')) return 'process';
+        if (n.includes('ожидает')) return 'wait';
+        return 'neutral';
+    },
+
+    getToneLabelClass(tone) {
+        return 'tone-' + String(tone || 'neutral');
+    },
+
+    getDealStageIndex(statusName) {
+        const n = this.normalizeStatusName(statusName);
+        if (n.includes('ожидает') && n.includes('начал')) return 1;
+        if (n.includes('рабоч')) return 2;
+        if (n.includes('ожидает') && n.includes('заверш')) return 3;
+        if (n.includes('заверш')) return 4;
+        return 1;
+    },
+
+    normalizeDocumentUrl(url) {
+        const raw = String(url || '').trim();
+        if (!raw) return '';
+        if (/^https?:\/\//i.test(raw)) return raw;
+        // s3/file и s3://... напрямую в браузере не открываются корректно.
+        return '';
+    },
+
     async getAuthHeaders() {
         if (typeof getAuthTokens !== 'function') return null;
         const authResult = await getAuthTokens();
@@ -220,9 +385,43 @@ const LotDetailPage = {
             if (res.status === 401 || res.status === 403) { if (typeof logout === 'function') logout(); return null; }
             if (!res.ok) return null;
             const text = await res.text();
-            return text ? JSON.parse(text) : null;
+            if (!text) return null;
+            const parsed = JSON.parse(text);
+            // Бек может вернуть как сам объект лота, так и обертку { data: {...} }.
+            if (parsed && parsed.data && typeof parsed.data === 'object' && !Array.isArray(parsed.data)) {
+                return parsed.data;
+            }
+            return parsed;
         } catch (e) {
             console.error('fetchLotById error', e);
+            return null;
+        }
+    },
+
+    async fetchUserById(userId) {
+        const id = String(userId || '').trim();
+        if (!id) return null;
+        const headers = await this.getAuthHeaders();
+        if (!headers) return null;
+        const url = API_CONFIG.BASE_URL + '/moderators-module/all-by-user?id=' + encodeURIComponent(id);
+        try {
+            const res = await fetch(url, {
+                method: 'GET',
+                headers,
+                signal: AbortSignal.timeout(API_CONFIG.TIMEOUT || 10000)
+            });
+            if (res.status === 401 || res.status === 403) {
+                if (typeof logout === 'function') logout();
+                return null;
+            }
+            if (!res.ok) return null;
+            const text = await res.text();
+            if (!text) return null;
+            const parsed = JSON.parse(text);
+            if (parsed && parsed.data && typeof parsed.data === 'object' && !Array.isArray(parsed.data)) return parsed.data;
+            return parsed;
+        } catch (e) {
+            console.error('fetchUserById error', e);
             return null;
         }
     },
@@ -262,6 +461,7 @@ const LotDetailPage = {
         if (pubBtn) pubBtn.style.display = isCreated ? '' : 'none';
 
         this.setPartyView(this.partyView);
+        this.setRelatedView(this.relatedView);
         this.renderRequestsSidebar();
         this.renderLogisticsBlock();
     },
@@ -307,27 +507,27 @@ const LotDetailPage = {
 
     renderRequestsSidebar() {
         const lot = this.lot || {};
+        const requests = Array.isArray(lot.lotsRequest) ? lot.lotsRequest : [];
+        const dealsList = Array.isArray(lot.transporterDeals) ? lot.transporterDeals : [];
+        let attention = 0;
+        let rework = 0;
+        let rejected = 0;
+        requests.forEach((req) => {
+            const name = (req && req.lotsRequestStatus && req.lotsRequestStatus.name) || '';
+            const tone = this.getRequestStatusTone(name);
+            if (tone === 'attention') attention += 1;
+            else if (tone === 'rework') rework += 1;
+            else if (tone === 'rejected') rejected += 1;
+        });
 
-        // Если бек начнет отдавать эти значения — подхватим автоматически.
-        const pickNum = (...vals) => {
-            for (let v of vals) {
-                if (v == null) continue;
-                const n = parseFloat(String(v).replace(',', '.'));
-                if (!isNaN(n)) return n;
-            }
-            return null;
-        };
-
-        const newReq = pickNum(lot.newRequests, lot.requestsNew, lot.applicationsNew, lot.applicationsNewCount);
-        const inWork = pickNum(lot.requestsInWork, lot.applicationsInWork, lot.applicationsInWorkCount);
-        const deals = pickNum(lot.createdDeals, lot.dealsCreated, lot.dealsCreatedCount);
-
-        const elNew = document.getElementById('lotReqNew');
-        const elWork = document.getElementById('lotReqInWork');
+        const elAttention = document.getElementById('lotReqAttention');
+        const elRework = document.getElementById('lotReqRework');
+        const elRejected = document.getElementById('lotReqRejected');
         const elDeals = document.getElementById('lotReqDeals');
-        if (elNew) elNew.textContent = (newReq == null ? '—' : String(Math.trunc(newReq)));
-        if (elWork) elWork.textContent = (inWork == null ? '—' : String(Math.trunc(inWork)));
-        if (elDeals) elDeals.textContent = (deals == null ? '—' : String(Math.trunc(deals)));
+        if (elAttention) elAttention.textContent = String(attention);
+        if (elRework) elRework.textContent = String(rework);
+        if (elRejected) elRejected.textContent = String(rejected);
+        if (elDeals) elDeals.textContent = String(dealsList.length);
 
         const volumeNum = parseFloat(String(lot.volume != null ? lot.volume : '').replace(',', '.'));
         const volumeFilledNum = parseFloat(String(lot.volumeFilled != null ? lot.volumeFilled : '').replace(',', '.'));
@@ -377,6 +577,535 @@ const LotDetailPage = {
             '<div class="lot-kv-item"><span class="lot-kv-label">' + this.escapeHtml(label) + '</span><div class="lot-kv-value">' + this.escapeHtml(value) + '</div></div>'
         )).join('');
         return '<div class="lot-kv-row">' + items + '</div>';
+    },
+
+    getRelatedItems() {
+        return this.getRelatedItemsByView(this.relatedView);
+    },
+
+    getRelatedItemsByView(view) {
+        const lot = this.lot || {};
+        const source = (lot && lot.data && typeof lot.data === 'object') ? lot.data : lot;
+        const raw = view === 'deals'
+            ? (Array.isArray(source.transporterDeals) ? source.transporterDeals : [])
+            : (Array.isArray(source.lotsRequest) ? source.lotsRequest : []);
+        return raw.filter((x) => x && typeof x === 'object');
+    },
+
+    getRelatedStatusName(item, isDeals) {
+        return isDeals
+            ? ((item.transporterDealsStatus && item.transporterDealsStatus.name) || '')
+            : ((item.lotsRequestStatus && item.lotsRequestStatus.name) || '');
+    },
+
+    getRelatedTrailers(item, isDeals) {
+        return isDeals
+            ? (Array.isArray(item.tractorTrailerTransporterDeals) ? item.tractorTrailerTransporterDeals : [])
+            : (Array.isArray(item.tractorTrailer) ? item.tractorTrailer : []);
+    },
+
+    getRelatedVolumeNum(item, isDeals) {
+        return this.parseNumericValue(isDeals ? item.volume : item.readyToTransportVolume);
+    },
+
+    buildRelatedSearchText(item, isDeals) {
+        const trailers = this.getRelatedTrailers(item, isDeals);
+        const parts = [
+            item.uniqueCode || '',
+            this.getRelatedStatusName(item, isDeals) || ''
+        ];
+        trailers.forEach((row) => {
+            const truck = row && row.trucks ? row.trucks : {};
+            const trailer = row && row.trailer ? row.trailer : {};
+            const driver = row && row.drivers ? row.drivers : {};
+            parts.push(
+                truck.uniqueCode || '',
+                trailer.uniqueCode || '',
+                (truck.brand && truck.brand.name) || '',
+                (truck.model && truck.model.name) || '',
+                [driver.lastName, driver.firstName, driver.patronymic].filter(Boolean).join(' ')
+            );
+        });
+        return parts.join(' ').toLowerCase();
+    },
+
+    filterRelatedItems(items, isDeals) {
+        const f = this.getCurrentRelatedFilterState();
+        const statusNeedle = this.normalizeStatusName(f.status || '');
+        const searchNeedle = String(f.search || '').trim().toLowerCase();
+        return items.filter((item) => {
+            const statusName = this.getRelatedStatusName(item, isDeals);
+            const statusNormalized = this.normalizeStatusName(statusName);
+            if (statusNeedle && statusNormalized !== statusNeedle) return false;
+
+            const volume = this.getRelatedVolumeNum(item, isDeals);
+            if (f.volumeStart != null && (volume == null || volume < f.volumeStart)) return false;
+            if (f.volumeEnd != null && (volume == null || volume > f.volumeEnd)) return false;
+
+            const vehicles = this.getRelatedTrailers(item, isDeals).length;
+            if (f.vehiclesStart != null && vehicles < f.vehiclesStart) return false;
+            if (f.vehiclesEnd != null && vehicles > f.vehiclesEnd) return false;
+
+            if (searchNeedle) {
+                const hay = this.buildRelatedSearchText(item, isDeals);
+                if (!hay.includes(searchNeedle)) return false;
+            }
+            return true;
+        });
+    },
+
+    countActiveRelatedFilters() {
+        const f = this.getCurrentRelatedFilterState();
+        let n = 0;
+        if (String(f.status || '').trim()) n++;
+        if (f.volumeStart != null || f.volumeEnd != null) n++;
+        if (f.vehiclesStart != null || f.vehiclesEnd != null) n++;
+        if (String(f.search || '').trim()) n++;
+        return n;
+    },
+
+    updateRelatedSelectedFiltersCount() {
+        const el = document.getElementById('lotRelatedSelectedCount');
+        if (!el) return;
+        el.innerHTML = 'Выбрано фильтров: <strong>' + String(this.countActiveRelatedFilters()) + '</strong>';
+    },
+
+    syncRelatedFiltersControls() {
+        const f = this.getCurrentRelatedFilterState();
+        const volumeStart = document.getElementById('lotRelatedVolumeStart');
+        const volumeEnd = document.getElementById('lotRelatedVolumeEnd');
+        const vehiclesStart = document.getElementById('lotRelatedVehiclesStart');
+        const vehiclesEnd = document.getElementById('lotRelatedVehiclesEnd');
+        const searchInput = document.getElementById('lotRelatedSearchInput');
+        const statusValue = document.getElementById('lotRelatedStatusSelectValue');
+        if (statusValue) {
+            statusValue.textContent = String(f.status || '').trim() || 'Все статусы';
+        }
+        if (volumeStart) volumeStart.value = f.volumeStart == null ? '' : String(f.volumeStart);
+        if (volumeEnd) volumeEnd.value = f.volumeEnd == null ? '' : String(f.volumeEnd);
+        if (vehiclesStart) vehiclesStart.value = f.vehiclesStart == null ? '' : String(f.vehiclesStart);
+        if (vehiclesEnd) vehiclesEnd.value = f.vehiclesEnd == null ? '' : String(f.vehiclesEnd);
+        if (searchInput) searchInput.value = String(f.search || '');
+        this.updateRelatedSelectedFiltersCount();
+    },
+
+    renderRelatedStatusesOptions(items, isDeals) {
+        const list = document.getElementById('lotRelatedStatusSelectList');
+        if (!list) return;
+        const selected = String(this.getCurrentRelatedFilterState().status || '');
+        const statuses = [];
+        items.forEach((item) => {
+            const name = this.getRelatedStatusName(item, isDeals);
+            if (name && !statuses.includes(name)) statuses.push(name);
+        });
+        const all = [''].concat(statuses);
+        list.innerHTML = all.map((name) => {
+            const label = name || 'Все статусы';
+            const isSelected = (name || '') === selected;
+            return (
+                '<button type="button" class="lot-status-option' + (isSelected ? ' is-selected' : '') + '" data-status-option="' + this.escapeHtml(name) + '">' +
+                    '<span class="lot-status-option-dot" aria-hidden="true"></span>' +
+                    '<span>' + this.escapeHtml(label) + '</span>' +
+                '</button>'
+            );
+        }).join('');
+        list.querySelectorAll('[data-status-option]').forEach((btn) => {
+            btn.addEventListener('click', () => {
+                const val = btn.getAttribute('data-status-option') || '';
+                const f = this.getCurrentRelatedFilterState();
+                f.status = val;
+                this.closeStatusDropdown();
+                this.syncRelatedFiltersControls();
+                this.renderRelatedCards();
+            });
+        });
+    },
+
+    renderRelatedCards() {
+        const grid = document.getElementById('lotRelatedGrid');
+        if (!grid) return;
+        const allItems = this.getRelatedItems();
+        const isDeals = this.relatedView === 'deals';
+        this.renderRelatedStatusesOptions(allItems, isDeals);
+        this.syncRelatedFiltersControls();
+        const items = this.filterRelatedItems(allItems, isDeals);
+        if (!items.length) {
+            grid.innerHTML =
+                '<div class="lot-related-empty">' +
+                    '<div class="lot-related-empty-icon"><i class="fas ' + (isDeals ? 'fa-handshake' : 'fa-layer-group') + '"></i></div>' +
+                    '<h4>Пока нет ' + (isDeals ? 'сделок' : 'заявок') + '</h4>' +
+                    '<p>' + (isDeals ? 'Сделки появятся после обработки заявок и согласования условий.' : 'Заявки от перевозчиков отобразятся здесь автоматически.') + '</p>' +
+                '</div>';
+            return;
+        }
+        grid.innerHTML = items.map((item) => {
+            const status = isDeals
+                ? ((item.transporterDealsStatus && item.transporterDealsStatus.name) || '—')
+                : ((item.lotsRequestStatus && item.lotsRequestStatus.name) || '—');
+            const tone = isDeals ? this.getDealStatusTone(status) : this.getRequestStatusTone(status);
+            const trailers = this.getRelatedTrailers(item, isDeals);
+            const vehiclesCount = trailers.length;
+            const volumeRaw = isDeals ? item.volume : item.readyToTransportVolume;
+            const volumeNum = this.parseNumericValue(volumeRaw);
+            const volumeText = volumeNum == null ? '—' : (this.formatNumber(volumeNum) + ' т');
+            const createdAtText = this.formatDateTime(item.created_at);
+            if (!isDeals) {
+                const from = this.escapeHtml((this.lot && this.lot.fromRegion) || '—');
+                const to = this.escapeHtml((this.lot && this.lot.toRegion) || '—');
+                return (
+                    '<article class="lot-related-card lot-related-card--request">' +
+                        '<div class="lot-request-layout">' +
+                            '<div class="lot-request-head">' +
+                                '<span class="lot-request-idline">№ ' + this.escapeHtml(item.uniqueCode || '—') + '</span>' +
+                                '<span class="lot-top-meta" style="justify-self:center;"><i class="fas fa-calendar-alt"></i> ' + this.escapeHtml(createdAtText) + '</span>' +
+                                '<span style="justify-self:end;"><span class="lot-status-chip ' + this.escapeHtml(this.getToneLabelClass(tone)) + '">' + this.escapeHtml(status) + '</span></span>' +
+                            '</div>' +
+                            '<div class="lot-request-route">' +
+                                '<span class="point">' + from + '</span>' +
+                                '<span class="arrow"><i class="fas fa-arrow-right"></i></span>' +
+                                '<span class="point" style="text-align:right;">' + to + '</span>' +
+                            '</div>' +
+                            '<div class="lot-request-metrics">' +
+                                '<div class="lot-request-metric"><span class="k">Количество машин</span><span class="v">' + this.escapeHtml(String(vehiclesCount)) + '</span></div>' +
+                                '<div class="lot-request-metric"><span class="k">Готов перевезти</span><span class="v">' + this.escapeHtml(volumeText) + '</span></div>' +
+                            '</div>' +
+                        '</div>' +
+                        '<div class="lot-related-actions">' +
+                            '<button type="button" class="btn btn-outline" data-related-info="' + this.escapeHtml(String(item.id || '')) + '"><i class="fas fa-circle-info"></i> О заявке</button>' +
+                            '<button type="button" class="btn btn-primary" data-related-open-request="' + this.escapeHtml(String(item.id || '')) + '"><i class="fas fa-chevron-right"></i> Подробнее</button>' +
+                        '</div>' +
+                    '</article>'
+                );
+            }
+
+            const stageIndex = this.getDealStageIndex(status);
+            const progressWidth = Math.max(5, Math.min(100, Math.round((stageIndex / 4) * 100)));
+            const isRejectedDeal = this.getDealStatusTone(status) === 'rejected';
+            return (
+                '<article class="lot-related-card lot-related-card--deal">' +
+                    '<div class="lot-deal-layout">' +
+                        '<div class="lot-deal-head">' +
+                            '<span class="lot-deal-idline">№ ' + this.escapeHtml(item.uniqueCode || '—') + '</span>' +
+                            '<span class="lot-top-meta" style="justify-self:center;"><i class="fas fa-calendar-alt"></i> ' + this.escapeHtml(createdAtText) + '</span>' +
+                            '<span style="justify-self:end;"><span class="lot-status-chip ' + this.escapeHtml(this.getToneLabelClass(tone)) + '">' + this.escapeHtml(status) + '</span></span>' +
+                        '</div>' +
+                        (isRejectedDeal
+                            ? '<div class="lot-deal-rejected-line"><i class="fas fa-ban" style="margin-right:0.4rem;"></i> Отклонена</div>'
+                            : (
+                                '<div class="lot-deal-progress"><span class="lot-deal-progress-fill" style="width:' + String(progressWidth) + '%;"></span></div>' +
+                                '<div class="lot-deal-stages">' +
+                                    '<span class="lot-deal-stage ' + (stageIndex >= 1 ? 'is-active' : '') + '">Старт</span>' +
+                                    '<span class="lot-deal-stage ' + (stageIndex >= 2 ? 'is-active' : '') + '">Работа</span>' +
+                                    '<span class="lot-deal-stage ' + (stageIndex >= 3 ? 'is-active' : '') + '">Финиш</span>' +
+                                    '<span class="lot-deal-stage ' + (stageIndex >= 4 ? 'is-active' : '') + '">Закрыта</span>' +
+                                '</div>'
+                            )
+                        ) +
+                        '<div class="lot-deal-metrics">' +
+                            '<div class="lot-deal-metric"><span class="k">Автопоезда</span><span class="v">' + this.escapeHtml(String(vehiclesCount)) + '</span></div>' +
+                            '<div class="lot-deal-metric"><span class="k">Объем сделки</span><span class="v">' + this.escapeHtml(volumeText) + '</span></div>' +
+                        '</div>' +
+                    '</div>' +
+                    '<div class="lot-related-actions">' +
+                        '<button type="button" class="btn btn-outline" data-related-info="' + this.escapeHtml(String(item.id || '')) + '"><i class="fas fa-circle-info"></i> О сделке</button>' +
+                        '<button type="button" class="btn btn-primary" data-related-more disabled><i class="fas fa-chevron-right"></i> Подробнее</button>' +
+                    '</div>' +
+                '</article>'
+            );
+        }).join('');
+
+        grid.querySelectorAll('[data-related-info]').forEach((btn) => {
+            btn.addEventListener('click', () => {
+                const id = btn.getAttribute('data-related-info') || '';
+                const target = items.find((x) => x && String(x.id || '') === String(id));
+                if (target) this.openRelatedInfoModal(target, isDeals);
+            });
+        });
+        grid.querySelectorAll('[data-related-open-request]').forEach((btn) => {
+            btn.addEventListener('click', () => {
+                const id = btn.getAttribute('data-related-open-request') || '';
+                if (!id) return;
+                window.location.href = '/order/request/' + encodeURIComponent(id) + '/';
+            });
+        });
+    },
+
+    async openRelatedInfoModal(item, isDeals) {
+        const list = isDeals
+            ? (Array.isArray(item.tractorTrailerTransporterDeals) ? item.tractorTrailerTransporterDeals : [])
+            : (Array.isArray(item.tractorTrailer) ? item.tractorTrailer : []);
+
+        const overlay = document.getElementById('lotRequestInfoModalOverlay');
+        if (!overlay) return;
+        const title = document.getElementById('lotRequestInfoModalTitle');
+        const bodyEl = document.getElementById('lotRequestInfoModalBody');
+        const modalRoot = document.getElementById('lotRequestInfoModal');
+        if (title) title.textContent = isDeals ? 'Информация о сделке' : 'Информация о заявке';
+        if (modalRoot) {
+            modalRoot.classList.remove('lot-request-modal', 'lot-deal-modal', 'lot-rich-modal');
+            modalRoot.classList.add(isDeals ? 'lot-deal-modal' : 'lot-request-modal');
+            modalRoot.classList.add('lot-rich-modal');
+        }
+        if (bodyEl) {
+            bodyEl.innerHTML =
+                '<div class="lot-related-loading">' +
+                    '<i class="fas fa-spinner fa-spin" aria-hidden="true"></i>' +
+                    '<span>Загрузка информации о контрагенте...</span>' +
+                '</div>';
+        }
+        overlay.classList.add('is-open');
+        overlay.setAttribute('aria-hidden', 'false');
+
+        const renderDocLink = (url, label, icon) => {
+            const href = this.normalizeDocumentUrl(url);
+            if (!href) {
+                return '<span class="lot-doc-link is-disabled"><i class="fas fa-' + this.escapeHtml(icon || 'file') + '"></i> ' + this.escapeHtml(label) + ' (недоступно)</span>';
+            }
+            return '<a class="lot-doc-link" href="' + this.escapeHtml(href) + '" target="_blank" rel="noopener noreferrer"><i class="fas fa-' + this.escapeHtml(icon || 'file') + '"></i> ' + this.escapeHtml(label) + '</a>';
+        };
+
+        const renderDocs = (docEntries) => {
+            const links = (Array.isArray(docEntries) ? docEntries : []).map((entry) => renderDocLink(entry.url, entry.label, entry.icon)).filter(Boolean);
+            if (!links.length) return '<span class="deal-modal-item-value">Нет документов</span>';
+            return '<div class="lot-doc-links">' + links.join('') + '</div>';
+        };
+
+        const renderAutotrainCard = (row, index) => {
+            const truck = row && row.trucks ? row.trucks : {};
+            const trailer = row && row.trailer ? row.trailer : {};
+            const driver = row && row.drivers ? row.drivers : {};
+            const driverFio = [driver.lastName, driver.firstName, driver.patronymic].filter(Boolean).join(' ') || '—';
+            const truckName = [truck.brand && truck.brand.name, truck.model && truck.model.name].filter(Boolean).join(' ') || '—';
+            const trailerCargo = Array.isArray(trailer.cargoType) ? trailer.cargoType.map((c) => c && c.name).filter(Boolean).join(', ') : '—';
+            const truckDocs = renderDocs([
+                { url: truck.vehiclePassportPhotoFront, label: 'ПТС (лицевая)', icon: 'id-card' },
+                { url: truck.vehiclePassportPhotoBack, label: 'ПТС (оборот)', icon: 'id-card' },
+                { url: truck.truckPhoto, label: 'Фото грузовика', icon: 'image' }
+            ]);
+            const trailerDocs = renderDocs([
+                { url: trailer.vehiclePassportPhotoFront, label: 'ПТС прицепа (лицевая)', icon: 'id-card' },
+                { url: trailer.vehiclePassportPhotoBack, label: 'ПТС прицепа (оборот)', icon: 'id-card' }
+            ]);
+            const driverDocs = renderDocs([
+                { url: driver.driverLicensePhotoFront, label: 'Права (лицевая)', icon: 'id-card' },
+                { url: driver.driverLicensePhotoBack, label: 'Права (оборот)', icon: 'id-card' },
+                { url: driver.driverPhoto, label: 'Фото водителя', icon: 'image' }
+            ]);
+            return (
+                '<article class="lot-autotrain-card">' +
+                    '<h4>Автопоезд #' + this.escapeHtml(String(index + 1)) + '</h4>' +
+                    '<div class="lot-autotrain-block">' +
+                        '<h5 class="lot-autotrain-block-title">Грузовик</h5>' +
+                        '<div class="lot-autotrain-kv">' +
+                            '<div class="deal-modal-item"><span class="deal-modal-item-label">Публичный ID</span><span class="deal-modal-item-value">' + this.escapeHtml(truck.uniqueCode || '—') + '</span></div>' +
+                            '<div class="deal-modal-item"><span class="deal-modal-item-label">Гос. номер</span><span class="deal-modal-item-value">' + this.escapeHtml(truck.registerNumber || '—') + '</span></div>' +
+                            '<div class="deal-modal-item"><span class="deal-modal-item-label">Марка/модель</span><span class="deal-modal-item-value">' + this.escapeHtml(truckName) + '</span></div>' +
+                            '<div class="deal-modal-item"><span class="deal-modal-item-label">Тип транспорта</span><span class="deal-modal-item-value">' + this.escapeHtml((truck.trucksType && truck.trucksType.name) || '—') + '</span></div>' +
+                        '</div>' +
+                        '<div class="deal-modal-item"><span class="deal-modal-item-label">Документы и фото</span>' + truckDocs + '</div>' +
+                    '</div>' +
+                    '<div class="lot-autotrain-block">' +
+                        '<h5 class="lot-autotrain-block-title">Прицеп</h5>' +
+                        '<div class="lot-autotrain-kv">' +
+                            '<div class="deal-modal-item"><span class="deal-modal-item-label">Публичный ID</span><span class="deal-modal-item-value">' + this.escapeHtml(trailer.uniqueCode || '—') + '</span></div>' +
+                            '<div class="deal-modal-item"><span class="deal-modal-item-label">Гос. номер</span><span class="deal-modal-item-value">' + this.escapeHtml(trailer.registerNumber || '—') + '</span></div>' +
+                            '<div class="deal-modal-item"><span class="deal-modal-item-label">Грузоподъемность</span><span class="deal-modal-item-value">' + this.escapeHtml(trailer.tonnage != null ? String(trailer.tonnage) + ' т' : '—') + '</span></div>' +
+                            '<div class="deal-modal-item"><span class="deal-modal-item-label">Способ выгрузки</span><span class="deal-modal-item-value">' + this.escapeHtml((trailer.unloadingMethod && trailer.unloadingMethod.name) || '—') + '</span></div>' +
+                            '<div class="deal-modal-item"><span class="deal-modal-item-label">Типы груза</span><span class="deal-modal-item-value">' + this.escapeHtml(trailerCargo) + '</span></div>' +
+                        '</div>' +
+                        '<div class="deal-modal-item"><span class="deal-modal-item-label">Документы</span>' + trailerDocs + '</div>' +
+                    '</div>' +
+                    '<div class="lot-autotrain-block">' +
+                        '<h5 class="lot-autotrain-block-title">Водитель</h5>' +
+                        '<div class="lot-autotrain-kv">' +
+                            '<div class="deal-modal-item"><span class="deal-modal-item-label">ФИО</span><span class="deal-modal-item-value">' + this.escapeHtml(driverFio) + '</span></div>' +
+                            '<div class="deal-modal-item"><span class="deal-modal-item-label">Телефон</span><span class="deal-modal-item-value">' + this.escapeHtml(driver.phone || '—') + '</span></div>' +
+                            '<div class="deal-modal-item"><span class="deal-modal-item-label">Паспорт</span><span class="deal-modal-item-value">' + this.escapeHtml((driver.passportSerial && driver.passportNumber) ? (driver.passportSerial + ' ' + driver.passportNumber) : '—') + '</span></div>' +
+                            '<div class="deal-modal-item"><span class="deal-modal-item-label">ВУ</span><span class="deal-modal-item-value">' + this.escapeHtml((driver.driverLicenseSerial && driver.driverLicenseNumber) ? (driver.driverLicenseSerial + ' ' + driver.driverLicenseNumber) : '—') + '</span></div>' +
+                        '</div>' +
+                        '<div class="deal-modal-item"><span class="deal-modal-item-label">Документы и фото</span>' + driverDocs + '</div>' +
+                    '</div>' +
+                '</article>'
+            );
+        };
+
+        const renderAutotrainCompactCard = (row, index) => {
+            const truck = row && row.trucks ? row.trucks : {};
+            const trailer = row && row.trailer ? row.trailer : {};
+            const driver = row && row.drivers ? row.drivers : {};
+            const truckName = [truck.brand && truck.brand.name, truck.model && truck.model.name].filter(Boolean).join(' ') || '—';
+            const driverFio = [driver.lastName, driver.firstName, driver.patronymic].filter(Boolean).join(' ') || '—';
+            const trailerType = (trailer.unloadingMethod && trailer.unloadingMethod.name) || '—';
+            return (
+                '<article class="lot-autotrain-compact-card">' +
+                    '<div class="lot-autotrain-compact-head">' +
+                        '<span class="lot-autotrain-compact-title"><i class="fas fa-truck"></i> Автопоезд #' + this.escapeHtml(String(index + 1)) + '</span>' +
+                        '<span class="lot-status-chip tone-neutral">ID ' + this.escapeHtml(String((row && row.id) || '—').slice(0, 6)) + '</span>' +
+                    '</div>' +
+                    '<div class="lot-autotrain-compact-grid">' +
+                        '<div class="lot-autotrain-compact-row"><span class="k">Марка/модель</span><span class="v">' + this.escapeHtml(truckName) + '</span></div>' +
+                        '<div class="lot-autotrain-compact-row"><span class="k">Гос. номер тягача</span><span class="v">' + this.escapeHtml(truck.registerNumber || '—') + '</span></div>' +
+                        '<div class="lot-autotrain-compact-row"><span class="k">Гос. номер прицепа</span><span class="v">' + this.escapeHtml(trailer.registerNumber || '—') + '</span></div>' +
+                        '<div class="lot-autotrain-compact-row"><span class="k">Тип прицепа</span><span class="v">' + this.escapeHtml(trailerType) + '</span></div>' +
+                        '<div class="lot-autotrain-compact-row"><span class="k">Водитель</span><span class="v">' + this.escapeHtml(driverFio) + '</span></div>' +
+                    '</div>' +
+                '</article>'
+            );
+        };
+
+        const status = isDeals
+            ? ((item.transporterDealsStatus && item.transporterDealsStatus.name) || '—')
+            : ((item.lotsRequestStatus && item.lotsRequestStatus.name) || '—');
+        const tone = isDeals ? this.getDealStatusTone(status) : this.getRequestStatusTone(status);
+        const volumeRaw = isDeals ? item.volume : item.readyToTransportVolume;
+        const volumeNum = this.parseNumericValue(volumeRaw);
+        const volumeText = volumeNum == null ? '—' : (this.formatNumber(volumeNum) + ' т');
+        const createdAtText = this.formatDateTime(item.created_at);
+        const userData = await this.fetchUserById(item.usersId);
+        const profile = userData && userData.entrepreneurProfile ? userData.entrepreneurProfile : null;
+        const counterpartyCard = profile
+            ? (
+                '<section class="lot-partner-card">' +
+                    '<div class="lot-partner-head">' +
+                        '<h4 class="lot-partner-title"><i class="fas fa-user-tie"></i> Контрагент</h4>' +
+                        '<span class="lot-status-chip tone-process">ИП</span>' +
+                    '</div>' +
+                    '<div class="lot-partner-grid">' +
+                        '<div class="lot-partner-item"><span class="k">Организация</span><span class="v">' + this.escapeHtml(profile.organizationName || '—') + '</span></div>' +
+                        '<div class="lot-partner-item"><span class="k">ИНН</span><span class="v">' + this.escapeHtml(profile.inn || '—') + '</span></div>' +
+                        '<div class="lot-partner-item"><span class="k">ФИО</span><span class="v">' + this.escapeHtml([profile.lastName, profile.firstName, profile.patronymic].filter(Boolean).join(' ') || '—') + '</span></div>' +
+                        '<div class="lot-partner-item"><span class="k">ОГРНИП</span><span class="v">' + this.escapeHtml(profile.ogrnip || '—') + '</span></div>' +
+                        '<div class="lot-partner-item"><span class="k">Телефон</span><span class="v">' + this.escapeHtml((userData && userData.phone) || '—') + '</span></div>' +
+                        '<div class="lot-partner-item"><span class="k">Email</span><span class="v">' + this.escapeHtml((userData && userData.email) || '—') + '</span></div>' +
+                    '</div>' +
+                '</section>'
+            )
+            : (
+                '<section class="lot-partner-card">' +
+                    '<h4 class="lot-partner-title"><i class="fas fa-user-tie"></i> Контрагент</h4>' +
+                    '<p class="deal-modal-empty" style="margin-top:0.45rem;">Не удалось получить данные предпринимателя.</p>' +
+                '</section>'
+            );
+
+        const profileName = profile
+            ? ([profile.lastName, profile.firstName, profile.patronymic].filter(Boolean).join(' ') || profile.organizationName || '—')
+            : 'Контрагент не найден';
+        const dossierMeta =
+            '<div class="lot-rich-meta-line">' +
+                '<span class="lot-rich-meta-created"><i class="fas fa-calendar-alt"></i> Создано: ' + this.escapeHtml(createdAtText) + '</span>' +
+                '<span class="lot-status-chip ' + this.escapeHtml(this.getToneLabelClass(tone)) + '">' + this.escapeHtml(status) + '</span>' +
+            '</div>';
+        const dossierCard =
+            '<section class="lot-dossier-card">' +
+                '<div class="lot-dossier-shell">' +
+                    '<section class="lot-dossier-primary">' +
+                        '<div class="lot-dossier-titleline">' +
+                            '<span class="title">Профиль контрагента</span>' +
+                            '<div class="lot-dossier-head-volume">' +
+                                '<span class="k">' + (isDeals ? 'Объем сделки' : 'Готов перевезти') + '</span>' +
+                                '<span class="v"><i class="fas fa-weight-hanging"></i> ' + this.escapeHtml(volumeText) + '</span>' +
+                            '</div>' +
+                        '</div>' +
+                        '<div class="lot-dossier-head">' +
+                            '<div class="lot-dossier-avatar"><i class="fas fa-user"></i></div>' +
+                            '<div>' +
+                                '<h4 class="lot-dossier-fio">' + this.escapeHtml(profileName) + '</h4>' +
+                                '<div class="lot-dossier-org">' + this.escapeHtml((profile && profile.organizationName) || '—') + '</div>' +
+                            '</div>' +
+                        '</div>' +
+                    '</section>' +
+                    '<div class="lot-dossier-kpi-strip">' +
+                        '<div class="lot-dossier-kpi"><span class="k">ИНН</span><span class="v">' + this.escapeHtml((profile && profile.inn) || '—') + '</span></div>' +
+                        '<div class="lot-dossier-kpi"><span class="k">ОГРНИП</span><span class="v">' + this.escapeHtml((profile && profile.ogrnip) || '—') + '</span></div>' +
+                        '<div class="lot-dossier-kpi focus"><span class="k">Публичный ID</span><span class="v">№ ' + this.escapeHtml(item.uniqueCode || '—') + '</span></div>' +
+                    '</div>' +
+                    '<div class="lot-dossier-contact-bar">' +
+                        '<div class="lot-dossier-contact-pill"><span class="k">Телефон</span><span class="v">' + this.escapeHtml((userData && userData.phone) || '—') + '</span></div>' +
+                        '<div class="lot-dossier-contact-pill"><span class="k">Email</span><span class="v">' + this.escapeHtml((userData && userData.email) || '—') + '</span></div>' +
+                    '</div>' +
+                    '<div class="lot-dossier-legal">' +
+                        '<h5 class="lot-dossier-legal-title"><i class="fas fa-scale-balanced"></i> Юридический профиль</h5>' +
+                        '<div class="lot-dossier-legal-grid">' +
+                            '<div class="lot-dossier-legal-item"><span class="k">Юр. адрес</span><span class="v">' + this.escapeHtml((profile && profile.legalAddress) || '—') + '</span></div>' +
+                            '<div class="lot-dossier-legal-item"><span class="k">Организация</span><span class="v">' + this.escapeHtml((profile && profile.organizationName) || '—') + '</span></div>' +
+                        '</div>' +
+                    '</div>' +
+                    '<div class="lot-dossier-finance">' +
+                        '<button type="button" class="lot-dossier-finance-toggle" data-finance-toggle>' +
+                            '<span><i class="fas fa-landmark" style="margin-right:0.4rem;"></i> Финансовый профиль</span>' +
+                            '<i class="fas fa-chevron-down"></i>' +
+                        '</button>' +
+                        '<div class="lot-dossier-finance-body" data-finance-body>' +
+                            '<div class="lot-dossier-finance-grid">' +
+                                '<div class="lot-dossier-item"><span class="k">Банк</span><span class="v">' + this.escapeHtml((profile && profile.bankName) || '—') + '</span></div>' +
+                                '<div class="lot-dossier-item"><span class="k">БИК</span><span class="v">' + this.escapeHtml((profile && profile.bik) || '—') + '</span></div>' +
+                                '<div class="lot-dossier-item"><span class="k">Расчетный счет</span><span class="v">' + this.escapeHtml((profile && profile.checkingAccount) || '—') + '</span></div>' +
+                                '<div class="lot-dossier-item"><span class="k">Корр. счет</span><span class="v">' + this.escapeHtml((profile && profile.correspondentAccount) || '—') + '</span></div>' +
+                            '</div>' +
+                        '</div>' +
+                    '</div>' +
+                '</div>' +
+            '</section>';
+
+        const transportSection =
+            '<section class="lot-rich-section">' +
+                '<h4 class="lot-rich-section-title"><i class="fas fa-truck-fast"></i> ' + (isDeals ? 'Состав автопоездов по сделке' : 'Состав автопоездов по заявке') + '</h4>' +
+                (list.length
+                    ? (
+                        '<div class="lot-autotrain-toolbar">' +
+                            '<span class="lot-autotrain-count"><i class="fas fa-layer-group"></i> Автопоездов: ' + this.escapeHtml(String(list.length)) + '</span>' +
+                            '<div class="lot-autotrain-view-switch">' +
+                                '<button type="button" class="lot-autotrain-view-btn is-active" data-autotrain-view-btn="cards"><i class="fas fa-grip-horizontal"></i> Карточки</button>' +
+                                '<button type="button" class="lot-autotrain-view-btn" data-autotrain-view-btn="details"><i class="fas fa-list"></i> Детально</button>' +
+                            '</div>' +
+                        '</div>' +
+                        '<div class="lot-autotrain-view is-active" data-autotrain-view="cards">' +
+                            '<div class="lot-autotrain-cards-grid">' + list.map(renderAutotrainCompactCard).join('') + '</div>' +
+                        '</div>' +
+                        '<div class="lot-autotrain-view" data-autotrain-view="details">' +
+                            '<div class="lot-autotrain-list">' + list.map(renderAutotrainCard).join('') + '</div>' +
+                        '</div>'
+                    )
+                    : '<p class="deal-modal-empty">Нет данных по автопоездам.</p>'
+                ) +
+            '</section>';
+
+        const body = isDeals
+            ? (dossierMeta + dossierCard + transportSection)
+            : (dossierMeta + dossierCard + transportSection);
+
+        if (bodyEl) {
+            bodyEl.innerHTML = body;
+            bodyEl.querySelectorAll('[data-finance-toggle]').forEach((toggleBtn) => {
+                toggleBtn.addEventListener('click', () => {
+                    const wrapper = toggleBtn.closest('.lot-dossier-finance');
+                    if (!wrapper) return;
+                    const bodyBlock = wrapper.querySelector('[data-finance-body]');
+                    if (!bodyBlock) return;
+                    const open = bodyBlock.classList.toggle('is-open');
+                    toggleBtn.classList.toggle('is-open', open);
+                });
+            });
+            bodyEl.querySelectorAll('[data-autotrain-view-btn]').forEach((btn) => {
+                btn.addEventListener('click', () => {
+                    const target = btn.getAttribute('data-autotrain-view-btn') || 'cards';
+                    bodyEl.querySelectorAll('[data-autotrain-view-btn]').forEach((b) => {
+                        b.classList.toggle('is-active', b === btn);
+                    });
+                    bodyEl.querySelectorAll('[data-autotrain-view]').forEach((viewEl) => {
+                        const key = viewEl.getAttribute('data-autotrain-view') || '';
+                        viewEl.classList.toggle('is-active', key === target);
+                    });
+                });
+            });
+        }
+    },
+
+    closeRequestInfoModal() {
+        const overlay = document.getElementById('lotRequestInfoModalOverlay');
+        if (!overlay) return;
+        overlay.classList.remove('is-open');
+        overlay.setAttribute('aria-hidden', 'true');
     },
 
     openInfoModal(title, bodyHtml) {
